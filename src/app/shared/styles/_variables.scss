@@ -1,0 +1,31 @@
+// SmartStay Global Design Tokens & SCSS Variables
+
+$color-primary-navy: #11243E;
+$color-secondary-navy: #1B3A5D;
+$color-accent-gold: #C99B4A;
+$color-accent-gold-light: #F7EFDF;
+$color-bg-main: #F5F7FA;
+$color-bg-card: #FFFFFF;
+$color-text-main: #1F2937;
+$color-text-muted: #6B7280;
+$color-border: #E5E7EB;
+$color-border-hover: #D1D5DB;
+
+// Status colors
+$color-success: #16803C;
+$color-success-bg: #E6F4EA;
+$color-warning: #B76E00;
+$color-warning-bg: #FEF3D6;
+$color-error: #C62828;
+$color-error-bg: #FCE8E6;
+$color-info: #2563EB;
+$color-info-bg: #E8F0FE;
+
+// Shadows & Border Radius
+$shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+$radius-sm: 4px;
+$radius-md: 8px;
+$radius-lg: 12px;
+$radius-full: 9999px;
