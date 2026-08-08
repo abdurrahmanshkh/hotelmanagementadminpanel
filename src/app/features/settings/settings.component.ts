@@ -31,7 +31,7 @@ import { HotelSettings } from '../../core/models';
             <h3 class="section-title">Hotel Property Profile</h3>
             <div class="form-grid">
               <app-form-field label="Hotel Name" [required]="true">
-                <input type="text" formControlName="hotelName" placeholder="e.g. SmartStay Grand Resort & Spa" class="form-control" />
+                <input type="text" formControlName="hotelName" placeholder="e.g. SmartStay Grand Hotel & Resort" class="form-control" />
               </app-form-field>
 
               <app-form-field label="Contact Email" [required]="true">

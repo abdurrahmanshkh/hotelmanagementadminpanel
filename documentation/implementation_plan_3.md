@@ -49,7 +49,7 @@ graph TD
 ### **Task 2: Admin Shell, Collapsible Sidebar & Top Navigation Header**
 - **Sidebar Component (`AdminSidebarComponent`):**
   - Implement collapsible sidebar navigation (`w-64` expanded ➔ `w-20` collapsed) with smooth CSS transitions.
-  - Add hotel brand header with property selector dropdown ("SmartStay Grand Resort & Spa").
+  - Add hotel brand header with property selector dropdown ("SmartStay Grand Hotel & Resort").
   - Update all 7 navigation groups to use vector SVG icons instead of emojis.
   - Active link highlight with solid slate background (`bg-slate-900 text-white shadow-sm`).
   - Add user profile footer with avatar badge, staff name, role badge (`Admin` / `Manager`), and quick logout menu.

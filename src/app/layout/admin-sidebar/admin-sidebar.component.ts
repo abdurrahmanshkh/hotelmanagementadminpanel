@@ -27,7 +27,7 @@ export interface NavGroup {
             <app-icon name="building" [size]="22" color="#D97706"></app-icon>
             <span class="title-text">SmartStay</span>
           </div>
-          <span class="property-subtitle">Grand Resort & Spa</span>
+          <span class="property-subtitle">Grand Hotel & Resort</span>
         </div>
         <div class="brand-content-mini" *ngIf="isCollapsed">
           <app-icon name="building" [size]="24" color="#D97706"></app-icon>
