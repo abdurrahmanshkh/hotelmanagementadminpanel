@@ -1,17 +1,20 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { IconComponent } from '../icon/icon.component';
 
 @Component({
   selector: 'app-empty-state',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, IconComponent],
   template: `
     <div class="empty-state">
-      <div class="empty-state__icon">{{ icon }}</div>
+      <div class="empty-state__icon-box">
+        <app-icon [name]="icon" [size]="32" color="#64748B"></app-icon>
+      </div>
       <h3 class="empty-state__title">{{ title }}</h3>
       <p *ngIf="description" class="empty-state__description">{{ description }}</p>
       <div *ngIf="actionText" class="empty-state__action">
-        <button class="btn btn--primary" (click)="onAction()">{{ actionText }}</button>
+        <button class="btn-action-primary" (click)="onAction()">{{ actionText }}</button>
       </div>
     </div>
   `,
@@ -24,42 +27,53 @@ import { CommonModule } from '@angular/common';
       text-align: center;
       padding: 3rem 1.5rem;
 
-      &__icon {
-        font-size: 3rem;
+      &__icon-box {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background-color: #F8FAFC;
+        border: 1px solid #E2E8F0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         margin-bottom: 1rem;
-        color: #9CA3AF;
       }
 
       &__title {
-        font-size: 1.125rem;
+        font-size: 1rem;
         font-weight: 700;
-        color: #11243E;
+        color: #0F172A;
         margin-bottom: 0.375rem;
       }
 
       &__description {
-        font-size: 0.875rem;
-        color: #6B7280;
-        max-width: 400px;
+        font-size: 0.8125rem;
+        color: #64748B;
+        max-width: 380px;
         line-height: 1.5;
         margin-bottom: 1.25rem;
       }
 
-      .btn {
+      .btn-action-primary {
         padding: 0.5rem 1rem;
-        background-color: #11243E;
-        color: #FFF;
+        background-color: #0F172A;
+        color: #FFFFFF;
         border: none;
-        border-radius: 6px;
+        border-radius: 8px;
         font-weight: 600;
-        font-size: 0.875rem;
+        font-size: 0.8125rem;
         cursor: pointer;
+        transition: background 0.15s;
+
+        &:hover {
+          background-color: #1E293B;
+        }
       }
     }
   `]
 })
 export class EmptyStateComponent {
-  @Input() icon = '📂';
+  @Input() icon = 'building';
   @Input({ required: true }) title!: string;
   @Input() description?: string;
   @Input() actionText?: string;
