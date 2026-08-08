@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router, NavigationEnd, ActivatedRoute, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
+import { IconComponent } from '../../shared/components/icon/icon.component';
 
 export interface BreadcrumbItem {
   label: string;
@@ -12,15 +13,18 @@ export interface BreadcrumbItem {
 @Component({
   selector: 'app-breadcrumb',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, IconComponent],
   template: `
     <nav *ngIf="breadcrumbs.length > 0" class="breadcrumb" aria-label="Breadcrumb">
       <ol class="breadcrumb__list">
         <li class="breadcrumb__item">
-          <a routerLink="/admin/dashboard" class="breadcrumb__link">Dashboard</a>
+          <a routerLink="/admin/dashboard" class="breadcrumb__link flex-gap-xs">
+            <app-icon name="dashboard" [size]="14" color="#64748B"></app-icon>
+            <span>Dashboard</span>
+          </a>
         </li>
         <li *ngFor="let item of breadcrumbs; let last = last" class="breadcrumb__item">
-          <span class="breadcrumb__separator">/</span>
+          <app-icon name="chevron-right" [size]="12" color="#94A3B8" className="breadcrumb__separator"></app-icon>
           <a *ngIf="!last" [routerLink]="item.url" class="breadcrumb__link">{{ item.label }}</a>
           <span *ngIf="last" class="breadcrumb__current">{{ item.label }}</span>
         </li>
@@ -44,24 +48,31 @@ export interface BreadcrumbItem {
         display: flex;
         align-items: center;
         gap: 0.375rem;
-        color: #6B7280;
+        color: #64748B;
+      }
+
+      .flex-gap-xs {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
       }
 
       &__separator {
-        color: #9CA3AF;
+        margin: 0 0.125rem;
       }
 
       &__link {
-        color: #4B5563;
+        color: #64748B;
         font-weight: 500;
+        transition: color 0.15s;
         &:hover {
-          color: #11243E;
+          color: #0F172A;
           text-decoration: underline;
         }
       }
 
       &__current {
-        color: #11243E;
+        color: #0F172A;
         font-weight: 600;
       }
     }

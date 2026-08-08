@@ -3,21 +3,24 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { NavGroup } from '../admin-sidebar/admin-sidebar.component';
+import { IconComponent } from '../../shared/components/icon/icon.component';
 
 @Component({
   selector: 'app-mobile-admin-navigation',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, IconComponent],
   template: `
     <div class="mobile-nav" [class.mobile-nav--open]="isOpen">
       <div class="mobile-nav__backdrop" (click)="close.emit()"></div>
       <div class="mobile-nav__drawer">
         <div class="mobile-nav__header">
           <div class="mobile-nav__brand">
-            <span>🏨</span>
+            <app-icon name="building" [size]="20" color="#D97706"></app-icon>
             <strong>SmartStay Admin</strong>
           </div>
-          <button class="mobile-nav__close" (click)="close.emit()">✕</button>
+          <button class="mobile-nav__close" (click)="close.emit()">
+            <app-icon name="x" [size]="20" color="#94A3B8"></app-icon>
+          </button>
         </div>
 
         <div class="mobile-nav__body">
@@ -32,7 +35,7 @@ import { NavGroup } from '../admin-sidebar/admin-sidebar.component';
                   (click)="close.emit()"
                   class="mobile-item"
                 >
-                  <span class="mobile-item__icon">{{ item.icon }}</span>
+                  <app-icon [name]="item.icon" [size]="18" className="mobile-item__icon"></app-icon>
                   <span>{{ item.label }}</span>
                 </a>
               </li>
@@ -56,7 +59,8 @@ import { NavGroup } from '../admin-sidebar/admin-sidebar.component';
       &__backdrop {
         position: absolute;
         inset: 0;
-        background-color: rgba(0, 0, 0, 0.5);
+        background-color: rgba(15, 23, 42, 0.6);
+        backdrop-filter: blur(4px);
       }
 
       &__drawer {
@@ -65,9 +69,9 @@ import { NavGroup } from '../admin-sidebar/admin-sidebar.component';
         left: 0;
         width: 280px;
         height: 100%;
-        background-color: #11243E;
+        background-color: #0F172A;
         color: #FFFFFF;
-        box-shadow: 4px 0 15px rgba(0, 0, 0, 0.2);
+        box-shadow: 4px 0 25px rgba(0, 0, 0, 0.3);
         display: flex;
         flex-direction: column;
       }
@@ -77,7 +81,7 @@ import { NavGroup } from '../admin-sidebar/admin-sidebar.component';
         align-items: center;
         justify-content: space-between;
         padding: 1.25rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        border-bottom: 1px solid #1E293B;
       }
 
       &__brand {
@@ -91,8 +95,10 @@ import { NavGroup } from '../admin-sidebar/admin-sidebar.component';
         background: none;
         border: none;
         color: #FFFFFF;
-        font-size: 1.25rem;
         cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
 
       &__body {
@@ -110,7 +116,7 @@ import { NavGroup } from '../admin-sidebar/admin-sidebar.component';
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.08em;
-        color: #9CA3AF;
+        color: #64748B;
         margin-bottom: 0.5rem;
       }
 
@@ -127,19 +133,20 @@ import { NavGroup } from '../admin-sidebar/admin-sidebar.component';
       align-items: center;
       gap: 0.75rem;
       padding: 0.625rem 0.75rem;
-      border-radius: 6px;
+      border-radius: 8px;
       font-size: 0.875rem;
-      color: #E5E7EB;
+      color: #94A3B8;
       text-decoration: none;
 
       &--active {
-        background-color: #C99B4A;
+        background-color: #1E293B;
         color: #FFFFFF;
         font-weight: 600;
-      }
+        border: 1px solid #334155;
 
-      &__icon {
-        font-size: 1.125rem;
+        .mobile-item__icon {
+          color: #D97706;
+        }
       }
     }
   `]
