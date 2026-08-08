@@ -149,18 +149,19 @@ export const API_ENDPOINTS = {
 };
 
 export const STATUS_LABELS: Record<string, { label: string; variant: 'success' | 'warning' | 'danger' | 'info' | 'neutral' }> = {
+  // Booking Statuses
   [BookingStatus.PENDING_PAYMENT]: { label: 'Pending Payment', variant: 'warning' },
   [BookingStatus.CONFIRMED]: { label: 'Confirmed', variant: 'info' },
   [BookingStatus.CHECKED_IN]: { label: 'Checked In', variant: 'success' },
-  [BookingStatus.COMPLETED]: { label: 'Completed', variant: 'neutral' },
-  [BookingStatus.CANCELLED]: { label: 'Cancelled', variant: 'danger' },
 
+  // Room Statuses
   [RoomStatus.AVAILABLE]: { label: 'Available', variant: 'success' },
   [RoomStatus.RESERVED]: { label: 'Reserved', variant: 'info' },
   [RoomStatus.OCCUPIED]: { label: 'Occupied', variant: 'neutral' },
   [RoomStatus.UNDER_CLEANING]: { label: 'Under Cleaning', variant: 'warning' },
   [RoomStatus.MAINTENANCE]: { label: 'Maintenance', variant: 'danger' },
 
+  // Payment & Refund Statuses
   [PaymentStatus.INITIATED]: { label: 'Initiated', variant: 'neutral' },
   [PaymentStatus.PENDING]: { label: 'Pending', variant: 'warning' },
   [PaymentStatus.SUCCESS]: { label: 'Success', variant: 'success' },
@@ -168,40 +169,25 @@ export const STATUS_LABELS: Record<string, { label: string; variant: 'success' |
   [PaymentStatus.REFUNDED]: { label: 'Refunded', variant: 'danger' },
   [PaymentStatus.PARTIALLY_REFUNDED]: { label: 'Partially Refunded', variant: 'warning' },
 
-  [RefundStatus.PENDING]: { label: 'Pending', variant: 'warning' },
-  [RefundStatus.SUCCESS]: { label: 'Success', variant: 'success' },
-  [RefundStatus.FAILED]: { label: 'Failed', variant: 'danger' },
+  // Common Workflow Statuses (shared string values)
+  'ACCEPTED': { label: 'Accepted', variant: 'info' },
+  'ASSIGNED': { label: 'Assigned', variant: 'info' },
+  'IN_PROGRESS': { label: 'In Progress', variant: 'info' },
+  'ON_HOLD': { label: 'On Hold', variant: 'warning' },
+  'COMPLETED': { label: 'Completed', variant: 'success' },
+  'CANCELLED': { label: 'Cancelled', variant: 'danger' },
+  'OPEN': { label: 'Open', variant: 'danger' },
+  'WAITING_FOR_ADMIN': { label: 'Waiting for Admin', variant: 'warning' },
+  'RESOLVED': { label: 'Resolved', variant: 'success' },
+  'CLOSED': { label: 'Closed', variant: 'neutral' },
 
-  [ServiceRequestStatus.PENDING]: { label: 'Pending', variant: 'warning' },
-  [ServiceRequestStatus.ACCEPTED]: { label: 'Accepted', variant: 'info' },
-  [ServiceRequestStatus.IN_PROGRESS]: { label: 'In Progress', variant: 'info' },
-  [ServiceRequestStatus.COMPLETED]: { label: 'Completed', variant: 'success' },
-  [ServiceRequestStatus.CANCELLED]: { label: 'Cancelled', variant: 'neutral' },
-
-  [CleaningTaskStatus.PENDING]: { label: 'Pending', variant: 'warning' },
-  [CleaningTaskStatus.ASSIGNED]: { label: 'Assigned', variant: 'info' },
-  [CleaningTaskStatus.IN_PROGRESS]: { label: 'In Progress', variant: 'info' },
-  [CleaningTaskStatus.COMPLETED]: { label: 'Completed', variant: 'success' },
-  [CleaningTaskStatus.CANCELLED]: { label: 'Cancelled', variant: 'neutral' },
-
-  [MaintenanceStatus.OPEN]: { label: 'Open', variant: 'danger' },
-  [MaintenanceStatus.ASSIGNED]: { label: 'Assigned', variant: 'warning' },
-  [MaintenanceStatus.IN_PROGRESS]: { label: 'In Progress', variant: 'info' },
-  [MaintenanceStatus.ON_HOLD]: { label: 'On Hold', variant: 'neutral' },
-  [MaintenanceStatus.COMPLETED]: { label: 'Completed', variant: 'success' },
-  [MaintenanceStatus.CANCELLED]: { label: 'Cancelled', variant: 'neutral' },
-
-  [ChatThreadStatus.OPEN]: { label: 'Open', variant: 'info' },
-  [ChatThreadStatus.WAITING_FOR_ADMIN]: { label: 'Waiting for Admin', variant: 'warning' },
-  [ChatThreadStatus.ASSIGNED]: { label: 'Assigned', variant: 'info' },
-  [ChatThreadStatus.RESOLVED]: { label: 'Resolved', variant: 'success' },
-  [ChatThreadStatus.CLOSED]: { label: 'Closed', variant: 'neutral' },
-
+  // Priorities
   [Priority.LOW]: { label: 'Low', variant: 'neutral' },
   [Priority.MEDIUM]: { label: 'Medium', variant: 'info' },
   [Priority.HIGH]: { label: 'High', variant: 'warning' },
   [Priority.URGENT]: { label: 'Urgent', variant: 'danger' },
 
+  // Pricing Adjustments
   [PricingAdjustmentType.PERCENTAGE_DISCOUNT]: { label: 'Percentage Discount', variant: 'success' },
   [PricingAdjustmentType.PERCENTAGE_MARKUP]: { label: 'Percentage Markup', variant: 'warning' },
   [PricingAdjustmentType.FIXED_DISCOUNT]: { label: 'Fixed Discount', variant: 'success' },
