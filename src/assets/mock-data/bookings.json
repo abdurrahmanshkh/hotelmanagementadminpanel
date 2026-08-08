@@ -1,0 +1,149 @@
+[
+  {
+    "id": 1001,
+    "bookingReference": "BK-2026-8801",
+    "guestId": 101,
+    "guestName": "Rahul Sharma",
+    "guestEmail": "rahul.sharma@example.com",
+    "guestPhone": "+91 99887 76655",
+    "roomId": 2,
+    "roomNumber": "RM-201",
+    "roomTypeName": "Deluxe King Suite",
+    "checkInDate": "2026-08-07",
+    "checkOutDate": "2026-08-10",
+    "guestCount": 2,
+    "totalAmount": 19500,
+    "status": "CHECKED_IN",
+    "paymentStatus": "SUCCESS",
+    "createdAt": "2026-08-01T10:00:00.000Z",
+    "specialRequests": "Extra bath towels and late check-in.",
+    "actualCheckInAt": "2026-08-07T14:30:00.000Z",
+    "passcode": "884102",
+    "paymentMethod": "CARD",
+    "paymentReference": "PAY-8801-XYZ",
+    "refundedAmount": 0,
+    "timeline": [
+      {
+        "id": 1,
+        "bookingId": 1001,
+        "action": "BOOKING_CREATED",
+        "performedBy": "Rahul Sharma",
+        "timestamp": "2026-08-01T10:00:00.000Z",
+        "notes": "Online booking created."
+      },
+      {
+        "id": 2,
+        "bookingId": 1001,
+        "action": "PAYMENT_SUCCESS",
+        "performedBy": "Payment Gateway",
+        "timestamp": "2026-08-01T10:05:00.000Z",
+        "notes": "Paid ₹19,500 via CARD."
+      },
+      {
+        "id": 3,
+        "bookingId": 1001,
+        "action": "CHECKED_IN",
+        "performedBy": "Alexander Vance (ADMIN)",
+        "timestamp": "2026-08-07T14:30:00.000Z",
+        "notes": "ID verified. Room passcode generated."
+      }
+    ]
+  },
+  {
+    "id": 1002,
+    "bookingReference": "BK-2026-8802",
+    "guestId": 102,
+    "guestName": "Priya Patel",
+    "guestEmail": "priya.patel@example.com",
+    "guestPhone": "+91 98765 11223",
+    "roomId": 5,
+    "roomNumber": "RM-501",
+    "roomTypeName": "Presidential Ocean Suite",
+    "checkInDate": "2026-08-09",
+    "checkOutDate": "2026-08-12",
+    "guestCount": 3,
+    "totalAmount": 54000,
+    "status": "CONFIRMED",
+    "paymentStatus": "SUCCESS",
+    "createdAt": "2026-08-03T11:20:00.000Z",
+    "specialRequests": "Ocean view confirmation.",
+    "paymentMethod": "UPI",
+    "paymentReference": "PAY-8802-UPI",
+    "refundedAmount": 0,
+    "timeline": [
+      {
+        "id": 10,
+        "bookingId": 1002,
+        "action": "BOOKING_CREATED",
+        "performedBy": "Priya Patel",
+        "timestamp": "2026-08-03T11:20:00.000Z",
+        "notes": "Booked Presidential Ocean Suite."
+      }
+    ]
+  },
+  {
+    "id": 1003,
+    "bookingReference": "BK-2026-8803",
+    "guestId": 103,
+    "guestName": "Amitav Roy",
+    "guestEmail": "amitav.roy@example.com",
+    "guestPhone": "+91 97654 33445",
+    "roomId": 3,
+    "roomNumber": "RM-301",
+    "roomTypeName": "Executive Twin Room",
+    "checkInDate": "2026-08-04",
+    "checkOutDate": "2026-08-07",
+    "guestCount": 1,
+    "totalAmount": 15600,
+    "status": "COMPLETED",
+    "paymentStatus": "SUCCESS",
+    "createdAt": "2026-07-28T09:15:00.000Z",
+    "actualCheckInAt": "2026-08-04T13:00:00.000Z",
+    "actualCheckOutAt": "2026-08-07T11:00:00.000Z",
+    "paymentMethod": "CARD",
+    "paymentReference": "PAY-8803-CARD",
+    "refundedAmount": 0,
+    "timeline": [
+      {
+        "id": 20,
+        "bookingId": 1003,
+        "action": "CHECKED_OUT",
+        "performedBy": "Liam Johnson (STAFF)",
+        "timestamp": "2026-08-07T11:00:00.000Z",
+        "notes": "Checkout complete. Cleaning task created."
+      }
+    ]
+  },
+  {
+    "id": 1004,
+    "bookingReference": "BK-2026-8804",
+    "guestId": 104,
+    "guestName": "Neha Gupta",
+    "guestEmail": "neha.gupta@example.com",
+    "guestPhone": "+91 96543 55667",
+    "roomId": 1,
+    "roomNumber": "RM-101",
+    "roomTypeName": "Deluxe King Suite",
+    "checkInDate": "2026-08-05",
+    "checkOutDate": "2026-08-07",
+    "guestCount": 2,
+    "totalAmount": 13000,
+    "status": "CANCELLED",
+    "paymentStatus": "PARTIALLY_REFUNDED",
+    "createdAt": "2026-08-02T16:45:00.000Z",
+    "cancellationReason": "Guest plans changed unexpectedly.",
+    "cancellationNotes": "50% cancellation policy applied.",
+    "cancelledAt": "2026-08-04T10:00:00.000Z",
+    "refundedAmount": 6500,
+    "timeline": [
+      {
+        "id": 30,
+        "bookingId": 1004,
+        "action": "CANCELLED",
+        "performedBy": "Sophia Martinez (MANAGER)",
+        "timestamp": "2026-08-04T10:00:00.000Z",
+        "notes": "Booking cancelled. Partial refund ₹6,500 issued."
+      }
+    ]
+  }
+]

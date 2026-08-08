@@ -1,0 +1,12 @@
+[
+  {
+    "id": 3001,
+    "refundReference": "REF-2026-001",
+    "paymentId": 2004,
+    "amount": 6500,
+    "reason": "50% cancellation fee policy refund",
+    "status": "SUCCESS",
+    "processedBy": "Sophia Martinez (MANAGER)",
+    "createdAt": "2026-08-04T10:05:00.000Z"
+  }
+]

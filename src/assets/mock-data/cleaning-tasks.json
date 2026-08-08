@@ -1,0 +1,29 @@
+[
+  {
+    "id": 501,
+    "taskNumber": "CLN-2026-101",
+    "roomId": 3,
+    "roomNumber": "RM-301",
+    "roomTypeName": "Executive Twin Room",
+    "status": "IN_PROGRESS",
+    "assignedStaffId": 3,
+    "assignedStaffName": "Liam Johnson",
+    "createdFromBookingId": 1003,
+    "createdAt": "2026-08-07T11:05:00.000Z",
+    "assignedAt": "2026-08-07T11:10:00.000Z",
+    "startedAt": "2026-08-08T09:00:00.000Z",
+    "notes": "Post-checkout cleaning and linen change.",
+    "maintenanceIssueFound": false
+  },
+  {
+    "id": 502,
+    "taskNumber": "CLN-2026-102",
+    "roomId": 1,
+    "roomNumber": "RM-101",
+    "roomTypeName": "Deluxe King Suite",
+    "status": "PENDING",
+    "createdAt": "2026-08-08T07:00:00.000Z",
+    "notes": "Daily touch-up cleaning before check-in.",
+    "maintenanceIssueFound": false
+  }
+]

@@ -1,0 +1,85 @@
+[
+  {
+    "id": 5001,
+    "bookingId": 1001,
+    "guestId": 101,
+    "guestName": "Rahul Sharma",
+    "guestEmail": "rahul.sharma@example.com",
+    "roomNumber": "RM-201",
+    "status": "WAITING_FOR_ADMIN",
+    "mode": "ADMIN",
+    "unreadCount": 1,
+    "lastMessageText": "Hi front desk, can I request a late checkout until 2:00 PM tomorrow?",
+    "lastMessageAt": "2026-08-08T10:45:00.000Z",
+    "createdAt": "2026-08-08T10:40:00.000Z",
+    "messages": [
+      {
+        "id": 1,
+        "threadId": 5001,
+        "senderType": "CUSTOMER",
+        "senderId": 101,
+        "senderName": "Rahul Sharma",
+        "content": "Hello, I need assistance with late checkout.",
+        "sentAt": "2026-08-08T10:40:00.000Z",
+        "isRead": true
+      },
+      {
+        "id": 2,
+        "threadId": 5001,
+        "senderType": "BOT",
+        "senderName": "SmartStay Assistant",
+        "content": "I am connecting you with the front-desk team. Please hold on.",
+        "sentAt": "2026-08-08T10:40:05.000Z",
+        "isRead": true
+      },
+      {
+        "id": 3,
+        "threadId": 5001,
+        "senderType": "CUSTOMER",
+        "senderId": 101,
+        "senderName": "Rahul Sharma",
+        "content": "Hi front desk, can I request a late checkout until 2:00 PM tomorrow?",
+        "sentAt": "2026-08-08T10:45:00.000Z",
+        "isRead": false
+      }
+    ]
+  },
+  {
+    "id": 5002,
+    "bookingId": 1002,
+    "guestId": 102,
+    "guestName": "Priya Patel",
+    "guestEmail": "priya.patel@example.com",
+    "roomNumber": "RM-501",
+    "status": "ASSIGNED",
+    "mode": "ADMIN",
+    "assignedAdminId": 1,
+    "assignedAdminName": "Alexander Vance",
+    "unreadCount": 0,
+    "lastMessageText": "We have noted your request for airport pickup.",
+    "lastMessageAt": "2026-08-08T09:30:00.000Z",
+    "createdAt": "2026-08-08T09:00:00.000Z",
+    "messages": [
+      {
+        "id": 10,
+        "threadId": 5002,
+        "senderType": "CUSTOMER",
+        "senderId": 102,
+        "senderName": "Priya Patel",
+        "content": "Can you arrange airport pickup for tomorrow morning?",
+        "sentAt": "2026-08-08T09:00:00.000Z",
+        "isRead": true
+      },
+      {
+        "id": 11,
+        "threadId": 5002,
+        "senderType": "ADMIN",
+        "senderId": 1,
+        "senderName": "Alexander Vance",
+        "content": "We have noted your request for airport pickup. Our driver will meet you at Terminal 2.",
+        "sentAt": "2026-08-08T09:30:00.000Z",
+        "isRead": true
+      }
+    ]
+  }
+]

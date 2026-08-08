@@ -1,0 +1,62 @@
+[
+  {
+    "id": 101,
+    "fullName": "Rahul Sharma",
+    "email": "rahul.sharma@example.com",
+    "phone": "+91 99887 76655",
+    "totalBookings": 3,
+    "currentStayRoom": "RM-201",
+    "lastStayDate": "2026-08-08",
+    "accountStatus": "ACTIVE",
+    "maskedIdType": "PASSPORT",
+    "maskedIdNumber": "XXXXXX4892",
+    "emergencyContact": "+91 99887 00000",
+    "notes": "Prefers high floor and extra pillows.",
+    "createdAt": "2026-02-15T10:00:00.000Z"
+  },
+  {
+    "id": 102,
+    "fullName": "Priya Patel",
+    "email": "priya.patel@example.com",
+    "phone": "+91 98765 11223",
+    "totalBookings": 2,
+    "currentStayRoom": "RM-304",
+    "lastStayDate": "2026-08-08",
+    "accountStatus": "ACTIVE",
+    "maskedIdType": "AADHAAR",
+    "maskedIdNumber": "XXXX-XXXX-8821",
+    "emergencyContact": "+91 98765 00000",
+    "notes": "Allergic to feather pillows.",
+    "createdAt": "2026-03-10T11:30:00.000Z"
+  },
+  {
+    "id": 103,
+    "fullName": "Amitav Roy",
+    "email": "amitav.roy@example.com",
+    "phone": "+91 97654 33445",
+    "totalBookings": 5,
+    "currentStayRoom": null,
+    "lastStayDate": "2026-07-20",
+    "accountStatus": "ACTIVE",
+    "maskedIdType": "DRIVING_LICENSE",
+    "maskedIdNumber": "XXXXXX9912",
+    "emergencyContact": "+91 97654 00000",
+    "notes": "Frequent corporate traveler.",
+    "createdAt": "2026-01-20T09:15:00.000Z"
+  },
+  {
+    "id": 104,
+    "fullName": "Neha Gupta",
+    "email": "neha.gupta@example.com",
+    "phone": "+91 96543 55667",
+    "totalBookings": 1,
+    "currentStayRoom": null,
+    "lastStayDate": "2026-08-05",
+    "accountStatus": "SUSPENDED",
+    "maskedIdType": "PASSPORT",
+    "maskedIdNumber": "XXXXXX1234",
+    "emergencyContact": "+91 96543 00000",
+    "notes": "Account suspended due to policy violation.",
+    "createdAt": "2026-04-05T14:20:00.000Z"
+  }
+]

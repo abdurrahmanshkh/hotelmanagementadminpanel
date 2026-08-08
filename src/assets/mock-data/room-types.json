@@ -1,0 +1,91 @@
+[
+  {
+    "id": 1,
+    "name": "Deluxe King Suite",
+    "code": "DLX-KING",
+    "description": "Spacious suite with king-size bed, city view, high-speed Wi-Fi, and luxury bathroom.",
+    "basePrice": 6500,
+    "minimumPrice": 4500,
+    "maximumPrice": 9500,
+    "adultCapacity": 2,
+    "childCapacity": 1,
+    "bedType": "King Bed",
+    "roomSizeSqFt": 450,
+    "amenities": [
+      { "id": 1, "name": "Free High-Speed Wi-Fi", "iconName": "wifi", "isActive": true, "usageCount": 120 },
+      { "id": 2, "name": "4K Smart TV", "iconName": "tv", "isActive": true, "usageCount": 95 },
+      { "id": 3, "name": "Mini Bar & Coffee Maker", "iconName": "coffee", "isActive": true, "usageCount": 80 },
+      { "id": 4, "name": "Air Conditioning", "iconName": "wind", "isActive": true, "usageCount": 150 }
+    ],
+    "images": [
+      {
+        "id": 101,
+        "url": "https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=800&q=80",
+        "altText": "Deluxe King Suite bedroom",
+        "displayOrder": 1,
+        "isPrimary": true,
+        "isActive": true
+      }
+    ],
+    "isActive": true,
+    "totalRoomsCount": 10
+  },
+  {
+    "id": 2,
+    "name": "Executive Twin Room",
+    "code": "EXEC-TWIN",
+    "description": "Modern room featuring twin beds, ergonomic workspace, and premium amenities.",
+    "basePrice": 5200,
+    "minimumPrice": 3800,
+    "maximumPrice": 7500,
+    "adultCapacity": 2,
+    "childCapacity": 1,
+    "bedType": "Twin Beds",
+    "roomSizeSqFt": 380,
+    "amenities": [
+      { "id": 1, "name": "Free High-Speed Wi-Fi", "iconName": "wifi", "isActive": true, "usageCount": 120 },
+      { "id": 2, "name": "4K Smart TV", "iconName": "tv", "isActive": true, "usageCount": 95 }
+    ],
+    "images": [
+      {
+        "id": 102,
+        "url": "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=800&q=80",
+        "altText": "Executive Twin Room view",
+        "displayOrder": 1,
+        "isPrimary": true,
+        "isActive": true
+      }
+    ],
+    "isActive": true,
+    "totalRoomsCount": 8
+  },
+  {
+    "id": 3,
+    "name": "Presidential Ocean Suite",
+    "code": "PRES-OCEAN",
+    "description": "Ultra-luxury penthouse suite with panoramic views, private jacuzzi, and butler service.",
+    "basePrice": 18000,
+    "minimumPrice": 12000,
+    "maximumPrice": 25000,
+    "adultCapacity": 4,
+    "childCapacity": 2,
+    "bedType": "Super King Bed",
+    "roomSizeSqFt": 950,
+    "amenities": [
+      { "id": 1, "name": "Free High-Speed Wi-Fi", "iconName": "wifi", "isActive": true, "usageCount": 120 },
+      { "id": 5, "name": "Private Jacuzzi", "iconName": "bath", "isActive": true, "usageCount": 30 }
+    ],
+    "images": [
+      {
+        "id": 103,
+        "url": "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80",
+        "altText": "Presidential Ocean Suite lounge",
+        "displayOrder": 1,
+        "isPrimary": true,
+        "isActive": true
+      }
+    ],
+    "isActive": true,
+    "totalRoomsCount": 2
+  }
+]

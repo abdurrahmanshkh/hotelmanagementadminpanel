@@ -1,0 +1,20 @@
+[
+  {
+    "id": 601,
+    "recordNumber": "MNT-2026-301",
+    "roomId": 4,
+    "roomNumber": "RM-304",
+    "roomTypeName": "Executive Twin Room",
+    "title": "Bathroom Plumbing Leak & Faucet Repair",
+    "description": "Minor water leakage underneath sink vanity.",
+    "priority": "HIGH",
+    "status": "IN_PROGRESS",
+    "reportedBy": "Housekeeping Inspector",
+    "assignedTechnicianId": 2,
+    "assignedTechnicianName": "Sophia Martinez",
+    "createdAt": "2026-08-08T07:30:00.000Z",
+    "assignedAt": "2026-08-08T07:45:00.000Z",
+    "startedAt": "2026-08-08T08:15:00.000Z",
+    "cleaningRequiredOnCompletion": true
+  }
+]

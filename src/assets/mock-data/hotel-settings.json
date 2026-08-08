@@ -1,0 +1,19 @@
+{
+  "id": 1,
+  "hotelName": "SmartStay Grand Palace Hotel & Resort",
+  "address": "100 Grand Boulevard, Marine Drive, Mumbai, MH 400020",
+  "phone": "+91 22 2200 9999",
+  "email": "contact@smartstaygrand.com",
+  "checkInTime": "14:00",
+  "checkOutTime": "11:00",
+  "maxStayDays": 30,
+  "pendingPaymentTimeoutMinutes": 15,
+  "cancellationCutoffHours": 24,
+  "currency": "INR",
+  "taxPercentage": 12.0,
+  "serviceFeePercentage": 5.0,
+  "isDynamicPricingEnabled": true,
+  "dynamicPricingPolicyNotes": "Occupancy discounts below 30%, surge pricing above 70%. Min/Max boundaries strictly enforced.",
+  "updatedBy": "Alexander Vance (ADMIN)",
+  "updatedAt": "2026-08-01T12:00:00.000Z"
+}

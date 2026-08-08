@@ -1,0 +1,20 @@
+[
+  {
+    "id": 6001,
+    "recipientRole": "ADMIN",
+    "title": "New Chat Escalation",
+    "message": "Guest Rahul Sharma (RM-201) escalated a chat thread.",
+    "type": "CHAT",
+    "isRead": false,
+    "createdAt": "2026-08-08T10:45:00.000Z"
+  },
+  {
+    "id": 6002,
+    "recipientRole": "STAFF",
+    "title": "Urgent Service Request",
+    "message": "High priority request reported for RM-201.",
+    "type": "SERVICE_REQUEST",
+    "isRead": false,
+    "createdAt": "2026-08-08T08:15:00.000Z"
+  }
+]

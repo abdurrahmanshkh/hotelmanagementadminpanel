@@ -1,0 +1,77 @@
+[
+  {
+    "id": 2001,
+    "paymentReference": "PAY-8801-XYZ",
+    "bookingId": 1001,
+    "bookingReference": "BK-2026-8801",
+    "guestName": "Rahul Sharma",
+    "amount": 19500,
+    "refundedAmount": 0,
+    "currency": "INR",
+    "paymentMethod": "CARD",
+    "status": "SUCCESS",
+    "gatewayTransactionId": "TXN_CARD_99182",
+    "gatewayName": "Razorpay Mock Gateway",
+    "paidAt": "2026-08-01T10:05:00.000Z",
+    "refunds": []
+  },
+  {
+    "id": 2002,
+    "paymentReference": "PAY-8802-UPI",
+    "bookingId": 1002,
+    "bookingReference": "BK-2026-8802",
+    "guestName": "Priya Patel",
+    "amount": 54000,
+    "refundedAmount": 0,
+    "currency": "INR",
+    "paymentMethod": "UPI",
+    "status": "SUCCESS",
+    "gatewayTransactionId": "TXN_UPI_77123",
+    "gatewayName": "UPI Mock Gateway",
+    "paidAt": "2026-08-03T11:25:00.000Z",
+    "refunds": []
+  },
+  {
+    "id": 2003,
+    "paymentReference": "PAY-8803-CARD",
+    "bookingId": 1003,
+    "bookingReference": "BK-2026-8803",
+    "guestName": "Amitav Roy",
+    "amount": 15600,
+    "refundedAmount": 0,
+    "currency": "INR",
+    "paymentMethod": "CARD",
+    "status": "SUCCESS",
+    "gatewayTransactionId": "TXN_CARD_44129",
+    "gatewayName": "Razorpay Mock Gateway",
+    "paidAt": "2026-07-28T09:20:00.000Z",
+    "refunds": []
+  },
+  {
+    "id": 2004,
+    "paymentReference": "PAY-8804-CARD",
+    "bookingId": 1004,
+    "bookingReference": "BK-2026-8804",
+    "guestName": "Neha Gupta",
+    "amount": 13000,
+    "refundedAmount": 6500,
+    "currency": "INR",
+    "paymentMethod": "CARD",
+    "status": "PARTIALLY_REFUNDED",
+    "gatewayTransactionId": "TXN_CARD_10293",
+    "gatewayName": "Razorpay Mock Gateway",
+    "paidAt": "2026-08-02T16:50:00.000Z",
+    "refunds": [
+      {
+        "id": 3001,
+        "refundReference": "REF-2026-001",
+        "paymentId": 2004,
+        "amount": 6500,
+        "reason": "50% cancellation fee policy refund",
+        "status": "SUCCESS",
+        "processedBy": "Sophia Martinez (MANAGER)",
+        "createdAt": "2026-08-04T10:05:00.000Z"
+      }
+    ]
+  }
+]

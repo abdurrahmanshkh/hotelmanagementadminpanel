@@ -1,0 +1,30 @@
+[
+  {
+    "id": 7001,
+    "name": "Low Demand Occupancy Discount",
+    "roomTypeId": 1,
+    "roomTypeName": "Deluxe King Suite",
+    "minOccupancyPercentage": 0,
+    "maxOccupancyPercentage": 30,
+    "adjustmentType": "PERCENTAGE_DISCOUNT",
+    "adjustmentValue": 10,
+    "allowedMinPrice": 4500,
+    "allowedMaxPrice": 9500,
+    "isActive": true,
+    "createdAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": 7002,
+    "name": "High Demand Occupancy Surge",
+    "roomTypeId": 1,
+    "roomTypeName": "Deluxe King Suite",
+    "minOccupancyPercentage": 70,
+    "maxOccupancyPercentage": 100,
+    "adjustmentType": "PERCENTAGE_MARKUP",
+    "adjustmentValue": 15,
+    "allowedMinPrice": 4500,
+    "allowedMaxPrice": 9500,
+    "isActive": true,
+    "createdAt": "2026-01-01T00:00:00.000Z"
+  }
+]

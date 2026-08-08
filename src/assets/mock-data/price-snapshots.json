@@ -1,0 +1,13 @@
+[
+  {
+    "id": 8001,
+    "roomTypeId": 1,
+    "targetDate": "2026-08-08",
+    "basePrice": 6500,
+    "calculatedPrice": 6500,
+    "clampedFinalPrice": 6500,
+    "occupancyPercentage": 50,
+    "appliedRuleName": null,
+    "createdAt": "2026-08-08T00:00:00.000Z"
+  }
+]

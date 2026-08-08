@@ -1,0 +1,102 @@
+[
+  {
+    "id": 1,
+    "roomNumber": "RM-101",
+    "roomTypeId": 1,
+    "roomTypeName": "Deluxe King Suite",
+    "floor": 1,
+    "capacity": 3,
+    "basePrice": 6500,
+    "currentPrice": 6500,
+    "status": "AVAILABLE",
+    "isActive": true,
+    "rating": 4.8,
+    "description": "Floor 1 corner suite near elevator",
+    "amenities": [
+      { "id": 1, "name": "Free High-Speed Wi-Fi", "iconName": "wifi", "isActive": true, "usageCount": 120 }
+    ],
+    "images": [
+      {
+        "id": 101,
+        "url": "https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=800&q=80",
+        "altText": "RM-101 Bedroom",
+        "displayOrder": 1,
+        "isPrimary": true,
+        "isActive": true
+      }
+    ],
+    "updatedAt": "2026-08-08T08:00:00.000Z"
+  },
+  {
+    "id": 2,
+    "roomNumber": "RM-201",
+    "roomTypeId": 1,
+    "roomTypeName": "Deluxe King Suite",
+    "floor": 2,
+    "capacity": 3,
+    "basePrice": 6500,
+    "currentPrice": 6500,
+    "status": "OCCUPIED",
+    "isActive": true,
+    "rating": 4.9,
+    "currentBookingId": 1001,
+    "description": "Floor 2 central suite",
+    "amenities": [],
+    "images": [],
+    "updatedAt": "2026-08-08T09:00:00.000Z"
+  },
+  {
+    "id": 3,
+    "roomNumber": "RM-301",
+    "roomTypeId": 2,
+    "roomTypeName": "Executive Twin Room",
+    "floor": 3,
+    "capacity": 3,
+    "basePrice": 5200,
+    "currentPrice": 5200,
+    "status": "UNDER_CLEANING",
+    "isActive": true,
+    "rating": 4.6,
+    "pendingCleaningTaskId": 501,
+    "description": "Floor 3 quiet zone twin room",
+    "amenities": [],
+    "images": [],
+    "updatedAt": "2026-08-08T10:15:00.000Z"
+  },
+  {
+    "id": 4,
+    "roomNumber": "RM-304",
+    "roomTypeId": 2,
+    "roomTypeName": "Executive Twin Room",
+    "floor": 3,
+    "capacity": 3,
+    "basePrice": 5200,
+    "currentPrice": 5200,
+    "status": "MAINTENANCE",
+    "isActive": true,
+    "rating": 4.5,
+    "openMaintenanceRecordId": 601,
+    "description": "Floor 3 maintenance issue flagged",
+    "amenities": [],
+    "images": [],
+    "updatedAt": "2026-08-08T07:30:00.000Z"
+  },
+  {
+    "id": 5,
+    "roomNumber": "RM-501",
+    "roomTypeId": 3,
+    "roomTypeName": "Presidential Ocean Suite",
+    "floor": 5,
+    "capacity": 6,
+    "basePrice": 18000,
+    "currentPrice": 18000,
+    "status": "RESERVED",
+    "isActive": true,
+    "rating": 5.0,
+    "currentBookingId": 1002,
+    "description": "Top floor penthouse ocean view suite",
+    "amenities": [],
+    "images": [],
+    "updatedAt": "2026-08-08T08:45:00.000Z"
+  }
+]
