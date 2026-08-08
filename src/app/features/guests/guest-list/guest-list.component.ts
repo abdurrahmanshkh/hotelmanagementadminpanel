@@ -11,6 +11,7 @@ import { FilterDrawerComponent } from '../../../shared/components/filter-drawer/
 import { DataTableComponent } from '../../../shared/components/data-table/data-table.component';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
+import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { GuestSummary } from '../../../core/models';
 
 @Component({
@@ -25,14 +26,15 @@ import { GuestSummary } from '../../../core/models';
     FilterDrawerComponent,
     DataTableComponent,
     PaginationComponent,
-    ButtonComponent
+    ButtonComponent,
+    IconComponent
   ],
   template: `
     <div class="guest-list-page">
       <app-page-header title="Guest Directory" subtitle="Search guest accounts, view stay history & manage status">
         <div actions class="header-actions">
           <app-button variant="outline" size="md" (btnClick)="isFilterDrawerOpen = true">
-            🌪️ Filters
+            <app-icon name="filter" [size]="16"></app-icon> Filters
           </app-button>
         </div>
       </app-page-header>

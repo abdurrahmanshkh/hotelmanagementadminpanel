@@ -7,6 +7,7 @@ import { ToastService } from '../../../core/services/toast.service';
 import { DateFormatter } from '../../../core/utilities/date-formatter.utility';
 import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
 import { SearchInputComponent } from '../../../shared/components/search-input/search-input.component';
+import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { ChatThread, ChatThreadStatus, ChatMode } from '../../../core/models';
 
 @Component({
@@ -17,7 +18,8 @@ import { ChatThread, ChatThreadStatus, ChatMode } from '../../../core/models';
     RouterModule,
     FormsModule,
     PageHeaderComponent,
-    SearchInputComponent
+    SearchInputComponent,
+    IconComponent
   ],
   template: `
     <div class="chat-inbox-page">
@@ -73,7 +75,7 @@ import { ChatThread, ChatThreadStatus, ChatMode } from '../../../core/models';
         <!-- Thread Conversation View -->
         <div class="conversation-panel">
           <div *ngIf="!activeThread" class="empty-conversation">
-            <span class="empty-icon">💬</span>
+            <app-icon name="chat" [size]="40" color="#64748B" className="empty-icon"></app-icon>
             <h3>Select a guest chat thread from the left panel</h3>
             <p>View guest messages, review AI bot responses, or send staff replies.</p>
           </div>

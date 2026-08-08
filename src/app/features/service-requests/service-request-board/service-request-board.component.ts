@@ -7,6 +7,7 @@ import { ToastService } from '../../../core/services/toast.service';
 import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
 import { PriorityBadgeComponent } from '../../../shared/components/priority-badge/priority-badge.component';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
+import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { ServiceRequest, ServiceRequestStatus } from '../../../core/models';
 
 @Component({
@@ -18,14 +19,15 @@ import { ServiceRequest, ServiceRequestStatus } from '../../../core/models';
     DragDropModule,
     PageHeaderComponent,
     PriorityBadgeComponent,
-    ButtonComponent
+    ButtonComponent,
+    IconComponent
   ],
   template: `
     <div class="kanban-page">
       <app-page-header title="Service Request Board" subtitle="Interactive Kanban visual workflow tracking">
         <div actions class="header-actions">
           <app-button variant="outline" size="md" (btnClick)="navigate('/admin/service-requests')">
-            📄 Switch to Table View
+            <app-icon name="receipt" [size]="16"></app-icon> Switch to Table View
           </app-button>
         </div>
       </app-page-header>

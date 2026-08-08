@@ -14,6 +14,7 @@ import { DataTableComponent } from '../../../shared/components/data-table/data-t
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
 import { StatusBadgeComponent } from '../../../shared/components/status-badge/status-badge.component';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
+import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { CheckInDialogComponent } from '../check-in-dialog/check-in-dialog.component';
 import { CheckOutDialogComponent } from '../check-out-dialog/check-out-dialog.component';
 import { CancellationDialogComponent } from '../cancellation-dialog/cancellation-dialog.component';
@@ -35,14 +36,15 @@ import { BookingSummary, BookingStatus, PaymentStatus } from '../../../core/mode
     ButtonComponent,
     CheckInDialogComponent,
     CheckOutDialogComponent,
-    CancellationDialogComponent
+    CancellationDialogComponent,
+    IconComponent
   ],
   template: `
     <div class="booking-list-page">
       <app-page-header title="Booking Management" subtitle="Search, filter, check in/out, and manage guest reservations">
         <div actions class="header-actions">
           <app-button variant="outline" size="md" (btnClick)="isFilterDrawerOpen = true">
-            🌪️ Filters {{ activeFilterCount > 0 ? '(' + activeFilterCount + ')' : '' }}
+            <app-icon name="filter" [size]="16"></app-icon> Filters {{ activeFilterCount > 0 ? '(' + activeFilterCount + ')' : '' }}
           </app-button>
         </div>
       </app-page-header>
@@ -116,7 +118,7 @@ import { BookingSummary, BookingStatus, PaymentStatus } from '../../../core/mode
         <ng-container rows>
           <tr *ngFor="let item of bookings">
             <td>
-              <strong class="ref-link" (click)="viewDetails(item.id)">{{ item.bookingReference }}</strong>
+              <strong class="ref-link font-mono" (click)="viewDetails(item.id)">{{ item.bookingReference }}</strong>
             </td>
             <td>
               <div class="guest-cell">
@@ -124,13 +126,13 @@ import { BookingSummary, BookingStatus, PaymentStatus } from '../../../core/mode
               </div>
             </td>
             <td>
-              <strong>{{ item.roomNumber }}</strong>
+              <strong class="font-mono">{{ item.roomNumber }}</strong>
               <div class="sub-text">{{ item.roomTypeName }}</div>
             </td>
             <td>{{ formatDate(item.checkInDate) }}</td>
             <td>{{ formatDate(item.checkOutDate) }}</td>
             <td>{{ item.guestCount }}</td>
-            <td><strong>{{ formatCurrency(item.totalAmount) }}</strong></td>
+            <td><strong class="font-mono">{{ formatCurrency(item.totalAmount) }}</strong></td>
             <td>
               <app-status-badge [status]="item.status"></app-status-badge>
             </td>
@@ -141,24 +143,24 @@ import { BookingSummary, BookingStatus, PaymentStatus } from '../../../core/mode
                   class="btn-action btn-action--checkin"
                   (click)="openCheckIn(item)"
                 >
-                  Check In
+                  <app-icon name="log-in" [size]="14"></app-icon> Check In
                 </button>
                 <button
                   *ngIf="item.status === 'CHECKED_IN'"
                   class="btn-action btn-action--checkout"
                   (click)="openCheckOut(item)"
                 >
-                  Check Out
+                  <app-icon name="log-out" [size]="14"></app-icon> Check Out
                 </button>
                 <button
                   *ngIf="item.status === 'CONFIRMED' || item.status === 'PENDING_PAYMENT'"
                   class="btn-action btn-action--danger"
                   (click)="openCancel(item)"
                 >
-                  Cancel
+                  <app-icon name="x" [size]="14"></app-icon> Cancel
                 </button>
                 <button class="btn-action btn-action--details" (click)="viewDetails(item.id)">
-                  Details
+                  <app-icon name="eye" [size]="14"></app-icon> Details
                 </button>
               </div>
             </td>
