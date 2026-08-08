@@ -78,8 +78,6 @@ import { ErrorFormatter } from '../../core/utilities/error-formatter.utility';
             [value]="summaryData.occupancyPercentage + '%'"
             icon="building"
             [subtext]="summaryData.roomCounters['OCCUPIED'] + ' / ' + summaryData.roomCounters['TOTAL'] + ' Rooms Occupied'"
-            trend="+8.5% vs last week"
-            [trendUp]="true"
             variant="accent"
           ></app-metric-card>
 
@@ -88,8 +86,6 @@ import { ErrorFormatter } from '../../core/utilities/error-formatter.utility';
             [value]="formatCurrency(summaryData.todayRevenue)"
             icon="card"
             subtext="Real-time payments ledger sum"
-            trend="+12.4% vs target"
-            [trendUp]="true"
             variant="success"
           ></app-metric-card>
 

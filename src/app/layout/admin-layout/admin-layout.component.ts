@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { AdminHeaderComponent } from '../admin-header/admin-header.component';
 import { AdminSidebarComponent } from '../admin-sidebar/admin-sidebar.component';
-import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
 import { MobileAdminNavigationComponent } from '../mobile-admin-navigation/mobile-admin-navigation.component';
 import { LoadingService } from '../../core/services/loading.service';
 
@@ -15,7 +14,6 @@ import { LoadingService } from '../../core/services/loading.service';
     RouterOutlet,
     AdminHeaderComponent,
     AdminSidebarComponent,
-    BreadcrumbComponent,
     MobileAdminNavigationComponent
   ],
   template: `
@@ -28,7 +26,6 @@ import { LoadingService } from '../../core/services/loading.service';
 
         <main class="admin-shell__content">
           <div class="content-wrapper">
-            <app-breadcrumb></app-breadcrumb>
             <router-outlet></router-outlet>
           </div>
         </main>
@@ -46,7 +43,7 @@ import { LoadingService } from '../../core/services/loading.service';
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      background-color: #F5F7FA;
+      background-color: #F8FAFC;
       position: relative;
 
       &__body {
@@ -76,7 +73,7 @@ import { LoadingService } from '../../core/services/loading.service';
       left: 0;
       right: 0;
       height: 3px;
-      background: linear-gradient(90deg, #C99B4A 0%, #11243E 50%, #C99B4A 100%);
+      background: linear-gradient(90deg, #D97706 0%, #0F172A 50%, #D97706 100%);
       background-size: 200% 100%;
       animation: progress-pulse 1.2s ease-in-out infinite;
       z-index: 2000;
