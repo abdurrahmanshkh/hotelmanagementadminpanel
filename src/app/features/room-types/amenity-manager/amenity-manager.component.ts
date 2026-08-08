@@ -49,7 +49,7 @@ import { Amenity } from '../../../core/models';
 
           <div class="tags-container">
             <div *ngFor="let item of amenities" class="amenity-chip">
-              <span class="chip-icon">{{ item.iconName || '✨' }}</span>
+              <span class="chip-icon">{{ getAmenityEmoji(item.iconName, item.name) }}</span>
               <span class="chip-name">{{ item.name }}</span>
               <button class="chip-delete" (click)="deleteAmenity(item.id)">✕</button>
             </div>
@@ -111,6 +111,20 @@ export class AmenityManagerComponent implements OnInit {
   deleteAmenity(id: number): void {
     this.amenities = this.amenities.filter(a => a.id !== id);
     this.toastService.info('Amenity removed.', 'Deleted');
+  }
+
+  getAmenityEmoji(iconName?: string, name?: string): string {
+    const str = ((iconName || '') + ' ' + (name || '')).toLowerCase();
+    if (str.includes('wifi')) return '📶';
+    if (str.includes('tv')) return '📺';
+    if (str.includes('coffee') || str.includes('mini bar') || str.includes('bar')) return '☕';
+    if (str.includes('wind') || str.includes('ac') || str.includes('air')) return '❄️';
+    if (str.includes('bath') || str.includes('jacuzzi') || str.includes('tub')) return '🛁';
+    if (str.includes('pool')) return '🏊';
+    if (str.includes('view') || str.includes('city')) return '🏙️';
+    if (str.includes('balcony')) return '🏞️';
+    if (str.includes('safe') || str.includes('lock')) return '🔒';
+    return (iconName && iconName.length <= 2) ? iconName : '✨';
   }
 
   goBack(): void {

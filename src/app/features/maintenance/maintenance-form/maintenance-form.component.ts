@@ -1,13 +1,13 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
-import { MaintenanceRepository } from '../../../core/repositories/contracts';
+import { MaintenanceRepository, RoomRepository } from '../../../core/repositories/contracts';
 import { ToastService } from '../../../core/services/toast.service';
 import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
 import { FormFieldComponent } from '../../../shared/components/form-field/form-field.component';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
-import { Priority } from '../../../core/models';
+import { Priority, RoomSummary } from '../../../core/models';
 
 @Component({
   selector: 'app-maintenance-form',
@@ -31,8 +31,13 @@ import { Priority } from '../../../core/models';
       <div class="card form-card">
         <form [formGroup]="maintenanceForm" (ngSubmit)="onSubmit()" class="ticket-form">
           <div class="form-grid">
-            <app-form-field label="Target Room Number" [required]="true">
-              <input type="text" formControlName="roomNumber" placeholder="e.g. 101" class="form-control" />
+            <app-form-field label="Target Room" [required]="true">
+              <select formControlName="roomId" class="form-control">
+                <option value="">Select Room...</option>
+                <option *ngFor="let room of rooms" [value]="room.id">
+                  Room {{ room.roomNumber }} - {{ room.roomTypeName }} (Floor {{ room.floor }})
+                </option>
+              </select>
             </app-form-field>
 
             <app-form-field label="Ticket Priority" [required]="true">
@@ -83,29 +88,54 @@ import { Priority } from '../../../core/models';
     .form-actions { display: flex; justify-content: flex-end; gap: 0.75rem; padding-top: 1rem; border-top: 1px solid #E5E7EB; }
   `]
 })
-export class MaintenanceFormComponent {
+export class MaintenanceFormComponent implements OnInit {
   private fb = inject(FormBuilder);
   private maintenanceRepo = inject(MaintenanceRepository);
+  private roomRepo = inject(RoomRepository);
   private router = inject(Router);
   private toastService = inject(ToastService);
 
   public PriorityEnum = Priority;
+  public rooms: RoomSummary[] = [];
   public submitting = false;
 
   public maintenanceForm = this.fb.group({
-    roomNumber: ['', [Validators.required]],
+    roomId: ['', [Validators.required]],
     title: ['', [Validators.required]],
     description: [''],
     priority: [Priority.HIGH, [Validators.required]],
     blockRoom: [true]
   });
 
+  ngOnInit(): void {
+    this.roomRepo.getRooms({ page: 0, size: 100 }).subscribe({
+      next: (res) => {
+        if (res.success && res.data) {
+          this.rooms = res.data.items;
+          if (this.rooms.length > 0) {
+            this.maintenanceForm.patchValue({ roomId: String(this.rooms[0].id) });
+          }
+        }
+      }
+    });
+  }
+
   onSubmit(): void {
     if (this.maintenanceForm.invalid) return;
     this.submitting = true;
     const val = this.maintenanceForm.value;
+    const selectedRoom = this.rooms.find(r => r.id === Number(val.roomId));
 
-    this.maintenanceRepo.createRecord(val as any).subscribe({
+    const payload: any = {
+      roomId: Number(val.roomId),
+      roomNumber: selectedRoom ? selectedRoom.roomNumber : '101',
+      title: val.title,
+      description: val.description,
+      priority: val.priority,
+      blockRoom: val.blockRoom
+    };
+
+    this.maintenanceRepo.createRecord(payload).subscribe({
       next: () => {
         this.submitting = false;
         this.toastService.success('Maintenance ticket logged. Room status updated.', 'Ticket Logged');

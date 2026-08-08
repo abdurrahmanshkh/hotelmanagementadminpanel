@@ -36,7 +36,7 @@ import { RevenueReport, OccupancyReport } from '../../core/models';
       <div class="metrics-grid">
         <app-metric-card
           title="Total Gross Revenue"
-          [value]="formatCurrency(revenueReport?.totalRevenue || 485000)"
+          [value]="formatCurrency(revenueReport?.grossRevenue || 485000)"
           subtitle="Includes room tariffs & addon services"
           icon="💰"
         ></app-metric-card>
@@ -206,7 +206,7 @@ export class ReportsComponent implements OnInit {
 
   exportCsv(): void {
     if (this.activeTab === 'REVENUE') {
-      const headers = [
+      const headers: Array<{ key: 'category' | 'gross' | 'refunds' | 'net'; label: string }> = [
         { key: 'category', label: 'Category' },
         { key: 'gross', label: 'Gross Revenue' },
         { key: 'refunds', label: 'Refunds' },
@@ -218,7 +218,7 @@ export class ReportsComponent implements OnInit {
       ];
       CsvGenerator.generateAndDownload('SmartStay_Financial_Revenue_Report', headers, data);
     } else {
-      const headers = [
+      const headers: Array<{ key: 'category' | 'available' | 'occupied' | 'rate'; label: string }> = [
         { key: 'category', label: 'Room Category' },
         { key: 'available', label: 'Available Nights' },
         { key: 'occupied', label: 'Occupied Nights' },

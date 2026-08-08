@@ -135,14 +135,14 @@ import { ChatThread, ChatThreadStatus, ChatMode } from '../../../core/models';
     </div>
   `,
   styles: [`
-    .chat-inbox-page { display: flex; flex-direction: column; gap: 1.25rem; }
-    .chat-layout { display: grid; grid-template-columns: 340px 1fr; height: 680px; overflow: hidden; padding: 0; @media (max-width: 1023px) { grid-template-columns: 1fr; } }
-    .threads-sidebar { border-right: 1px solid #E5E7EB; display: flex; flex-direction: column; background: #F9FAFB; }
-    .sidebar-header { padding: 1rem; border-bottom: 1px solid #E5E7EB; display: flex; flex-direction: column; gap: 0.75rem; }
+    .chat-inbox-page { display: flex; flex-direction: column; gap: 1.25rem; height: calc(100vh - 120px); }
+    .chat-layout { display: grid; grid-template-columns: 340px 1fr; height: 100%; min-height: 500px; overflow: hidden; padding: 0; @media (max-width: 1023px) { grid-template-columns: 1fr; } }
+    .threads-sidebar { border-right: 1px solid #E5E7EB; display: flex; flex-direction: column; background: #F9FAFB; height: 100%; overflow: hidden; }
+    .sidebar-header { padding: 1rem; border-bottom: 1px solid #E5E7EB; display: flex; flex-direction: column; gap: 0.75rem; flex-shrink: 0; }
     .filter-pills { display: flex; gap: 0.375rem; flex-wrap: wrap; }
     .pill { padding: 0.25rem 0.5rem; font-size: 0.75rem; border-radius: 4px; border: 1px solid #D1D5DB; background: #FFF; cursor: pointer; &--active { background: #11243E; color: #FFF; font-weight: 600; } }
     .sidebar-loading, .empty-threads { padding: 1.5rem; text-align: center; font-size: 0.8125rem; color: #6B7280; }
-    .thread-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
+    .thread-list { flex: 1 1 auto; overflow-y: auto; min-height: 0; display: flex; flex-direction: column; }
     .thread-card { padding: 0.875rem 1rem; border-bottom: 1px solid #E5E7EB; cursor: pointer; transition: background 0.15s; &:hover { background: #F3F4F6; } &--selected { background: #E8F0FE !important; border-left: 4px solid #11243E; } &--unread { font-weight: 700; background: #FEF3D6; } }
     .guest-name { font-size: 0.875rem; color: #11243E; }
     .thread-time { font-size: 0.75rem; color: #6B7280; }
@@ -150,16 +150,16 @@ import { ChatThread, ChatThreadStatus, ChatMode } from '../../../core/models';
     .room-tag { font-size: 0.75rem; color: #4B5563; font-weight: 600; }
     .mode-tag { font-size: 0.6875rem; font-weight: 700; color: #2563EB; &--escalated { color: #C62828; } }
     .thread-snippet { font-size: 0.8125rem; color: #6B7280; margin-top: 0.375rem; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; }
-    .conversation-panel { display: flex; flex-direction: column; height: 100%; background: #FFF; }
+    .conversation-panel { display: flex; flex-direction: column; height: 100%; min-height: 0; background: #FFF; overflow: hidden; }
     .empty-conversation { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: #6B7280; padding: 2rem; .empty-icon { font-size: 3rem; margin-bottom: 0.75rem; } }
-    .conversation-content { display: flex; flex-direction: column; height: 100%; }
-    .conversation-header { padding: 1rem 1.25rem; border-bottom: 1px solid #E5E7EB; h2 { font-size: 1.125rem; color: #11243E; font-weight: 700; } .header-sub { font-size: 0.8125rem; color: #6B7280; } }
-    .messages-stream { flex: 1; padding: 1.25rem; overflow-y: auto; display: flex; flex-direction: column; gap: 1rem; background: #F9FAFB; }
+    .conversation-content { display: flex; flex-direction: column; height: 100%; min-height: 0; overflow: hidden; }
+    .conversation-header { padding: 1rem 1.25rem; border-bottom: 1px solid #E5E7EB; flex-shrink: 0; h2 { font-size: 1.125rem; color: #11243E; font-weight: 700; } .header-sub { font-size: 0.8125rem; color: #6B7280; } }
+    .messages-stream { flex: 1 1 auto; padding: 1.25rem; overflow-y: auto; min-height: 0; display: flex; flex-direction: column; gap: 1rem; background: #F9FAFB; }
     .chat-bubble-wrapper { display: flex; flex-direction: column; max-width: 70%; &--guest { align-self: flex-start; .chat-bubble { background: #FFF; border: 1px solid #E5E7EB; color: #1F2937; } } &--bot { align-self: flex-start; .chat-bubble { background: #E8F0FE; border: 1px solid #BFDBFE; color: #1E40AF; } } &--admin { align-self: flex-end; .chat-bubble { background: #11243E; color: #FFF; } .sender-label, .bubble-time { text-align: right; } } }
     .sender-label { font-size: 0.7rem; font-weight: 600; color: #6B7280; margin-bottom: 0.125rem; }
     .chat-bubble { padding: 0.75rem 1rem; border-radius: 12px; font-size: 0.875rem; line-height: 1.4; }
     .bubble-time { font-size: 0.6875rem; color: #9CA3AF; margin-top: 0.25rem; }
-    .reply-bar { padding: 1rem; border-top: 1px solid #E5E7EB; display: flex; gap: 0.75rem; background: #FFF; }
+    .reply-bar { flex: 0 0 auto; padding: 1rem; border-top: 1px solid #E5E7EB; display: flex; gap: 0.75rem; background: #FFF; position: relative; z-index: 5; }
     .reply-input { flex: 1; padding: 0.625rem 0.875rem; border: 1px solid #D1D5DB; border-radius: 6px; font-size: 0.875rem; }
     .btn { padding: 0.5rem 1rem; border-radius: 6px; font-weight: 600; border: none; cursor: pointer; &--primary { background: #11243E; color: #FFF; } &--success { background: #16803C; color: #FFF; } }
   `]

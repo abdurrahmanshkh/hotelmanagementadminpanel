@@ -29,14 +29,36 @@ import { CleaningTask, CleaningTaskStatus } from '../../../core/models';
       <div class="board-grid">
         <div class="board-column">
           <div class="column-header">
-            <h3>Pending Cleaning</h3>
+            <h3>Pending / Assigned</h3>
             <span class="count">{{ pendingTasks.length }}</span>
           </div>
           <div class="task-list">
             <div *ngFor="let item of pendingTasks" class="task-card">
-              <strong class="room-title">Room {{ item.roomNumber }}</strong>
+              <div class="card-top flex-between">
+                <strong class="room-title">Room {{ item.roomNumber }}</strong>
+                <span class="status-tag">{{ item.status }}</span>
+              </div>
               <p class="notes">{{ item.notes || 'Post-checkout turnover' }}</p>
-              <button class="btn-action" (click)="assignStaff(item.id)">Assign Housekeeper</button>
+              <div class="staff-info" *ngIf="item.assignedStaffName">
+                👤 <strong>{{ item.assignedStaffName }}</strong>
+              </div>
+
+              <div class="card-actions">
+                <button
+                  *ngIf="!item.assignedStaffId"
+                  class="btn-action"
+                  (click)="assignStaff(item.id)"
+                >
+                  Assign Housekeeper
+                </button>
+                <button
+                  *ngIf="item.assignedStaffId"
+                  class="btn-action btn-action--accent"
+                  (click)="startTask(item.id)"
+                >
+                  Start Cleaning ➔
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -50,7 +72,7 @@ import { CleaningTask, CleaningTaskStatus } from '../../../core/models';
             <div *ngFor="let item of inProgressTasks" class="task-card">
               <strong class="room-title">Room {{ item.roomNumber }}</strong>
               <span class="staff-tag">👤 {{ item.assignedStaffName || 'Housekeeper' }}</span>
-              <button class="btn-action btn-action--success" (click)="completeTask(item.id)">Complete</button>
+              <button class="btn-action btn-action--success" (click)="completeTask(item.id)">Complete Cleaning</button>
             </div>
           </div>
         </div>
@@ -80,10 +102,17 @@ import { CleaningTask, CleaningTaskStatus } from '../../../core/models';
     .task-list { display: flex; flex-direction: column; gap: 0.75rem; }
     .task-card { background: #FFF; border: 1px solid #E5E7EB; border-radius: 6px; padding: 0.875rem; display: flex; flex-direction: column; gap: 0.5rem; &--done { background: #E6F4EA; border-color: #A7F3D0; } }
     .room-title { font-size: 1rem; color: #11243E; }
+    .status-tag { font-size: 0.6875rem; font-weight: 700; color: #C99B4A; background: #FEF3D6; padding: 0.125rem 0.375rem; border-radius: 4px; }
     .notes { font-size: 0.8125rem; color: #6B7280; }
+    .staff-info { font-size: 0.75rem; color: #1F2937; }
     .staff-tag { font-size: 0.75rem; font-weight: 600; color: #374151; }
     .done-label { font-size: 0.8125rem; font-weight: 700; color: #16803C; }
-    .btn-action { padding: 0.375rem 0.75rem; background: #11243E; color: #FFF; border: none; border-radius: 4px; font-size: 0.75rem; font-weight: 600; cursor: pointer; &--success { background: #16803C; } }
+    .card-actions { display: flex; gap: 0.375rem; margin-top: 0.25rem; }
+    .btn-action {
+      padding: 0.375rem 0.75rem; background: #11243E; color: #FFF; border: none; border-radius: 4px; font-size: 0.75rem; font-weight: 600; cursor: pointer;
+      &--accent { background: #C99B4A; }
+      &--success { background: #16803C; }
+    }
   `]
 })
 export class CleaningBoardComponent implements OnInit {
@@ -116,6 +145,15 @@ export class CleaningBoardComponent implements OnInit {
     this.cleaningRepo.assignStaff(id, 101, 'Marcus Vance').subscribe({
       next: () => {
         this.toastService.success('Assigned housekeeper Marcus Vance.', 'Assigned');
+        this.loadAllTasks();
+      }
+    });
+  }
+
+  startTask(id: number): void {
+    this.cleaningRepo.startTask(id).subscribe({
+      next: () => {
+        this.toastService.info('Turnover cleaning started. Task moved to In Progress.', 'Cleaning Started');
         this.loadAllTasks();
       }
     });

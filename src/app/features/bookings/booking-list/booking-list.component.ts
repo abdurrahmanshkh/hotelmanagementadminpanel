@@ -282,11 +282,11 @@ export class BookingListComponent implements OnInit {
       if (params['status']) this.selectedStatus = params['status'];
       if (params['q']) this.searchQuery = params['q'];
       if (params['page']) this.page = +params['page'];
-      this.loadBookings();
+      this.loadBookings(params['action'], params['bookingId']);
     });
   }
 
-  loadBookings(): void {
+  loadBookings(action?: string, targetBookingId?: string): void {
     this.loading = true;
     const filterParams: any = {
       page: this.page - 1,
@@ -305,6 +305,15 @@ export class BookingListComponent implements OnInit {
           this.bookings = res.data.items;
           this.totalPages = res.data.totalPages;
           this.totalElements = res.data.totalItems;
+
+          if (action && targetBookingId) {
+            const bId = Number(targetBookingId);
+            const found = this.bookings.find(b => b.id === bId);
+            if (found) {
+              if (action === 'checkin') this.openCheckIn(found);
+              else if (action === 'checkout') this.openCheckOut(found);
+            }
+          }
         }
       },
       error: (err: Error) => {

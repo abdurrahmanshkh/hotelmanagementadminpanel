@@ -536,6 +536,8 @@ export interface RevenueReport {
   grossRevenue: number;
   totalRefunds: number;
   netRevenue: number;
+  roomRevenue?: number;
+  serviceRevenue?: number;
   averageBookingValue: number;
   revenueByPaymentMethod: Record<string, number>;
   revenueByRoomType: Record<string, number>;
@@ -560,6 +562,8 @@ export interface OccupancyReport {
   peakOccupancyPercentage: number;
   lowestOccupancyPercentage: number;
   maintenanceImpactDays: number;
+  averageDailyRate?: number;
+  revPar?: number;
   occupancyByRoomType: Record<string, number>;
   dailyBreakdown: Array<{ date: string; occupancyPercentage: number; occupiedCount: number }>;
 }

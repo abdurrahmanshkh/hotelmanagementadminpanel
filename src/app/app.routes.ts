@@ -141,6 +141,18 @@ export const routes: Routes = [
         loadComponent: () => import('./features/pricing/pricing-rules/pricing-rules.component').then(m => m.PricingRulesComponent)
       },
       {
+        path: 'pricing/new',
+        canActivate: [roleGuard],
+        data: { roles: [Role.ADMIN, Role.MANAGER] },
+        loadComponent: () => import('./features/pricing/pricing-rule-form/pricing-rule-form.component').then(m => m.PricingRuleFormComponent)
+      },
+      {
+        path: 'pricing/:ruleId/edit',
+        canActivate: [roleGuard],
+        data: { roles: [Role.ADMIN, Role.MANAGER] },
+        loadComponent: () => import('./features/pricing/pricing-rule-form/pricing-rule-form.component').then(m => m.PricingRuleFormComponent)
+      },
+      {
         path: 'pricing/rules',
         canActivate: [roleGuard],
         data: { roles: [Role.ADMIN, Role.MANAGER] },
@@ -158,72 +170,24 @@ export const routes: Routes = [
         data: { roles: [Role.ADMIN, Role.MANAGER] },
         loadComponent: () => import('./features/pricing/pricing-rule-form/pricing-rule-form.component').then(m => m.PricingRuleFormComponent)
       },
-      {
-        path: 'pricing/preview',
-        canActivate: [roleGuard],
-        data: { roles: [Role.ADMIN, Role.MANAGER] },
-        loadComponent: () => import('./features/pricing/pricing-preview/pricing-preview.component').then(m => m.PricingPreviewComponent)
-      },
       // Reports
       {
         path: 'reports',
         canActivate: [roleGuard],
         data: { roles: [Role.ADMIN, Role.MANAGER] },
-        loadComponent: () => import('./features/reports/revenue-report/revenue-report.component').then(m => m.RevenueReportComponent)
-      },
-      {
-        path: 'reports/revenue',
-        canActivate: [roleGuard],
-        data: { roles: [Role.ADMIN, Role.MANAGER] },
-        loadComponent: () => import('./features/reports/revenue-report/revenue-report.component').then(m => m.RevenueReportComponent)
-      },
-      {
-        path: 'reports/bookings',
-        canActivate: [roleGuard],
-        data: { roles: [Role.ADMIN, Role.MANAGER] },
-        loadComponent: () => import('./features/reports/booking-report/booking-report.component').then(m => m.BookingReportComponent)
-      },
-      {
-        path: 'reports/occupancy',
-        canActivate: [roleGuard],
-        data: { roles: [Role.ADMIN, Role.MANAGER] },
-        loadComponent: () => import('./features/reports/occupancy-report/occupancy-report.component').then(m => m.OccupancyReportComponent)
-      },
-      {
-        path: 'reports/services',
-        canActivate: [roleGuard],
-        data: { roles: [Role.ADMIN, Role.MANAGER] },
-        loadComponent: () => import('./features/reports/service-report/service-report.component').then(m => m.ServiceReportComponent)
+        loadComponent: () => import('./features/reports/reports.component').then(m => m.ReportsComponent)
       },
       // Administration Settings
       {
         path: 'settings',
         canActivate: [roleGuard],
-        data: { roles: [Role.MANAGER] },
-        loadComponent: () => import('./features/settings/hotel-settings/hotel-settings.component').then(m => m.HotelSettingsComponent)
-      },
-      {
-        path: 'settings/hotel',
-        canActivate: [roleGuard],
-        data: { roles: [Role.MANAGER] },
-        loadComponent: () => import('./features/settings/hotel-settings/hotel-settings.component').then(m => m.HotelSettingsComponent)
-      },
-      {
-        path: 'settings/operations',
-        canActivate: [roleGuard],
-        data: { roles: [Role.MANAGER] },
-        loadComponent: () => import('./features/settings/operations-settings/operations-settings.component').then(m => m.OperationsSettingsComponent)
-      },
-      {
-        path: 'settings/pricing',
-        canActivate: [roleGuard],
-        data: { roles: [Role.MANAGER] },
-        loadComponent: () => import('./features/settings/pricing-settings/pricing-settings.component').then(m => m.PricingSettingsComponent)
+        data: { roles: [Role.ADMIN, Role.MANAGER] },
+        loadComponent: () => import('./features/settings/settings.component').then(m => m.SettingsComponent)
       }
     ]
   },
   {
     path: '**',
-    redirectTo: 'admin/dashboard'
+    loadComponent: () => import('./features/not-found/not-found.component').then(m => m.NotFoundComponent)
   }
 ];

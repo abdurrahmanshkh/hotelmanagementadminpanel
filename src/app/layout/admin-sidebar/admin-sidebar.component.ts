@@ -45,6 +45,8 @@ export interface NavGroup {
       background-color: #11243E;
       color: #FFFFFF;
       min-height: calc(100vh - 64px);
+      height: 100%;
+      align-self: stretch;
       display: flex;
       flex-direction: column;
       border-right: 1px solid rgba(255, 255, 255, 0.08);
@@ -160,7 +162,7 @@ export class AdminSidebarComponent {
     {
       name: 'Administration',
       items: [
-        { label: 'Hotel Settings', route: '/admin/settings', icon: '⚙️', roles: ['MANAGER'] }
+        { label: 'Hotel Settings', route: '/admin/settings', icon: '⚙️', roles: ['ADMIN', 'MANAGER'] }
       ]
     }
   ];

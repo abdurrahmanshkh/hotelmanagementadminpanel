@@ -12,10 +12,10 @@
     "bedType": "King Bed",
     "roomSizeSqFt": 450,
     "amenities": [
-      { "id": 1, "name": "Free High-Speed Wi-Fi", "iconName": "wifi", "isActive": true, "usageCount": 120 },
-      { "id": 2, "name": "4K Smart TV", "iconName": "tv", "isActive": true, "usageCount": 95 },
-      { "id": 3, "name": "Mini Bar & Coffee Maker", "iconName": "coffee", "isActive": true, "usageCount": 80 },
-      { "id": 4, "name": "Air Conditioning", "iconName": "wind", "isActive": true, "usageCount": 150 }
+      { "id": 1, "name": "Free High-Speed Wi-Fi", "iconName": "📶", "isActive": true, "usageCount": 120 },
+      { "id": 2, "name": "4K Smart TV", "iconName": "📺", "isActive": true, "usageCount": 95 },
+      { "id": 3, "name": "Mini Bar & Coffee Maker", "iconName": "☕", "isActive": true, "usageCount": 80 },
+      { "id": 4, "name": "Air Conditioning", "iconName": "❄️", "isActive": true, "usageCount": 150 }
     ],
     "images": [
       {
@@ -43,8 +43,8 @@
     "bedType": "Twin Beds",
     "roomSizeSqFt": 380,
     "amenities": [
-      { "id": 1, "name": "Free High-Speed Wi-Fi", "iconName": "wifi", "isActive": true, "usageCount": 120 },
-      { "id": 2, "name": "4K Smart TV", "iconName": "tv", "isActive": true, "usageCount": 95 }
+      { "id": 1, "name": "Free High-Speed Wi-Fi", "iconName": "📶", "isActive": true, "usageCount": 120 },
+      { "id": 2, "name": "4K Smart TV", "iconName": "📺", "isActive": true, "usageCount": 95 }
     ],
     "images": [
       {
@@ -72,8 +72,8 @@
     "bedType": "Super King Bed",
     "roomSizeSqFt": 950,
     "amenities": [
-      { "id": 1, "name": "Free High-Speed Wi-Fi", "iconName": "wifi", "isActive": true, "usageCount": 120 },
-      { "id": 5, "name": "Private Jacuzzi", "iconName": "bath", "isActive": true, "usageCount": 30 }
+      { "id": 1, "name": "Free High-Speed Wi-Fi", "iconName": "📶", "isActive": true, "usageCount": 120 },
+      { "id": 5, "name": "Private Jacuzzi", "iconName": "🛁", "isActive": true, "usageCount": 30 }
     ],
     "images": [
       {

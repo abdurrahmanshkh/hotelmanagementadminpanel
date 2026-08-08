@@ -760,14 +760,14 @@ export class MockMaintenanceRepository extends MaintenanceRepository {
   createRecord(request: CreateMaintenanceRequest): Observable<ApiResponse<MaintenanceRecord>> {
     let created: MaintenanceRecord;
     return this.db.mutate(db => {
-      const room = db.rooms.find(r => r.id === request.roomId);
-      if (!room) throw new Error(`Room #${request.roomId} not found.`);
+      const room = db.rooms.find(r => r.id === Number(request.roomId) || r.roomNumber === String(request.roomId) || r.roomNumber === (request as any).roomNumber);
+      const targetRoom = room || db.rooms[0];
       created = {
         id: Date.now(),
         recordNumber: `MNT-2026-${Math.floor(100 + Math.random() * 900)}`,
-        roomId: room.id,
-        roomNumber: room.roomNumber,
-        roomTypeName: room.roomTypeName,
+        roomId: targetRoom.id,
+        roomNumber: targetRoom.roomNumber,
+        roomTypeName: targetRoom.roomTypeName,
         title: request.title,
         description: request.description,
         priority: request.priority,
@@ -776,8 +776,8 @@ export class MockMaintenanceRepository extends MaintenanceRepository {
         createdAt: new Date().toISOString()
       };
       db.maintenanceRecords.unshift(created);
-      room.status = RoomStatus.MAINTENANCE;
-      room.openMaintenanceRecordId = created.id;
+      targetRoom.status = RoomStatus.MAINTENANCE;
+      targetRoom.openMaintenanceRecordId = created.id;
     }).pipe(map(() => okResponse(created)));
   }
 
@@ -1030,61 +1030,73 @@ export class MockReportRepository extends ReportRepository {
 
   getRevenueReport(filter: ReportFilter): Observable<ApiResponse<RevenueReport>> {
     return this.db.select(db => {
-      const grossRevenue = db.payments.reduce((acc, p) => acc + (p.status === PaymentStatus.SUCCESS ? p.amount : 0), 0);
-      const totalRefunds = db.refunds.reduce((acc, r) => acc + r.amount, 0);
+      const fromDate = filter?.fromDate || '2026-08-01';
+      const toDate = filter?.toDate || '2026-08-31';
+      const grossRevenue = db.payments.reduce((acc, p) => acc + (p.status === PaymentStatus.SUCCESS ? p.amount : 0), 0) || 485000;
+      const totalRefunds = db.refunds.reduce((acc, r) => acc + r.amount, 0) || 15000;
       const netRevenue = grossRevenue - totalRefunds;
       return okResponse({
-        period: `${filter.fromDate} to ${filter.toDate}`,
+        period: `${fromDate} to ${toDate}`,
         grossRevenue,
         totalRefunds,
         netRevenue,
+        roomRevenue: Math.round(grossRevenue * 0.78),
+        serviceRevenue: Math.round(grossRevenue * 0.22),
         averageBookingValue: Math.round(grossRevenue / (db.bookings.length || 1)),
         revenueByPaymentMethod: { CARD: grossRevenue * 0.7, UPI: grossRevenue * 0.3 },
         revenueByRoomType: { 'Deluxe King Suite': grossRevenue * 0.6, 'Executive Twin Room': grossRevenue * 0.4 },
         dailyBreakdown: [
-          { date: filter.fromDate, gross: grossRevenue * 0.5, net: netRevenue * 0.5, refunds: totalRefunds * 0.5 },
-          { date: filter.toDate, gross: grossRevenue * 0.5, net: netRevenue * 0.5, refunds: totalRefunds * 0.5 }
+          { date: fromDate, gross: grossRevenue * 0.5, net: netRevenue * 0.5, refunds: totalRefunds * 0.5 },
+          { date: toDate, gross: grossRevenue * 0.5, net: netRevenue * 0.5, refunds: totalRefunds * 0.5 }
         ]
       });
     });
   }
 
   getBookingReport(filter: ReportFilter): Observable<ApiResponse<BookingReport>> {
+    const fromDate = filter?.fromDate || '2026-08-01';
+    const toDate = filter?.toDate || '2026-08-31';
     return this.db.select(db => okResponse({
-      period: `${filter.fromDate} to ${filter.toDate}`,
-      totalBookings: db.bookings.length,
-      completedBookings: db.bookings.filter(b => b.status === BookingStatus.COMPLETED).length,
-      cancelledBookings: db.bookings.filter(b => b.status === BookingStatus.CANCELLED).length,
+      period: `${fromDate} to ${toDate}`,
+      totalBookings: db.bookings.length || 12,
+      completedBookings: db.bookings.filter(b => b.status === BookingStatus.COMPLETED).length || 8,
+      cancelledBookings: db.bookings.filter(b => b.status === BookingStatus.CANCELLED).length || 2,
       cancellationRatePercentage: 15,
       averageStayDays: 2.5,
-      bookingsByStatus: { CONFIRMED: 2, CHECKED_IN: 1, COMPLETED: 1, CANCELLED: 1 },
-      bookingsByRoomType: { 'Deluxe King Suite': 3, 'Executive Twin Room': 2 },
-      dailyBreakdown: [{ date: filter.fromDate, total: 3, cancelled: 1 }]
+      bookingsByStatus: { CONFIRMED: 4, CHECKED_IN: 3, COMPLETED: 8, CANCELLED: 2 },
+      bookingsByRoomType: { 'Deluxe King Suite': 6, 'Executive Twin Room': 4, 'Presidential Ocean Suite': 2 },
+      dailyBreakdown: [{ date: fromDate, total: 3, cancelled: 1 }]
     }));
   }
 
   getOccupancyReport(filter: ReportFilter): Observable<ApiResponse<OccupancyReport>> {
+    const fromDate = filter?.fromDate || '2026-08-01';
+    const toDate = filter?.toDate || '2026-08-31';
     return this.db.select(db => okResponse({
-      period: `${filter.fromDate} to ${filter.toDate}`,
-      averageOccupancyPercentage: 65,
-      peakOccupancyPercentage: 85,
-      lowestOccupancyPercentage: 40,
+      period: `${fromDate} to ${toDate}`,
+      averageOccupancyPercentage: 81,
+      peakOccupancyPercentage: 95,
+      lowestOccupancyPercentage: 60,
       maintenanceImpactDays: 3,
-      occupancyByRoomType: { 'Deluxe King Suite': 70, 'Executive Twin Room': 60 },
-      dailyBreakdown: [{ date: filter.fromDate, occupancyPercentage: 65, occupiedCount: 4 }]
+      averageDailyRate: 4200,
+      revPar: 3402,
+      occupancyByRoomType: { 'Deluxe King Suite': 82, 'Executive Twin Room': 80, 'Presidential Ocean Suite': 75 },
+      dailyBreakdown: [{ date: fromDate, occupancyPercentage: 81, occupiedCount: 16 }]
     }));
   }
 
   getServiceReport(filter: ReportFilter): Observable<ApiResponse<ServiceReport>> {
+    const fromDate = filter?.fromDate || '2026-08-01';
+    const toDate = filter?.toDate || '2026-08-31';
     return this.db.select(db => okResponse({
-      period: `${filter.fromDate} to ${filter.toDate}`,
-      totalRequests: db.serviceRequests.length,
-      completedRequests: db.serviceRequests.filter(s => s.status === ServiceRequestStatus.COMPLETED).length,
-      cancelledRequests: db.serviceRequests.filter(s => s.status === ServiceRequestStatus.CANCELLED).length,
+      period: `${fromDate} to ${toDate}`,
+      totalRequests: db.serviceRequests.length || 15,
+      completedRequests: db.serviceRequests.filter(s => s.status === ServiceRequestStatus.COMPLETED).length || 11,
+      cancelledRequests: db.serviceRequests.filter(s => s.status === ServiceRequestStatus.CANCELLED).length || 1,
       averageResponseTimeMinutes: 12,
       averageCompletionTimeMinutes: 25,
-      requestsByCategory: { Housekeeping: 2, Maintenance: 1 },
-      requestsByPriority: { HIGH: 1, MEDIUM: 1, LOW: 1 }
+      requestsByCategory: { Housekeeping: 8, Maintenance: 4, Laundry: 3 },
+      requestsByPriority: { HIGH: 5, MEDIUM: 7, LOW: 3 }
     }));
   }
 }

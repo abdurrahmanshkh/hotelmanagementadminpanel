@@ -16,8 +16,6 @@ import { ButtonComponent } from '../../shared/components/button/button.component
 import { SkeletonLoaderComponent } from '../../shared/components/skeleton-loader/skeleton-loader.component';
 import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
 import { ErrorStateComponent } from '../../shared/components/error-state/error-state.component';
-import { BookingSummary, ServiceRequest, ChatThread } from '../../core/models';
-import { APP_ROUTES } from '../../core/constants';
 
 @Component({
   selector: 'app-dashboard',
@@ -126,8 +124,8 @@ import { APP_ROUTES } from '../../core/constants';
           <h3 class="quick-actions-bar__title">Quick Actions</h3>
           <div class="quick-actions-bar__buttons">
             <button class="btn-action" (click)="navigate('/admin/bookings')">🔍 Search Bookings</button>
-            <button class="btn-action" (click)="navigate('/admin/bookings')">📥 Check-In Guest</button>
-            <button class="btn-action" (click)="navigate('/admin/bookings')">📤 Checkout Guest</button>
+            <button class="btn-action" (click)="navigate('/admin/bookings?status=CONFIRMED')">📥 Check-In Guest</button>
+            <button class="btn-action" (click)="navigate('/admin/bookings?status=CHECKED_IN')">📤 Checkout Guest</button>
             <button class="btn-action" (click)="navigate('/admin/service-requests/board')">📋 Service Kanban</button>
             <button class="btn-action" (click)="navigate('/admin/chats')">💬 Chat Inbox</button>
             <button class="btn-action" (click)="navigate('/admin/guests')">👥 Guest Directory</button>
@@ -156,7 +154,7 @@ import { APP_ROUTES } from '../../core/constants';
                 </div>
                 <div class="queue-item__action">
                   <app-status-badge [status]="booking.status"></app-status-badge>
-                  <button class="btn-link" (click)="navigate('/admin/bookings/' + booking.id)">Process Check-In →</button>
+                  <button class="btn-link" (click)="processCheckIn(booking)">Process Check-In →</button>
                 </div>
               </div>
             </div>
@@ -182,7 +180,7 @@ import { APP_ROUTES } from '../../core/constants';
                 </div>
                 <div class="queue-item__action">
                   <app-status-badge [status]="booking.status"></app-status-badge>
-                  <button class="btn-link" (click)="navigate('/admin/bookings/' + booking.id)">Process Checkout →</button>
+                  <button class="btn-link" (click)="processCheckout(booking)">Process Checkout →</button>
                 </div>
               </div>
             </div>
@@ -430,7 +428,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private refreshSubscription?: Subscription;
 
   ngOnInit(): void {
-    // 30-second auto refresh stream
     this.refreshSubscription = timer(0, 30000).pipe(
       switchMap(() => this.dashboardRepo.getSummary()),
       takeUntilDestroyed(this.destroyRef)
@@ -470,6 +467,18 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.loading = false;
         this.error = err.message || 'Failed to refresh dashboard metrics.';
       }
+    });
+  }
+
+  public processCheckIn(booking: any): void {
+    this.router.navigate(['/admin/bookings'], {
+      queryParams: { status: 'CONFIRMED', action: 'checkin', bookingId: booking.id }
+    });
+  }
+
+  public processCheckout(booking: any): void {
+    this.router.navigate(['/admin/bookings'], {
+      queryParams: { status: 'CHECKED_IN', action: 'checkout', bookingId: booking.id }
     });
   }
 
