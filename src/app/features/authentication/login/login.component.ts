@@ -8,6 +8,7 @@ import { environment } from '../../../../environments/environment';
 import { APP_ROUTES } from '../../../core/constants';
 import { FormFieldComponent } from '../../../shared/components/form-field/form-field.component';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
+import { ErrorFormatter } from '../../../core/utilities/error-formatter.utility';
 
 @Component({
   selector: 'app-login',
@@ -338,7 +339,7 @@ export class LoginComponent {
       },
       error: (err: Error) => {
         this.loading = false;
-        this.errorMessage = err.message || 'Invalid email, password, or staff authorization code.';
+        this.errorMessage = ErrorFormatter.format(err, 'Invalid email, password, or staff authorization code.');
       }
     });
   }

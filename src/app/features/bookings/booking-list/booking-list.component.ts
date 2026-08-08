@@ -6,6 +6,7 @@ import { BookingRepository } from '../../../core/repositories/contracts';
 import { ToastService } from '../../../core/services/toast.service';
 import { CurrencyFormatter } from '../../../core/utilities/currency-formatter.utility';
 import { DateFormatter } from '../../../core/utilities/date-formatter.utility';
+import { ErrorFormatter } from '../../../core/utilities/error-formatter.utility';
 import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
 import { SearchInputComponent } from '../../../shared/components/search-input/search-input.component';
 import { FilterDrawerComponent } from '../../../shared/components/filter-drawer/filter-drawer.component';
@@ -318,7 +319,7 @@ export class BookingListComponent implements OnInit {
       },
       error: (err: Error) => {
         this.loading = false;
-        this.toastService.error(err.message || 'Failed to load bookings');
+        this.toastService.error(ErrorFormatter.format(err, 'Failed to load bookings'));
       }
     });
   }
@@ -397,7 +398,7 @@ export class BookingListComponent implements OnInit {
       },
       error: (err: Error) => {
         this.actionLoading = false;
-        this.toastService.error(err.message || 'Check-in failed');
+        this.toastService.error(ErrorFormatter.format(err, 'Check-in failed'));
       }
     });
   }
@@ -414,7 +415,7 @@ export class BookingListComponent implements OnInit {
       },
       error: (err: Error) => {
         this.actionLoading = false;
-        this.toastService.error(err.message || 'Checkout failed');
+        this.toastService.error(ErrorFormatter.format(err, 'Checkout failed'));
       }
     });
   }
@@ -431,7 +432,7 @@ export class BookingListComponent implements OnInit {
       },
       error: (err: Error) => {
         this.actionLoading = false;
-        this.toastService.error(err.message || 'Cancellation failed');
+        this.toastService.error(ErrorFormatter.format(err, 'Cancellation failed'));
       }
     });
   }

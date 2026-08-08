@@ -5,6 +5,7 @@ import { catchError, finalize } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
 import { ToastService } from '../services/toast.service';
 import { LoadingService } from '../services/loading.service';
+import { ErrorFormatter } from '../utilities/error-formatter.utility';
 import { environment } from '../../../environments/environment';
 
 export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> => {
@@ -42,27 +43,30 @@ export const errorInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, n
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
-      let errorMessage = 'An unexpected system error occurred.';
-      if (error.error && typeof error.error.message === 'string') {
-        errorMessage = error.error.message;
-      } else if (error.message) {
-        errorMessage = error.message;
-      }
+      const friendlyMessage = ErrorFormatter.format(error, 'An unexpected system error occurred.');
 
       if (error.status === 401) {
-        toastService.error('Session expired or invalid. Please log in again.', 'Unauthorized');
-        authService.clearSessionAndRedirect();
+        toastService.error('Session expired or invalid credentials.', 'Unauthorized');
+        if (!req.url.includes('/auth/login')) {
+          authService.clearSessionAndRedirect();
+        }
       } else if (error.status === 403) {
         toastService.error('You do not have permission to perform this action.', 'Access Denied');
+      } else if (error.status === 404) {
+        toastService.error(friendlyMessage, 'Backend Endpoint Not Found');
       } else if (error.status === 409) {
-        toastService.warning(errorMessage || 'Conflict detected. Please refresh and retry.', 'State Conflict');
+        toastService.warning(friendlyMessage, 'State Conflict');
       } else if (error.status >= 500) {
         toastService.error('Internal server error. Please try again later.', 'Server Error');
       } else if (error.status === 0) {
-        toastService.error('Cannot connect to server. Check network connection.', 'Connection Error');
+        toastService.error(friendlyMessage, 'Backend Offline');
       }
 
-      return throwError(() => error);
+      // Attach cleaned friendly message to error object for component subscribers
+      const normalizedError = new Error(friendlyMessage);
+      (normalizedError as any).status = error.status;
+
+      return throwError(() => normalizedError);
     })
   );
 };

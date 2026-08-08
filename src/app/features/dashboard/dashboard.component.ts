@@ -16,6 +16,7 @@ import { ButtonComponent } from '../../shared/components/button/button.component
 import { SkeletonLoaderComponent } from '../../shared/components/skeleton-loader/skeleton-loader.component';
 import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
 import { ErrorStateComponent } from '../../shared/components/error-state/error-state.component';
+import { ErrorFormatter } from '../../core/utilities/error-formatter.utility';
 
 @Component({
   selector: 'app-dashboard',
@@ -440,7 +441,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         }
       },
       error: (err) => {
-        this.error = err.message || 'Failed to fetch dashboard operational summary.';
+        this.error = ErrorFormatter.format(err, 'Failed to fetch dashboard operational summary.');
       }
     });
   }
@@ -465,7 +466,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       },
       error: (err) => {
         this.loading = false;
-        this.error = err.message || 'Failed to refresh dashboard metrics.';
+        this.error = ErrorFormatter.format(err, 'Failed to refresh dashboard metrics.');
       }
     });
   }
