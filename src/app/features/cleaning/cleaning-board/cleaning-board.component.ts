@@ -5,6 +5,7 @@ import { CleaningRepository } from '../../../core/repositories/contracts';
 import { ToastService } from '../../../core/services/toast.service';
 import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
+import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { CleaningTask, CleaningTaskStatus } from '../../../core/models';
 
 @Component({
@@ -14,14 +15,15 @@ import { CleaningTask, CleaningTaskStatus } from '../../../core/models';
     CommonModule,
     RouterModule,
     PageHeaderComponent,
-    ButtonComponent
+    ButtonComponent,
+    IconComponent
   ],
   template: `
     <div class="cleaning-board-page">
       <app-page-header title="Housekeeping Kanban Board" subtitle="Visual room turnover progress workflow">
         <div actions class="header-actions">
           <app-button variant="outline" size="md" (btnClick)="navigate('/admin/cleaning')">
-            📄 Switch to Table View
+            <app-icon name="receipt" [size]="16"></app-icon> Switch to Table View
           </app-button>
         </div>
       </app-page-header>
@@ -35,12 +37,13 @@ import { CleaningTask, CleaningTaskStatus } from '../../../core/models';
           <div class="task-list">
             <div *ngFor="let item of pendingTasks" class="task-card">
               <div class="card-top flex-between">
-                <strong class="room-title">Room {{ item.roomNumber }}</strong>
+                <strong class="room-title font-mono">Room {{ item.roomNumber }}</strong>
                 <span class="status-tag">{{ item.status }}</span>
               </div>
               <p class="notes">{{ item.notes || 'Post-checkout turnover' }}</p>
-              <div class="staff-info" *ngIf="item.assignedStaffName">
-                👤 <strong>{{ item.assignedStaffName }}</strong>
+              <div class="staff-info flex-gap" *ngIf="item.assignedStaffName">
+                <app-icon name="users" [size]="14" color="#64748B"></app-icon>
+                <strong>{{ item.assignedStaffName }}</strong>
               </div>
 
               <div class="card-actions">
@@ -56,7 +59,8 @@ import { CleaningTask, CleaningTaskStatus } from '../../../core/models';
                   class="btn-action btn-action--accent"
                   (click)="startTask(item.id)"
                 >
-                  Start Cleaning ➔
+                  <span>Start Cleaning</span>
+                  <app-icon name="arrow-right" [size]="12"></app-icon>
                 </button>
               </div>
             </div>

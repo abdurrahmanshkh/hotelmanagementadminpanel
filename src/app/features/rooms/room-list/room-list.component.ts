@@ -10,6 +10,7 @@ import { DataTableComponent } from '../../../shared/components/data-table/data-t
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
 import { StatusBadgeComponent } from '../../../shared/components/status-badge/status-badge.component';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
+import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { RoomSummary, RoomStatus } from '../../../core/models';
 
 @Component({
@@ -24,14 +25,15 @@ import { RoomSummary, RoomStatus } from '../../../core/models';
     DataTableComponent,
     PaginationComponent,
     StatusBadgeComponent,
-    ButtonComponent
+    ButtonComponent,
+    IconComponent
   ],
   template: `
     <div class="room-list-page">
       <app-page-header title="Rooms Inventory" subtitle="Manage physical hotel rooms, floor locations & operational status">
         <div actions class="header-actions">
           <app-button variant="accent" size="md" (btnClick)="navigate('/admin/rooms/new')">
-            ➕ Add New Room
+            <app-icon name="plus" [size]="16"></app-icon> Add New Room
           </app-button>
         </div>
       </app-page-header>
@@ -71,8 +73,8 @@ import { RoomSummary, RoomStatus } from '../../../core/models';
 
         <ng-container rows>
           <tr *ngFor="let item of rooms">
-            <td><strong class="ref-link" (click)="viewDetails(item.id)">Room {{ item.roomNumber }}</strong></td>
-            <td>Floor {{ item.floor }}</td>
+            <td><strong class="ref-link font-mono" (click)="viewDetails(item.id)">Room {{ item.roomNumber }}</strong></td>
+            <td class="font-mono">Floor {{ item.floor }}</td>
             <td><strong>{{ item.roomTypeName }}</strong></td>
             <td>
               <app-status-badge [status]="item.status"></app-status-badge>
@@ -84,8 +86,12 @@ import { RoomSummary, RoomStatus } from '../../../core/models';
             </td>
             <td>
               <div class="action-buttons">
-                <button class="btn-action" (click)="editRoom(item.id)">Edit</button>
-                <button class="btn-action btn-action--details" (click)="viewDetails(item.id)">Details</button>
+                <button class="btn-action" (click)="editRoom(item.id)">
+                  <app-icon name="edit" [size]="14"></app-icon> Edit
+                </button>
+                <button class="btn-action btn-action--details" (click)="viewDetails(item.id)">
+                  <app-icon name="eye" [size]="14"></app-icon> Details
+                </button>
               </div>
             </td>
           </tr>

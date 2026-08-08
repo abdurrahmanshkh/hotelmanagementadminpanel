@@ -6,6 +6,7 @@ import { RoomRepository } from '../../../core/repositories/contracts';
 import { ToastService } from '../../../core/services/toast.service';
 import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
+import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { Amenity } from '../../../core/models';
 
 @Component({
@@ -16,13 +17,16 @@ import { Amenity } from '../../../core/models';
     FormsModule,
     RouterModule,
     PageHeaderComponent,
-    ButtonComponent
+    ButtonComponent,
+    IconComponent
   ],
   template: `
     <div class="amenity-manager-page">
       <app-page-header title="Amenities Manager" subtitle="Manage hotel & room category amenities">
         <div actions class="header-actions">
-          <app-button variant="outline" size="sm" (btnClick)="goBack()">← Back to Room Types</app-button>
+          <app-button variant="outline" size="sm" (btnClick)="goBack()">
+            <app-icon name="arrow-left" [size]="14"></app-icon> Back to Room Types
+          </app-button>
         </div>
       </app-page-header>
 
@@ -35,11 +39,11 @@ import { Amenity } from '../../../core/models';
             <input type="text" [(ngModel)]="newAmenityName" placeholder="e.g. Jacuzzi Bath" class="form-control" />
           </div>
           <div class="form-group">
-            <label>Icon / Emoji</label>
-            <input type="text" [(ngModel)]="newAmenityIcon" placeholder="e.g. 🛁" class="form-control" />
+            <label>Icon Key</label>
+            <input type="text" [(ngModel)]="newAmenityIcon" placeholder="e.g. bath" class="form-control" />
           </div>
           <app-button variant="accent" size="md" [disabled]="!newAmenityName.trim()" (btnClick)="createAmenity()">
-            ➕ Create Amenity
+            <app-icon name="plus" [size]="16"></app-icon> Create Amenity
           </app-button>
         </div>
 
@@ -49,9 +53,11 @@ import { Amenity } from '../../../core/models';
 
           <div class="tags-container">
             <div *ngFor="let item of amenities" class="amenity-chip">
-              <span class="chip-icon">{{ getAmenityEmoji(item.iconName, item.name) }}</span>
+              <app-icon [name]="item.iconName || item.name" [size]="16" color="#0F172A"></app-icon>
               <span class="chip-name">{{ item.name }}</span>
-              <button class="chip-delete" (click)="deleteAmenity(item.id)">✕</button>
+              <button class="chip-delete" (click)="deleteAmenity(item.id)">
+                <app-icon name="x" [size]="14"></app-icon>
+              </button>
             </div>
           </div>
         </div>

@@ -6,6 +6,7 @@ import { ToastService } from '../../core/services/toast.service';
 import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 import { FormFieldComponent } from '../../shared/components/form-field/form-field.component';
 import { ButtonComponent } from '../../shared/components/button/button.component';
+import { IconComponent } from '../../shared/components/icon/icon.component';
 import { HotelSettings } from '../../core/models';
 
 @Component({
@@ -16,7 +17,8 @@ import { HotelSettings } from '../../core/models';
     ReactiveFormsModule,
     PageHeaderComponent,
     FormFieldComponent,
-    ButtonComponent
+    ButtonComponent,
+    IconComponent
   ],
   template: `
     <div class="settings-page">
@@ -78,7 +80,7 @@ import { HotelSettings } from '../../core/models';
 
           <div class="form-actions">
             <app-button type="submit" variant="accent" [loading]="submitting" [disabled]="settingsForm.invalid">
-              💾 Save Hotel Settings
+              <app-icon name="check" [size]="16"></app-icon> Save Hotel Settings
             </app-button>
           </div>
         </form>

@@ -9,6 +9,7 @@ import { PageHeaderComponent } from '../../shared/components/page-header/page-he
 import { MetricCardComponent } from '../../shared/components/metric-card/metric-card.component';
 import { DataTableComponent } from '../../shared/components/data-table/data-table.component';
 import { ButtonComponent } from '../../shared/components/button/button.component';
+import { IconComponent } from '../../shared/components/icon/icon.component';
 import { RevenueReport, OccupancyReport } from '../../core/models';
 
 @Component({
@@ -20,14 +21,15 @@ import { RevenueReport, OccupancyReport } from '../../core/models';
     PageHeaderComponent,
     MetricCardComponent,
     DataTableComponent,
-    ButtonComponent
+    ButtonComponent,
+    IconComponent
   ],
   template: `
     <div class="reports-page">
       <app-page-header title="Financial & Operational Analytics" subtitle="Revenue trends, occupancy metrics & automated CSV exports">
         <div actions class="header-actions">
           <app-button variant="accent" size="md" (btnClick)="exportCsv()">
-            📥 Export CSV Report
+            <app-icon name="download" [size]="16"></app-icon> Export CSV Report
           </app-button>
         </div>
       </app-page-header>
@@ -37,29 +39,33 @@ import { RevenueReport, OccupancyReport } from '../../core/models';
         <app-metric-card
           title="Total Gross Revenue"
           [value]="formatCurrency(revenueReport?.grossRevenue || 485000)"
-          subtitle="Includes room tariffs & addon services"
-          icon="💰"
+          subtext="Includes room tariffs & addon services"
+          icon="card"
+          variant="success"
         ></app-metric-card>
 
         <app-metric-card
           title="Net Hotel Profit"
           [value]="formatCurrency(revenueReport?.netRevenue || 432000)"
-          subtitle="Post refund deductions"
-          icon="📈"
+          subtext="Post refund deductions"
+          icon="trending-up"
+          variant="accent"
         ></app-metric-card>
 
         <app-metric-card
           title="Average Daily Rate (ADR)"
           [value]="formatCurrency(occupancyReport?.averageDailyRate || 4200)"
-          subtitle="Per occupied room night"
-          icon="🏷️"
+          subtext="Per occupied room night"
+          icon="receipt"
+          variant="info"
         ></app-metric-card>
 
         <app-metric-card
           title="RevPAR (Revenue / Avail)"
           [value]="formatCurrency(occupancyReport?.revPar || 3360)"
-          subtitle="Overall room inventory yield"
-          icon="📊"
+          subtext="Overall room inventory yield"
+          icon="building"
+          variant="warning"
         ></app-metric-card>
       </div>
 
