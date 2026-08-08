@@ -1,0 +1,96 @@
+export enum Role {
+  CUSTOMER = 'CUSTOMER',
+  STAFF = 'STAFF',
+  ADMIN = 'ADMIN',
+  MANAGER = 'MANAGER'
+}
+
+export enum BookingStatus {
+  PENDING_PAYMENT = 'PENDING_PAYMENT',
+  CONFIRMED = 'CONFIRMED',
+  CHECKED_IN = 'CHECKED_IN',
+  COMPLETED = 'COMPLETED',
+  CANCELLED = 'CANCELLED'
+}
+
+export enum RoomStatus {
+  AVAILABLE = 'AVAILABLE',
+  RESERVED = 'RESERVED',
+  OCCUPIED = 'OCCUPIED',
+  UNDER_CLEANING = 'UNDER_CLEANING',
+  MAINTENANCE = 'MAINTENANCE'
+}
+
+export enum PaymentStatus {
+  INITIATED = 'INITIATED',
+  PENDING = 'PENDING',
+  SUCCESS = 'SUCCESS',
+  FAILED = 'FAILED',
+  REFUNDED = 'REFUNDED',
+  PARTIALLY_REFUNDED = 'PARTIALLY_REFUNDED'
+}
+
+export enum PaymentMethod {
+  CARD = 'CARD',
+  UPI = 'UPI',
+  CASH = 'CASH'
+}
+
+export enum RefundStatus {
+  PENDING = 'PENDING',
+  SUCCESS = 'SUCCESS',
+  FAILED = 'FAILED'
+}
+
+export enum ServiceRequestStatus {
+  PENDING = 'PENDING',
+  ACCEPTED = 'ACCEPTED',
+  IN_PROGRESS = 'IN_PROGRESS',
+  COMPLETED = 'COMPLETED',
+  CANCELLED = 'CANCELLED'
+}
+
+export enum CleaningTaskStatus {
+  PENDING = 'PENDING',
+  ASSIGNED = 'ASSIGNED',
+  IN_PROGRESS = 'IN_PROGRESS',
+  COMPLETED = 'COMPLETED',
+  CANCELLED = 'CANCELLED'
+}
+
+export enum MaintenanceStatus {
+  OPEN = 'OPEN',
+  ASSIGNED = 'ASSIGNED',
+  IN_PROGRESS = 'IN_PROGRESS',
+  ON_HOLD = 'ON_HOLD',
+  COMPLETED = 'COMPLETED',
+  CANCELLED = 'CANCELLED'
+}
+
+export enum ChatThreadStatus {
+  OPEN = 'OPEN',
+  WAITING_FOR_ADMIN = 'WAITING_FOR_ADMIN',
+  ASSIGNED = 'ASSIGNED',
+  RESOLVED = 'RESOLVED',
+  CLOSED = 'CLOSED'
+}
+
+export enum ChatMode {
+  BOT = 'BOT',
+  ADMIN = 'ADMIN'
+}
+
+export enum Priority {
+  LOW = 'LOW',
+  MEDIUM = 'MEDIUM',
+  HIGH = 'HIGH',
+  URGENT = 'URGENT'
+}
+
+export enum PricingAdjustmentType {
+  PERCENTAGE_DISCOUNT = 'PERCENTAGE_DISCOUNT',
+  PERCENTAGE_MARKUP = 'PERCENTAGE_MARKUP',
+  FIXED_DISCOUNT = 'FIXED_DISCOUNT',
+  FIXED_MARKUP = 'FIXED_MARKUP',
+  NO_ADJUSTMENT = 'NO_ADJUSTMENT'
+}
