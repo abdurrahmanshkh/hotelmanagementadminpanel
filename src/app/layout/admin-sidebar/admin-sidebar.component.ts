@@ -20,18 +20,9 @@ export interface NavGroup {
   imports: [CommonModule, RouterModule, IconComponent],
   template: `
     <aside class="admin-sidebar" [class.admin-sidebar--collapsed]="isCollapsed">
-      <!-- Brand & Property Header -->
-      <div class="sidebar-brand">
-        <div class="brand-content" *ngIf="!isCollapsed">
-          <div class="brand-title">
-            <app-icon name="building" [size]="22" color="#D97706"></app-icon>
-            <span class="title-text">SmartStay</span>
-          </div>
-          <span class="property-subtitle">Grand Hotel & Resort</span>
-        </div>
-        <div class="brand-content-mini" *ngIf="isCollapsed">
-          <app-icon name="building" [size]="24" color="#D97706"></app-icon>
-        </div>
+      <!-- Sidebar Control Top Toolbar -->
+      <div class="sidebar-top">
+        <span class="navigation-label" *ngIf="!isCollapsed">MAIN NAVIGATION</span>
         <button
           type="button"
           class="collapse-toggle"
@@ -62,29 +53,6 @@ export interface NavGroup {
           </ul>
         </div>
       </div>
-
-      <!-- User Profile Footer -->
-      <div class="sidebar-footer" *ngIf="authService.currentUser() as user">
-        <div class="user-profile" *ngIf="!isCollapsed">
-          <img
-            [src]="user.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80'"
-            [alt]="user.fullName"
-            class="user-avatar"
-          />
-          <div class="user-details">
-            <span class="user-name">{{ user.fullName }}</span>
-            <span class="user-role-badge">{{ user.role }}</span>
-          </div>
-        </div>
-        <button
-          type="button"
-          class="logout-btn"
-          (click)="onLogout()"
-          [title]="'Sign Out ' + user.fullName"
-        >
-          <app-icon name="log-out" [size]="18" color="#EF4444"></app-icon>
-        </button>
-      </div>
     </aside>
   `,
   styles: [`
@@ -103,6 +71,11 @@ export interface NavGroup {
 
       &--collapsed {
         width: 72px;
+
+        .sidebar-top {
+          justify-content: center;
+          padding: 0.75rem 0.5rem;
+        }
 
         .nav-container {
           padding: 1rem 0.5rem;
@@ -123,43 +96,19 @@ export interface NavGroup {
       }
     }
 
-    .sidebar-brand {
-      height: 64px;
+    .sidebar-top {
+      height: 48px;
       padding: 0 1rem;
       border-bottom: 1px solid #1E293B;
       display: flex;
       align-items: center;
       justify-content: space-between;
 
-      .brand-content {
-        display: flex;
-        flex-direction: column;
-      }
-
-      .brand-title {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        font-size: 1.125rem;
+      .navigation-label {
+        font-size: 0.6875rem;
         font-weight: 700;
-        color: #FFFFFF;
-        letter-spacing: -0.02em;
-      }
-
-      .property-subtitle {
-        font-size: 0.7rem;
-        font-weight: 500;
-        color: #D97706;
-        margin-left: 1.75rem;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-      }
-
-      .brand-content-mini {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
+        letter-spacing: 0.08em;
+        color: #64748B;
       }
 
       .collapse-toggle {
@@ -243,73 +192,10 @@ export interface NavGroup {
         }
       }
     }
-
-    .sidebar-footer {
-      padding: 0.875rem 1rem;
-      border-top: 1px solid #1E293B;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: #090D16;
-
-      .user-profile {
-        display: flex;
-        align-items: center;
-        gap: 0.625rem;
-        overflow: hidden;
-      }
-
-      .user-avatar {
-        width: 34px;
-        height: 34px;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 2px solid #D97706;
-      }
-
-      .user-details {
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-      }
-
-      .user-name {
-        font-size: 0.8125rem;
-        font-weight: 600;
-        color: #FFFFFF;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
-      }
-
-      .user-role-badge {
-        font-size: 0.6875rem;
-        color: #D97706;
-        font-weight: 600;
-        text-transform: uppercase;
-      }
-
-      .logout-btn {
-        background: #1E293B;
-        border: 1px solid #334155;
-        border-radius: 6px;
-        padding: 0.375rem;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: background 0.15s;
-
-        &:hover {
-          background: #7F1D1D;
-          border-color: #991B1B;
-        }
-      }
-    }
   `]
 })
 export class AdminSidebarComponent {
-  public authService = inject(AuthService);
+  private authService = inject(AuthService);
   public isCollapsed = false;
 
   public navGroups: NavGroup[] = [
@@ -368,11 +254,5 @@ export class AdminSidebarComponent {
     if (!roles || roles.length === 0) return true;
     const currentRole = this.authService.userRole();
     return currentRole ? roles.includes(currentRole) : false;
-  }
-
-  onLogout(): void {
-    if (confirm('Are you sure you want to log out of SmartStay Admin Panel?')) {
-      this.authService.logout();
-    }
   }
 }

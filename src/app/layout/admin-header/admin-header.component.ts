@@ -21,25 +21,54 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
           <app-icon name="menu" [size]="20" color="#334155"></app-icon>
         </button>
 
-        <!-- Dynamic Route Breadcrumbs track embedded directly in top header bar -->
+        <!-- Primary Hotel Brand Logo & Title -->
+        <div class="header-brand">
+          <app-icon name="building" [size]="24" color="#D97706"></app-icon>
+          <div class="brand-details">
+            <span class="brand-name">SmartStay Admin</span>
+            <span class="property-tag">Grand Resort & Spa</span>
+          </div>
+        </div>
+
+        <span class="header-divider"></span>
+
+        <!-- Dynamic Route Breadcrumb Track -->
         <div class="header-breadcrumbs">
           <app-breadcrumb></app-breadcrumb>
         </div>
       </div>
 
       <div class="admin-header__right">
-        <!-- Hotel System Status Badge -->
-        <div class="property-status-badge flex-gap">
-          <span class="live-pulse-dot"></span>
-          <span class="property-name font-semibold">SmartStay Grand Resort</span>
-          <span class="badge badge--available">Live System</span>
+        <!-- Staff User Profile Card & Sign Out Button -->
+        <div class="user-profile-header" *ngIf="authService.currentUser() as user">
+          <div class="user-pill flex-gap">
+            <img
+              [src]="user.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80'"
+              [alt]="user.fullName"
+              class="user-avatar"
+            />
+            <div class="user-details">
+              <span class="user-name">{{ user.fullName }}</span>
+              <span class="user-role">{{ user.role }} &bull; {{ user.staffCode }}</span>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            class="logout-action-btn"
+            (click)="onLogout()"
+            title="Sign Out of SmartStay HMS"
+          >
+            <app-icon name="log-out" [size]="16" color="#BE123C"></app-icon>
+            <span class="logout-label">Sign Out</span>
+          </button>
         </div>
       </div>
     </header>
   `,
   styles: [`
     .admin-header {
-      height: 56px;
+      height: 64px;
       background-color: #FFFFFF;
       border-bottom: 1px solid #E2E8F0;
       display: flex;
@@ -49,12 +78,12 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
       position: sticky;
       top: 0;
       z-index: 100;
-      box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04);
+      box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.05);
 
       &__left {
         display: flex;
         align-items: center;
-        gap: 1rem;
+        gap: 1.25rem;
         flex: 1;
       }
 
@@ -81,50 +110,126 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
       }
     }
 
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+
+      .brand-details {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .brand-name {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #0F172A;
+        line-height: 1.1;
+        letter-spacing: -0.02em;
+      }
+
+      .property-tag {
+        font-size: 0.6875rem;
+        font-weight: 600;
+        color: #D97706;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+    }
+
+    .header-divider {
+      width: 1px;
+      height: 24px;
+      background-color: #CBD5E1;
+
+      @media (max-width: 768px) {
+        display: none;
+      }
+    }
+
     .header-breadcrumbs {
       display: flex;
       align-items: center;
-      margin-bottom: 0;
+
+      @media (max-width: 768px) {
+        display: none;
+      }
 
       ::ng-deep .breadcrumb {
         margin-bottom: 0 !important;
       }
     }
 
-    .property-status-badge {
+    .user-profile-header {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-      font-size: 0.8125rem;
-      color: #0F172A;
-      background: #F8FAFC;
-      border: 1px solid #E2E8F0;
-      padding: 0.375rem 0.75rem;
-      border-radius: 9999px;
+      gap: 1rem;
 
-      @media (max-width: 640px) {
-        display: none;
+      .user-pill {
+        display: flex;
+        align-items: center;
+        gap: 0.625rem;
+        background-color: #F8FAFC;
+        border: 1px solid #E2E8F0;
+        padding: 0.375rem 0.75rem;
+        border-radius: 9999px;
       }
 
-      .live-pulse-dot {
-        width: 8px;
-        height: 8px;
+      .user-avatar {
+        width: 32px;
+        height: 32px;
         border-radius: 50%;
-        background-color: #047857;
-        box-shadow: 0 0 0 2px rgba(4, 120, 87, 0.2);
-        animation: pulse-green 2s infinite;
+        object-fit: cover;
+        border: 2px solid #D97706;
       }
 
-      .property-name {
-        font-weight: 600;
+      .user-details {
+        display: flex;
+        flex-direction: column;
+
+        @media (max-width: 640px) {
+          display: none;
+        }
+      }
+
+      .user-name {
+        font-size: 0.8125rem;
+        font-weight: 700;
         color: #0F172A;
+        line-height: 1.1;
       }
-    }
 
-    @keyframes pulse-green {
-      0% { box-shadow: 0 0 0 0 rgba(4, 120, 87, 0.4); }
-      70% { box-shadow: 0 0 0 6px rgba(4, 120, 87, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(4, 120, 87, 0); }
+      .user-role {
+        font-size: 0.6875rem;
+        font-weight: 600;
+        color: #64748B;
+      }
+
+      .logout-action-btn {
+        display: flex;
+        align-items: center;
+        gap: 0.375rem;
+        padding: 0.4375rem 0.875rem;
+        background-color: #FFF1F2;
+        color: #BE123C;
+        border: 1px solid #FECDD3;
+        border-radius: 8px;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.15s ease-in-out;
+
+        &:hover {
+          background-color: #FFE4E6;
+          border-color: #FDA4AF;
+        }
+
+        @media (max-width: 640px) {
+          .logout-label {
+            display: none;
+          }
+        }
+      }
     }
   `]
 })
@@ -132,4 +237,10 @@ export class AdminHeaderComponent {
   public authService = inject(AuthService);
 
   @Output() toggleMobileMenu = new EventEmitter<void>();
+
+  onLogout(): void {
+    if (confirm('Are you sure you want to sign out of SmartStay Admin Panel?')) {
+      this.authService.logout();
+    }
+  }
 }
