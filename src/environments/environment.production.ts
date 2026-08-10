@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
   useMockApi: false,
-  apiBaseUrl: '/api/v1',
+  apiBaseUrl: 'http://localhost:8080/api/v1',
   mockDataPath: 'assets/mock-data',
   mockDelayMs: 0,
   chatPollingIntervalMs: 5000,
