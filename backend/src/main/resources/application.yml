@@ -1,0 +1,48 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: smartstay-backend
+  datasource:
+    url: jdbc:h2:file:./data/smartstay_db;DB_CLOSE_ON_EXIT=FALSE;AUTO_RECONNECT=TRUE;MODE=MySQL
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: password
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      settings:
+        web-allow-others: true
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:data.sql
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+app:
+  jwt:
+    secret: 9a6f8b12c4d3e5f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1
+    expiration-minutes: 1440
+  hotel:
+    tax-percentage: 12.0
+    service-fee-percentage: 5.0
+    check-in-time: "14:00"
+    check-out-time: "11:00"
+    max-stay-days: 30
+    pending-payment-timeout-minutes: 15
+    cancellation-cutoff-hours: 24
