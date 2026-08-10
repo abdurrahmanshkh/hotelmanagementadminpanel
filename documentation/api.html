@@ -1,0 +1,110 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SmartStay REST API Tester</title>
+</head>
+<body>
+<header>
+  <div class="title-row"><div><h1>SmartStay API Tester</h1><div class="subtitle">Single-file browser client covering the complete API contract</div></div><span class="pill" id="count"></span></div>
+  <div class="toolbar">
+    <input id="baseUrl" value="http://localhost:8080/api/v1" aria-label="API base URL" />
+    <input id="token" type="password" placeholder="JWT access token (auto-filled after login)" aria-label="JWT token" />
+    <button class="secondary" onclick="saveSettings()">Save settings</button>
+    <button class="secondary" onclick="clearToken()">Clear token</button>
+    <button class="danger" onclick="clearResponses()">Clear responses</button>
+  </div>
+</header>
+<main>
+  <nav class="sidebar" id="nav"></nav>
+  <div class="content">
+    <div class="notice"><b>Browser note:</b> the Spring Boot backend must allow CORS for the origin serving this file. For best results, serve it using a local HTTP server rather than opening it directly with <code>file://</code>. CSV export responses are automatically downloaded.</div>
+    <div id="app"></div>
+  </div>
+</main>
+<div class="global-response hidden" id="globalBox"><div class="bar"><b>Last response</b><button class="secondary" onclick="document.getElementById('globalBox').classList.add('hidden')">Close</button></div><pre id="globalText"></pre></div>
+<script>
+const J = x => JSON.stringify(x,null,2);
+const sections = [
+['Authentication',[
+ ['Register customer','POST','/auth/register','Public',{firstName:'Rohit',lastName:'Sharma',email:'rohit@example.com',phone:'9876543210',password:'Guest@123',confirmPassword:'Guest@123'}],
+ ['Login','POST','/auth/login','Public',{email:'rohit@example.com',password:'Guest@123'},null,{captureToken:true}],
+ ['Current identity','GET','/auth/me','Authenticated']]],
+['Profile',[
+ ['Get profile','GET','/users/me','Authenticated'],['Update profile','PUT','/users/me','Authenticated',{firstName:'Rohit',lastName:'Sharma',phone:'9876543299'}],['Change password','POST','/users/me/change-password','Authenticated',{currentPassword:'Guest@123',newPassword:'Guest@456',confirmNewPassword:'Guest@456'}]]],
+['Public room types',[
+ ['List active room types','GET','/room-types','Public'],['Get room type','GET','/room-types/{roomTypeId}','Public',null,{roomTypeId:1}]]],
+['Public rooms',[
+ ['List active rooms','GET','/rooms','Public'],['Get room details','GET','/rooms/{roomIdentifier}','Public',null,{roomIdentifier:'3'}],['Search availability','GET','/rooms/availability','Public',null,null,null,{checkInDate:'2026-08-20',checkOutDate:'2026-08-22',adults:2,children:0,roomTypeId:1}],['Get room feedback','GET','/rooms/{roomId}/feedback','Public',null,{roomId:3}]]],
+['Booking',[
+ ['Generate quote','POST','/bookings/quote','Customer',{roomId:3,checkInDate:'2026-08-20',checkOutDate:'2026-08-22',adults:2,children:0,promoCode:null}],['Create booking','POST','/bookings','Customer',{roomId:3,checkInDate:'2026-08-20',checkOutDate:'2026-08-22',adults:2,children:0,specialRequests:'Quiet room if possible'}],['List my bookings','GET','/bookings/my','Customer'],['Get booking details','GET','/bookings/{bookingIdentifier}','Owner',null,{bookingIdentifier:'43'}],['Cancel booking','POST','/bookings/{bookingId}/cancel','Owner',{reason:'Travel plans changed'},{bookingId:43}]]],
+['Payment',[
+ ['Initiate payment','POST','/payments/initiate','Owner',{bookingId:43}],['Confirm payment','POST','/payments/{paymentId}/confirm','Owner',{dummyPaymentToken:'DUMMY-TOKEN-ABC123'},{paymentId:15},{idempotency:true}]]],
+['Passcode and room access',[
+ ['Get passcode status','GET','/bookings/{bookingId}/passcode','Owner',null,{bookingId:43}],['Validate room access','POST','/room-access/validate','Public / configured',{roomId:3,passcode:'123456'}]]],
+['Customer service requests',[
+ ['Create service request','POST','/service-requests','Customer',{bookingId:43,category:'HOUSEKEEPING',title:'Extra towels required',description:'Please provide two extra towels',priority:'MEDIUM'}],['List my service requests','GET','/service-requests/my','Customer'],['Get service request','GET','/service-requests/{serviceRequestId}','Owner',null,{serviceRequestId:18}],['Cancel service request','POST','/service-requests/{serviceRequestId}/cancel','Owner',{reason:'No longer required'},{serviceRequestId:18}]]],
+['Notifications',[
+ ['List notifications','GET','/notifications','Authenticated'],['Unread count','GET','/notifications/unread-count','Authenticated'],['Mark one read','PATCH','/notifications/{notificationId}/read','Authenticated',null,{notificationId:101}],['Mark all read','PATCH','/notifications/read-all','Authenticated']]],
+['Customer chat',[
+ ['Create chat','POST','/chats','Customer',{bookingId:43,initialMessage:'I need help with my booking.',mode:'BOT'}],['List my chats','GET','/chats/my','Customer'],['Get chat thread','GET','/chats/{chatId}','Customer',null,{chatId:7}],['Send chat message','POST','/chats/{chatId}/messages','Customer',{message:'Can I arrive one hour early?'},{chatId:7}],['Escalate chat','POST','/chats/{chatId}/escalate','Customer',{reason:'BOT_DID_NOT_UNDERSTAND',lastBotConfidence:0.32},{chatId:7}],['Close chat','POST','/chats/{chatId}/close','Customer',null,{chatId:7}]]],
+['Customer feedback',[
+ ['Submit feedback','POST','/feedback','Customer / owner',{bookingId:43,rating:5,title:'Excellent stay',comments:'The room was clean and staff were helpful.'}],['List my feedback','GET','/feedback/my','Customer']]],
+['Admin bookings',[
+ ['List all bookings','GET','/admin/bookings','STAFF / ADMIN / MANAGER'],['Get booking details','GET','/admin/bookings/{bookingId}','STAFF / ADMIN / MANAGER',null,{bookingId:43}],['Check in','PATCH','/admin/bookings/{bookingId}/check-in','STAFF / ADMIN / MANAGER',{notes:'Customer identity verified'},{bookingId:43}],['Check out','PATCH','/admin/bookings/{bookingId}/check-out','STAFF / ADMIN / MANAGER',{notes:'Checkout completed',maintenanceRequired:false,maintenanceDescription:null},{bookingId:43}],['Admin cancellation','POST','/admin/bookings/{bookingId}/cancel','ADMIN / MANAGER',{reason:'Hotel operational issue',processRefund:true},{bookingId:43}]]],
+['Admin cleaning',[
+ ['List cleaning tasks','GET','/admin/cleaning-tasks','Admin portal'],['Assign cleaning task','PATCH','/admin/cleaning-tasks/{taskId}/assign','Admin portal',{assignedToUserId:2,notes:'Assigned to housekeeping'},{taskId:1}],['Start cleaning task','PATCH','/admin/cleaning-tasks/{taskId}/start','Admin portal',{notes:'Cleaning started'},{taskId:1}],['Complete cleaning task','PATCH','/admin/cleaning-tasks/{taskId}/complete','Admin portal',{notes:'Room cleaned and inspected',maintenanceRequired:false,maintenanceDescription:null},{taskId:1}]]],
+['Admin maintenance',[
+ ['List maintenance','GET','/admin/maintenance','Admin portal'],['Create maintenance','POST','/admin/maintenance','Admin portal',{roomId:3,title:'Air conditioner not cooling',description:'The air conditioner requires inspection',priority:'HIGH'}],['Assign maintenance','PATCH','/admin/maintenance/{maintenanceId}/assign','Admin portal',{assignedToUserId:2,notes:'Assigned to maintenance staff'},{maintenanceId:1}],['Start maintenance','PATCH','/admin/maintenance/{maintenanceId}/start','Admin portal',{notes:'Inspection started'},{maintenanceId:1}],['Complete maintenance','PATCH','/admin/maintenance/{maintenanceId}/complete','Admin portal',{notes:'Air conditioner repaired and tested',roomReady:true},{maintenanceId:1}]]],
+['Admin rooms',[
+ ['Create room','POST','/admin/rooms','ADMIN / MANAGER',{roomNumber:'501',roomTypeId:1,floorNumber:5,description:'Premium room on the fifth floor',imageUrl:'https://example.com/room-501.jpg',active:true}],['Update room','PUT','/admin/rooms/{roomId}','ADMIN / MANAGER',{roomNumber:'501',roomTypeId:1,floorNumber:5,description:'Updated room description',imageUrl:'https://example.com/room-501-new.jpg',version:0},{roomId:3}],['Update room status','PATCH','/admin/rooms/{roomId}/status','ADMIN / MANAGER',{status:'MAINTENANCE',reason:'Room inspection required'},{roomId:3}],['Update active status','PATCH','/admin/rooms/{roomId}/active','ADMIN / MANAGER',{active:false,reason:'Temporarily removed from inventory'},{roomId:3}]]],
+['Admin room types',[
+ ['Create room type','POST','/admin/room-types','ADMIN / MANAGER',{name:'Premium',code:'PREMIUM',description:'Premium room with modern facilities',basePrice:7000,minimumPrice:5500,maximumPrice:9500,maximumAdults:3,maximumChildren:2,bedType:'KING',roomSizeSqft:500,active:true}],['Update room type','PUT','/admin/room-types/{roomTypeId}','ADMIN / MANAGER',{name:'Premium',code:'PREMIUM',description:'Premium room with modern facilities',basePrice:7000,minimumPrice:5500,maximumPrice:9500,maximumAdults:3,maximumChildren:2,bedType:'KING',roomSizeSqft:500,active:true},{roomTypeId:1}]]],
+['Admin feedback',[
+ ['List feedback','GET','/admin/feedback','ADMIN / MANAGER'],['Update visibility','PATCH','/admin/feedback/{feedbackId}/visibility','ADMIN / MANAGER',{visible:false,reason:'Review contains personal information'},{feedbackId:1}]]],
+['Hotel settings',[
+ ['Get settings','GET','/admin/settings','ADMIN / MANAGER'],['Update settings','PUT','/admin/settings','ADMIN / MANAGER',{hotelName:'SmartStay Hotel',currency:'INR',timezone:'Asia/Kolkata',checkInTime:'14:00:00',checkOutTime:'11:00:00',taxPercentage:12,serviceFeePercentage:6,maximumStayNights:30,paymentTimeoutMinutes:20,fullRefundCutoffHours:48,lateRefundPercentage:25,dynamicPricingEnabled:true}]]],
+['Dashboard',[[ 'Dashboard summary','GET','/admin/dashboard/summary','STAFF / ADMIN / MANAGER']]],
+['Admin reports',[
+ ['Revenue report','GET','/admin/reports/revenue','ADMIN / MANAGER',null,null,null,{fromDate:'2026-08-01',toDate:'2026-08-31'}],['Bookings report','GET','/admin/reports/bookings','Operational roles',null,null,null,{fromDate:'2026-08-01',toDate:'2026-08-31'}],['Occupancy report','GET','/admin/reports/occupancy','Operational roles',null,null,null,{fromDate:'2026-08-01',toDate:'2026-08-31'}],['Services report','GET','/admin/reports/services','Operational roles',null,null,null,{fromDate:'2026-08-01',toDate:'2026-08-31'}],['Export revenue CSV','GET','/admin/reports/revenue/export','ADMIN / MANAGER',null,null,{download:true},{fromDate:'2026-08-01',toDate:'2026-08-31'}],['Export bookings CSV','GET','/admin/reports/bookings/export','Operational roles',null,null,{download:true},{fromDate:'2026-08-01',toDate:'2026-08-31'}],['Export occupancy CSV','GET','/admin/reports/occupancy/export','Operational roles',null,null,{download:true},{fromDate:'2026-08-01',toDate:'2026-08-31'}],['Export services CSV','GET','/admin/reports/services/export','Operational roles',null,null,{download:true},{fromDate:'2026-08-01',toDate:'2026-08-31'}]]],
+['Admin users',[
+ ['List users','GET','/admin/users','ADMIN / MANAGER'],['Get user','GET','/admin/users/{userId}','ADMIN / MANAGER',null,{userId:12}],['Change role','PATCH','/admin/users/{userId}/role','ADMIN',{role:'STAFF',reason:'Assigned to hotel operations'},{userId:12}],['Change active status','PATCH','/admin/users/{userId}/active','ADMIN',{active:false,reason:'Account temporarily disabled'},{userId:12}]]],
+['Audit logs',[
+ ['List audit logs','GET','/admin/audit-logs','ADMIN / MANAGER',null,null,null,{action:'USER_ROLE_CHANGED',entityType:'',actorUserId:'',entityId:'',fromDate:'2026-08-01',toDate:'2026-08-31',limit:50}],['Get audit log','GET','/admin/audit-logs/{auditLogId}','ADMIN / MANAGER',null,{auditLogId:1}]]],
+['Admin service requests',[
+ ['List service requests','GET','/admin/service-requests','Admin portal'],['Get service request','GET','/admin/service-requests/{requestId}','Admin portal',null,{requestId:18}],['Assign service request','PATCH','/admin/service-requests/{requestId}/assign','Admin portal',{assignedToUserId:2,notes:'Assigned to staff'},{requestId:18}],['Start service request','PATCH','/admin/service-requests/{requestId}/start','Admin portal',{notes:'Work started'},{requestId:18}],['Complete service request','PATCH','/admin/service-requests/{requestId}/complete','Admin portal',{notes:'Request completed'},{requestId:18}],['Cancel service request','PATCH','/admin/service-requests/{requestId}/cancel','Admin portal',{reason:'Cancelled by administrator'},{requestId:18}]]],
+['Admin chats',[
+ ['List chats','GET','/admin/chats','Admin portal'],['Get chat','GET','/admin/chats/{chatId}','Admin portal',null,{chatId:7}],['Assign chat','POST','/admin/chats/{chatId}/assign','Admin portal',{assignedAdminId:2},{chatId:7}],['Send admin message','POST','/admin/chats/{chatId}/messages','Admin portal',{message:'How may I assist you?'},{chatId:7}],['Resolve chat','POST','/admin/chats/{chatId}/resolve','Admin portal',{resolution:'Customer query resolved'},{chatId:7}]]]
+];
+
+
+let seq=0;
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function render(){
+ const app=document.getElementById('app'),nav=document.getElementById('nav'); let total=0;
+ sections.forEach(([name,eps],si)=>{const id='s'+si;nav.insertAdjacentHTML('beforeend',`<a href="#${id}">${esc(name)} <small>(${eps.length})</small></a>`);let cards='';
+ eps.forEach(ep=>{total++;let [title,method,path,auth,body,pathVars,opts,query] = ep; pathVars = pathVars || {}; opts = opts || {}; query = query || {}; const i=seq++; const pv=Object.entries(pathVars).map(([k,v])=>`<div class="field"><label>Path: ${esc(k)}</label><input data-path="${esc(k)}" value="${esc(v)}" oninput="preview(${i})"></div>`).join(''); const qv=Object.entries(query).map(([k,v])=>`<div class="field"><label>Query: ${esc(k)}</label><input data-query="${esc(k)}" value="${esc(v)}" oninput="preview(${i})"></div>`).join('');
+ cards+=`<article class="card" id="e${i}" data-method="${method}" data-path="${esc(path)}" data-options='${esc(J(opts))}'>
+ <div class="card-head" onclick="toggleCard(${i})"><span class="method ${method}">${method}</span><h3>${esc(title)}</h3><span class="auth">${esc(auth)}</span></div>
+ <div class="card-body"><div class="url-preview" id="url${i}"></div>${pv}${qv}${opts.idempotency?`<div class="field"><label>Idempotency-Key</label><input data-idempotency value="${crypto.randomUUID?crypto.randomUUID():Date.now()}-${i}"></div>`:''}${body!==undefined&&body!==null?`<div class="field"><label>JSON body</label><textarea data-body>${esc(J(body))}</textarea></div>`:''}
+ <div class="actions"><button onclick="sendRequest(${i})">Send request</button><button class="secondary" onclick="copyCurl(${i})">Copy cURL</button><span class="status" id="status${i}">Ready</span></div><div class="field" style="margin-top:9px"><label>Response</label><div class="response" id="resp${i}">No request sent.</div></div></div></article>`});
+ app.insertAdjacentHTML('beforeend',`<section class="section" id="${id}"><h2>${esc(name)}</h2><div class="grid">${cards}</div></section>`)});
+ document.getElementById('count').textContent=total+' endpoints'; for(let i=0;i<seq;i++)preview(i); loadSettings();
+}
+function toggleCard(i){document.querySelector(`#e${i} .card-body`).classList.toggle('hidden')}
+function build(i){const card=document.getElementById('e'+i);let path=card.dataset.path;card.querySelectorAll('[data-path]').forEach(x=>path=path.replace('{'+x.dataset.path+'}',encodeURIComponent(x.value)));const base=document.getElementById('baseUrl').value.replace(/\/$/,'');const qs=new URLSearchParams();card.querySelectorAll('[data-query]').forEach(x=>{if(x.value!=='')qs.append(x.dataset.query,x.value)});return base+path+(qs.toString()?'?'+qs:'')}
+function preview(i){document.getElementById('url'+i).textContent=build(i)}
+function headersFor(card){const h={Accept:'application/json'};const token=document.getElementById('token').value.trim();if(token)h.Authorization='Bearer '+token;const body=card.querySelector('[data-body]');if(body)h['Content-Type']='application/json';const ik=card.querySelector('[data-idempotency]');if(ik)h['Idempotency-Key']=ik.value.trim();return h}
+async function sendRequest(i){const card=document.getElementById('e'+i),method=card.dataset.method,url=build(i),bodyEl=card.querySelector('[data-body]'),status=document.getElementById('status'+i),out=document.getElementById('resp'+i),btn=card.querySelector('button');let options={method,headers:headersFor(card)};try{if(bodyEl){JSON.parse(bodyEl.value);options.body=bodyEl.value}status.textContent='Sending...';status.className='status';btn.disabled=true;const res=await fetch(url,options);const type=res.headers.get('content-type')||'';const opts=JSON.parse(card.dataset.options||'{}');if(opts.download||type.includes('text/csv')){const blob=await res.blob();const cd=res.headers.get('content-disposition')||'';const m=cd.match(/filename="?([^";]+)"?/);const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=m?m[1]:'smartstay-export.csv';a.click();URL.revokeObjectURL(a.href);out.textContent=`Downloaded ${a.download}\nHTTP ${res.status} ${res.statusText}`;}else{const text=await res.text();let data;try{data=JSON.parse(text);out.textContent=J(data)}catch{data=text;out.textContent=text||'(empty response)'}if(opts.captureToken&&res.ok){const t=data?.data?.accessToken||data?.accessToken;if(t){document.getElementById('token').value=t;saveSettings();}}showGlobal(`HTTP ${res.status} ${res.statusText}\n\n${out.textContent}`)}status.textContent=`HTTP ${res.status} ${res.statusText}`;status.className='status '+(res.ok?'ok':'bad');}
+ catch(e){out.textContent=`Request failed: ${e.message}\n\nLikely causes: backend is offline, CORS is not configured, mixed HTTP/HTTPS content, or the URL is wrong.`;status.textContent='Network / client error';status.className='status bad';showGlobal(out.textContent)}finally{btn.disabled=false}}
+function copyCurl(i){const card=document.getElementById('e'+i),h=headersFor(card),body=card.querySelector('[data-body]');let c=`curl -i -X ${card.dataset.method} '${build(i).replaceAll("'","'\\''")}'`;Object.entries(h).forEach(([k,v])=>c+=` \\\n  -H '${k}: ${String(v).replaceAll("'","'\\''")}'`);if(body)c+=` \\\n  --data-raw '${body.value.replaceAll("'","'\\''")}'`;navigator.clipboard.writeText(c).then(()=>{document.getElementById('status'+i).textContent='cURL copied'})}
+function saveSettings(){localStorage.setItem('smartstay.baseUrl',document.getElementById('baseUrl').value);localStorage.setItem('smartstay.token',document.getElementById('token').value);for(let i=0;i<seq;i++)preview(i)}
+function loadSettings(){const b=localStorage.getItem('smartstay.baseUrl'),t=localStorage.getItem('smartstay.token');if(b)document.getElementById('baseUrl').value=b;if(t)document.getElementById('token').value=t;for(let i=0;i<seq;i++)preview(i)}
+function clearToken(){document.getElementById('token').value='';localStorage.removeItem('smartstay.token')}
+function clearResponses(){document.querySelectorAll('.response').forEach(x=>x.textContent='No request sent.');document.querySelectorAll('.status').forEach(x=>{x.textContent='Ready';x.className='status'})}
+function showGlobal(t){document.getElementById('globalText').textContent=t;document.getElementById('globalBox').classList.remove('hidden')}
+document.getElementById('baseUrl').addEventListener('input',()=>{for(let i=0;i<seq;i++)preview(i)});render();
+</script>
+</body>
+</html>
