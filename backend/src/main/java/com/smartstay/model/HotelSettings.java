@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 public class HotelSettings {
 
     @Id
+    @Builder.Default
     private Long id = 1L;
 
     @Column(name = "hotel_name", nullable = false)
