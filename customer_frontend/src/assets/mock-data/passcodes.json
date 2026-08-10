@@ -1,0 +1,19 @@
+[
+  {
+    "id": 1,
+    "bookingId": 1,
+    "bookingReference": "BK-20260803-0001",
+    "roomId": 1,
+    "roomNumber": "101",
+    "userId": 1,
+    "passcode": "784920",
+    "maskedPasscode": "78XX20",
+    "status": "ACTIVE",
+    "validFrom": "2026-08-10T14:00:00+05:30",
+    "validUntil": "2026-08-12T11:00:00+05:30",
+    "failedAttempts": 0,
+    "maxAllowedAttempts": 5,
+    "createdAt": "2026-08-10T14:00:00+05:30",
+    "updatedAt": "2026-08-10T14:00:00+05:30"
+  }
+]

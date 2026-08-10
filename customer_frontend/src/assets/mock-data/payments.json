@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "paymentReference": "PAY-20260803-0001",
+    "bookingId": 1,
+    "bookingReference": "BK-20260803-0001",
+    "userId": 1,
+    "amount": 11583.00,
+    "currency": "INR",
+    "paymentMethod": "CARD",
+    "status": "SUCCESS",
+    "gatewayTransactionId": "TXN_MOCK_987654",
+    "createdAt": "2026-08-03T10:32:00+05:30",
+    "updatedAt": "2026-08-03T10:32:00+05:30"
+  }
+]

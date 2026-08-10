@@ -1,0 +1,44 @@
+[
+  {
+    "id": 1,
+    "name": "Standard Room",
+    "code": "STANDARD",
+    "description": "Cozy room with modern amenities, work desk, and high-speed Wi-Fi.",
+    "basePrice": 3200.00,
+    "minimumPrice": 2500.00,
+    "maximumPrice": 4500.00,
+    "maximumAdults": 2,
+    "maximumChildren": 1,
+    "bedType": "Queen Bed",
+    "roomSizeSqft": 280,
+    "active": true
+  },
+  {
+    "id": 2,
+    "name": "Deluxe Room",
+    "code": "DELUXE",
+    "description": "Spacious room featuring a king bed, city skyline view, mini bar, and luxury bath.",
+    "basePrice": 4500.00,
+    "minimumPrice": 3600.00,
+    "maximumPrice": 6500.00,
+    "maximumAdults": 2,
+    "maximumChildren": 1,
+    "bedType": "King Bed",
+    "roomSizeSqft": 340,
+    "active": true
+  },
+  {
+    "id": 3,
+    "name": "Executive Suite",
+    "code": "SUITE",
+    "description": "Luxurious suite with private lounge, balcony view, espresso bar, and soaking tub.",
+    "basePrice": 8500.00,
+    "minimumPrice": 7000.00,
+    "maximumPrice": 12500.00,
+    "maximumAdults": 3,
+    "maximumChildren": 2,
+    "bedType": "King Bed + Sofa Bed",
+    "roomSizeSqft": 520,
+    "active": true
+  }
+]

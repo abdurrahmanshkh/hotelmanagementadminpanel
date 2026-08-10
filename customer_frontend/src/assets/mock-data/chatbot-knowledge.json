@@ -1,0 +1,26 @@
+[
+  {
+    "keywords": ["breakfast", "food", "timing", "morning", "buffet"],
+    "answer": "Complimentary breakfast buffet is served daily at The Grand Dining Hall from 7:00 AM to 10:30 AM."
+  },
+  {
+    "keywords": ["wifi", "internet", "password", "connect"],
+    "answer": "High-speed Wi-Fi network is 'SmartStay-Guest'. Your password is your room number + last 4 digits of your phone number."
+  },
+  {
+    "keywords": ["checkout", "check out", "timing", "leave"],
+    "answer": "Standard checkout time is 11:00 AM. Late checkout can be requested via Service Requests on your account dashboard."
+  },
+  {
+    "keywords": ["checkin", "check in", "timing", "arrive"],
+    "answer": "Standard check-in time starts at 2:00 PM. Early check-in is subject to room availability."
+  },
+  {
+    "keywords": ["passcode", "key", "door", "lock", "access", "pin"],
+    "answer": "Your 6-digit room door passcode is available on your Account Dashboard under 'My Passcode' once your booking is checked in."
+  },
+  {
+    "keywords": ["pool", "swimming", "gym", "fitness", "spa"],
+    "answer": "Our infinity pool and fitness center are open daily from 6:00 AM to 10:00 PM on the 5th floor."
+  }
+]
