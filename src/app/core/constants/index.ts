@@ -82,7 +82,9 @@ export const API_ENDPOINTS = {
   SERVICE_REQUESTS_LIST: '/admin/service-requests',
   SERVICE_REQUEST_DETAILS: (id: number | string) => `/admin/service-requests/${id}`,
   SERVICE_REQUEST_ASSIGN: (id: number | string) => `/admin/service-requests/${id}/assign`,
-  SERVICE_REQUEST_STATUS: (id: number | string) => `/admin/service-requests/${id}/status`,
+  SERVICE_REQUEST_START: (id: number | string) => `/admin/service-requests/${id}/start`,
+  SERVICE_REQUEST_COMPLETE: (id: number | string) => `/admin/service-requests/${id}/complete`,
+  SERVICE_REQUEST_CANCEL: (id: number | string) => `/admin/service-requests/${id}/cancel`,
 
   CHATS_LIST: '/admin/chats',
   CHAT_DETAILS: (id: number | string) => `/admin/chats/${id}`,
