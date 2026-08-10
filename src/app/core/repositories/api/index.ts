@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { API_ENDPOINTS } from '../../constants';
 import {
@@ -78,16 +78,167 @@ function getUrl(path: string): string {
   return `${environment.apiBaseUrl}${path}`;
 }
 
+type JsonRecord = Record<string, unknown>;
+
+type BackendAuthResponse = AuthResponse & {
+  accessToken?: string;
+  tokenType?: string;
+};
+
+function isRecord(value: unknown): value is JsonRecord {
+  return typeof value === 'object' && value !== null;
+}
+
+function asString(value: unknown, fallback = ''): string {
+  return typeof value === 'string' ? value : fallback;
+}
+
+function asNumber(value: unknown, fallback = 0): number {
+  return typeof value === 'number' ? value : fallback;
+}
+
+function getNestedRecord(value: JsonRecord, key: string): JsonRecord | undefined {
+  const nested = value[key];
+  return isRecord(nested) ? nested : undefined;
+}
+
+function getOptionalString(value: JsonRecord, key: string): string | undefined {
+  return typeof value[key] === 'string' ? value[key] : undefined;
+}
+
+function normalizeUser(user: AdminUser | JsonRecord): AdminUser {
+  const raw = user as JsonRecord;
+  const firstName = asString(raw['firstName']);
+  const lastName = asString(raw['lastName']);
+  return {
+    ...(user as AdminUser),
+    id: asNumber(raw['id']),
+    email: asString(raw['email']),
+    fullName: asString(raw['fullName'], `${firstName} ${lastName}`.trim()),
+    role: raw['role'] as AdminUser['role'],
+    staffCode: asString(raw['staffCode'], getOptionalString(raw, 'employeeCode') ?? ''),
+    createdAt: asString(raw['createdAt'], new Date().toISOString())
+  };
+}
+
+function normalizeAuthResponse(response: ApiResponse<BackendAuthResponse>): ApiResponse<AuthResponse> {
+  const data = response.data;
+  return {
+    ...response,
+    data: {
+      token: data.token || data.accessToken || '',
+      expiresInSeconds: data.expiresInSeconds,
+      user: normalizeUser(data.user)
+    }
+  };
+}
+
+function normalizePage<T>(itemsOrPage: unknown, mapper: (item: T) => T): PageData<T> {
+  if (Array.isArray(itemsOrPage)) {
+    return { items: itemsOrPage.map(item => mapper(item as T)), page: 0, size: itemsOrPage.length, totalItems: itemsOrPage.length, totalPages: 1 };
+  }
+  if (isRecord(itemsOrPage)) {
+    const content = itemsOrPage['items'] ?? itemsOrPage['content'] ?? itemsOrPage['data'];
+    const items = Array.isArray(content) ? content.map(item => mapper(item as T)) : [];
+    return {
+      items,
+      page: asNumber(itemsOrPage['page'], asNumber(itemsOrPage['number'])),
+      size: asNumber(itemsOrPage['size'], items.length),
+      totalItems: asNumber(itemsOrPage['totalItems'], asNumber(itemsOrPage['totalElements'], items.length)),
+      totalPages: asNumber(itemsOrPage['totalPages'], 1)
+    };
+  }
+  return { items: [], page: 0, size: 0, totalItems: 0, totalPages: 0 };
+}
+
+function mapPageResponse<T>(response: ApiResponse<unknown>, mapper: (item: T) => T): ApiResponse<PageData<T>> {
+  return { ...response, data: normalizePage<T>(response.data, mapper) };
+}
+
+function normalizeBooking<T extends BookingSummary>(booking: T): T {
+  const raw = booking as JsonRecord;
+  const customer = getNestedRecord(raw, 'customer') ?? getNestedRecord(raw, 'guest');
+  const room = getNestedRecord(raw, 'room');
+  const roomType = room ? getNestedRecord(room, 'roomType') : getNestedRecord(raw, 'roomType');
+  return {
+    ...booking,
+    bookingReference: asString(raw['bookingReference'], asString(raw['referenceNumber'])),
+    guestId: asNumber(raw['guestId'], customer ? asNumber(customer['id']) : 0),
+    guestName: asString(raw['guestName'], customer ? `${asString(customer['firstName'])} ${asString(customer['lastName'])}`.trim() : ''),
+    guestEmail: asString(raw['guestEmail'], customer ? asString(customer['email']) : ''),
+    guestPhone: asString(raw['guestPhone'], customer ? asString(customer['phone']) : ''),
+    roomId: asNumber(raw['roomId'], room ? asNumber(room['id']) : 0),
+    roomNumber: asString(raw['roomNumber'], room ? asString(room['roomNumber']) : ''),
+    roomTypeName: asString(raw['roomTypeName'], roomType ? asString(roomType['name']) : ''),
+    guestCount: asNumber(raw['guestCount'], asNumber(raw['adults']) + asNumber(raw['children'])),
+    totalAmount: asNumber(raw['totalAmount'], asNumber(raw['finalAmount']))
+  };
+}
+
+function normalizeRoom<T extends RoomSummary>(room: T): T {
+  const raw = room as JsonRecord;
+  const roomType = getNestedRecord(raw, 'roomType');
+  return {
+    ...room,
+    roomTypeId: asNumber(raw['roomTypeId'], roomType ? asNumber(roomType['id']) : 0),
+    roomTypeName: asString(raw['roomTypeName'], roomType ? asString(roomType['name']) : ''),
+    floor: asNumber(raw['floor'], asNumber(raw['floorNumber'])),
+    capacity: asNumber(raw['capacity'], asNumber(raw['maximumAdults']) + asNumber(raw['maximumChildren'])),
+    isActive: typeof raw['isActive'] === 'boolean' ? raw['isActive'] : raw['active'] !== false,
+    rating: asNumber(raw['rating'])
+  };
+}
+
+function normalizeDashboard(response: ApiResponse<unknown>): ApiResponse<{
+  roomCounters: Record<string, number>;
+  arrivals: BookingSummary[];
+  departures: BookingSummary[];
+  urgentServiceRequests: ServiceRequest[];
+  waitingChats: ChatThread[];
+  occupancyPercentage: number;
+  todayRevenue: number;
+  monthlyRevenue: number;
+}> {
+  const data = isRecord(response.data) ? response.data : {};
+  return {
+    ...response,
+    data: {
+      roomCounters: {
+        TOTAL: asNumber(data['totalRooms']),
+        AVAILABLE: asNumber(data['availableRooms']),
+        OCCUPIED: asNumber(data['occupiedRooms']),
+        RESERVED: asNumber(data['reservedRooms']),
+        MAINTENANCE: asNumber(data['maintenanceRooms']),
+        UNDER_CLEANING: asNumber(data['underCleaningRooms'])
+      },
+      arrivals: Array.isArray(data['arrivals']) ? (data['arrivals'] as BookingSummary[]).map(normalizeBooking) : [],
+      departures: Array.isArray(data['departures']) ? (data['departures'] as BookingSummary[]).map(normalizeBooking) : [],
+      urgentServiceRequests: Array.isArray(data['urgentServiceRequests']) ? data['urgentServiceRequests'] as ServiceRequest[] : [],
+      waitingChats: Array.isArray(data['waitingChats']) ? data['waitingChats'] as ChatThread[] : [],
+      occupancyPercentage: asNumber(data['occupancyPercentage'], asNumber(data['currentOccupancyPercentage'])),
+      todayRevenue: asNumber(data['todayRevenue']),
+      monthlyRevenue: asNumber(data['monthlyRevenue'])
+    }
+  };
+}
+
+function appendPagination(params: HttpParams, page?: number, size?: number): HttpParams {
+  let result = params;
+  if (page !== undefined) result = result.set('page', page.toString());
+  if (size !== undefined) result = result.set('size', size.toString());
+  return result;
+}
+
 @Injectable()
 export class ApiAuthRepository extends AuthRepository {
   private http = inject(HttpClient);
 
   login(request: LoginRequest): Observable<ApiResponse<AuthResponse>> {
-    return this.http.post<ApiResponse<AuthResponse>>(getUrl(API_ENDPOINTS.AUTH_LOGIN), request);
+    return this.http.post<ApiResponse<BackendAuthResponse>>(getUrl(API_ENDPOINTS.AUTH_LOGIN), request).pipe(map(normalizeAuthResponse));
   }
 
   getMe(): Observable<ApiResponse<AdminUser>> {
-    return this.http.get<ApiResponse<AdminUser>>(getUrl(API_ENDPOINTS.AUTH_ME));
+    return this.http.get<ApiResponse<AdminUser | JsonRecord>>(getUrl(API_ENDPOINTS.AUTH_ME)).pipe(map(response => ({ ...response, data: normalizeUser(response.data) })));
   }
 
   logout(): Observable<ApiResponse<void>> {
@@ -99,8 +250,17 @@ export class ApiAuthRepository extends AuthRepository {
 export class ApiDashboardRepository extends DashboardRepository {
   private http = inject(HttpClient);
 
-  getSummary(): Observable<ApiResponse<any>> {
-    return this.http.get<ApiResponse<any>>(getUrl(API_ENDPOINTS.DASHBOARD_SUMMARY));
+  getSummary(): Observable<ApiResponse<{
+    roomCounters: Record<string, number>;
+    arrivals: BookingSummary[];
+    departures: BookingSummary[];
+    urgentServiceRequests: ServiceRequest[];
+    waitingChats: ChatThread[];
+    occupancyPercentage: number;
+    todayRevenue: number;
+    monthlyRevenue: number;
+  }>> {
+    return this.http.get<ApiResponse<unknown>>(getUrl(API_ENDPOINTS.DASHBOARD_SUMMARY)).pipe(map(normalizeDashboard));
   }
 }
 
@@ -110,15 +270,14 @@ export class ApiBookingRepository extends BookingRepository {
 
   getBookings(filter?: BookingFilter): Observable<ApiResponse<PageData<BookingSummary>>> {
     let params = new HttpParams();
-    if (filter?.reference) params = params.set('reference', filter.reference);
+    if (filter?.reference) params = params.set('bookingReference', filter.reference);
     if (filter?.status) params = params.set('status', filter.status);
-    if (filter?.page) params = params.set('page', filter.page.toString());
-    if (filter?.size) params = params.set('size', filter.size.toString());
-    return this.http.get<ApiResponse<PageData<BookingSummary>>>(getUrl(API_ENDPOINTS.BOOKINGS_LIST), { params });
+    params = appendPagination(params, filter?.page, filter?.size);
+    return this.http.get<ApiResponse<unknown>>(getUrl(API_ENDPOINTS.BOOKINGS_LIST), { params }).pipe(map(response => mapPageResponse<BookingSummary>(response, normalizeBooking)));
   }
 
   getBookingById(id: number): Observable<ApiResponse<BookingDetails>> {
-    return this.http.get<ApiResponse<BookingDetails>>(getUrl(API_ENDPOINTS.BOOKING_DETAILS(id)));
+    return this.http.get<ApiResponse<BookingDetails>>(getUrl(API_ENDPOINTS.BOOKING_DETAILS(id))).pipe(map(response => ({ ...response, data: normalizeBooking(response.data) })));
   }
 
   checkIn(id: number, request: CheckInRequest): Observable<ApiResponse<BookingDetails>> {
@@ -141,9 +300,8 @@ export class ApiGuestRepository extends GuestRepository {
   getGuests(filter?: GuestFilter): Observable<ApiResponse<PageData<GuestSummary>>> {
     let params = new HttpParams();
     if (filter?.query) params = params.set('query', filter.query);
-    if (filter?.page) params = params.set('page', filter.page.toString());
-    if (filter?.size) params = params.set('size', filter.size.toString());
-    return this.http.get<ApiResponse<PageData<GuestSummary>>>(getUrl(API_ENDPOINTS.GUESTS_LIST), { params });
+    params = appendPagination(params, filter?.page, filter?.size);
+    return this.http.get<ApiResponse<unknown>>(getUrl(API_ENDPOINTS.GUESTS_LIST), { params }).pipe(map(response => mapPageResponse<GuestSummary>(response, item => item)));
   }
 
   getGuestById(id: number): Observable<ApiResponse<GuestDetails>> {
@@ -162,9 +320,8 @@ export class ApiServiceRequestRepository extends ServiceRequestRepository {
   getRequests(filter?: ServiceRequestFilter): Observable<ApiResponse<PageData<ServiceRequest>>> {
     let params = new HttpParams();
     if (filter?.status) params = params.set('status', filter.status);
-    if (filter?.page) params = params.set('page', filter.page.toString());
-    if (filter?.size) params = params.set('size', filter.size.toString());
-    return this.http.get<ApiResponse<PageData<ServiceRequest>>>(getUrl(API_ENDPOINTS.SERVICE_REQUESTS_LIST), { params });
+    params = appendPagination(params, filter?.page, filter?.size);
+    return this.http.get<ApiResponse<unknown>>(getUrl(API_ENDPOINTS.SERVICE_REQUESTS_LIST), { params }).pipe(map(response => mapPageResponse<ServiceRequest>(response, item => item)));
   }
 
   getRequestById(id: number): Observable<ApiResponse<ServiceRequest>> {
@@ -187,9 +344,8 @@ export class ApiChatRepository extends ChatRepository {
   getThreads(filter?: ChatFilter): Observable<ApiResponse<PageData<ChatThread>>> {
     let params = new HttpParams();
     if (filter?.status) params = params.set('status', filter.status);
-    if (filter?.page) params = params.set('page', filter.page.toString());
-    if (filter?.size) params = params.set('size', filter.size.toString());
-    return this.http.get<ApiResponse<PageData<ChatThread>>>(getUrl(API_ENDPOINTS.CHATS_LIST), { params });
+    params = appendPagination(params, filter?.page, filter?.size);
+    return this.http.get<ApiResponse<unknown>>(getUrl(API_ENDPOINTS.CHATS_LIST), { params }).pipe(map(response => mapPageResponse<ChatThread>(response, item => item)));
   }
 
   getThreadById(id: number): Observable<ApiResponse<ChatThread>> {
@@ -220,13 +376,12 @@ export class ApiRoomRepository extends RoomRepository {
   getRooms(filter?: RoomFilter): Observable<ApiResponse<PageData<RoomSummary>>> {
     let params = new HttpParams();
     if (filter?.status) params = params.set('status', filter.status);
-    if (filter?.page) params = params.set('page', filter.page.toString());
-    if (filter?.size) params = params.set('size', filter.size.toString());
-    return this.http.get<ApiResponse<PageData<RoomSummary>>>(getUrl(API_ENDPOINTS.ROOMS_LIST), { params });
+    params = appendPagination(params, filter?.page, filter?.size);
+    return this.http.get<ApiResponse<unknown>>(getUrl(API_ENDPOINTS.ROOMS_LIST), { params }).pipe(map(response => mapPageResponse<RoomSummary>(response, normalizeRoom)));
   }
 
   getRoomById(id: number): Observable<ApiResponse<RoomDetails>> {
-    return this.http.get<ApiResponse<RoomDetails>>(getUrl(API_ENDPOINTS.ROOM_DETAILS(id)));
+    return this.http.get<ApiResponse<RoomDetails>>(getUrl(API_ENDPOINTS.ROOM_DETAILS(id))).pipe(map(response => ({ ...response, data: normalizeRoom(response.data) })));
   }
 
   createRoom(value: RoomFormValue): Observable<ApiResponse<RoomDetails>> {
@@ -277,9 +432,8 @@ export class ApiCleaningRepository extends CleaningRepository {
   getCleaningTasks(filter?: CleaningFilter): Observable<ApiResponse<PageData<CleaningTask>>> {
     let params = new HttpParams();
     if (filter?.status) params = params.set('status', filter.status);
-    if (filter?.page) params = params.set('page', filter.page.toString());
-    if (filter?.size) params = params.set('size', filter.size.toString());
-    return this.http.get<ApiResponse<PageData<CleaningTask>>>(getUrl(API_ENDPOINTS.CLEANING_TASKS_LIST), { params });
+    params = appendPagination(params, filter?.page, filter?.size);
+    return this.http.get<ApiResponse<unknown>>(getUrl(API_ENDPOINTS.CLEANING_TASKS_LIST), { params }).pipe(map(response => mapPageResponse<CleaningTask>(response, item => item)));
   }
 
   getCleaningTaskById(id: number): Observable<ApiResponse<CleaningTask>> {
@@ -306,9 +460,8 @@ export class ApiMaintenanceRepository extends MaintenanceRepository {
   getMaintenanceRecords(filter?: MaintenanceFilter): Observable<ApiResponse<PageData<MaintenanceRecord>>> {
     let params = new HttpParams();
     if (filter?.status) params = params.set('status', filter.status);
-    if (filter?.page) params = params.set('page', filter.page.toString());
-    if (filter?.size) params = params.set('size', filter.size.toString());
-    return this.http.get<ApiResponse<PageData<MaintenanceRecord>>>(getUrl(API_ENDPOINTS.MAINTENANCE_LIST), { params });
+    params = appendPagination(params, filter?.page, filter?.size);
+    return this.http.get<ApiResponse<unknown>>(getUrl(API_ENDPOINTS.MAINTENANCE_LIST), { params }).pipe(map(response => mapPageResponse<MaintenanceRecord>(response, item => item)));
   }
 
   getMaintenanceById(id: number): Observable<ApiResponse<MaintenanceRecord>> {
@@ -343,9 +496,8 @@ export class ApiPaymentRepository extends PaymentRepository {
   getPayments(filter?: PaymentFilter): Observable<ApiResponse<PageData<PaymentSummary>>> {
     let params = new HttpParams();
     if (filter?.status) params = params.set('status', filter.status);
-    if (filter?.page) params = params.set('page', filter.page.toString());
-    if (filter?.size) params = params.set('size', filter.size.toString());
-    return this.http.get<ApiResponse<PageData<PaymentSummary>>>(getUrl(API_ENDPOINTS.PAYMENTS_LIST), { params });
+    params = appendPagination(params, filter?.page, filter?.size);
+    return this.http.get<ApiResponse<unknown>>(getUrl(API_ENDPOINTS.PAYMENTS_LIST), { params }).pipe(map(response => mapPageResponse<PaymentSummary>(response, item => item)));
   }
 
   getPaymentById(id: number): Observable<ApiResponse<PaymentDetails>> {
