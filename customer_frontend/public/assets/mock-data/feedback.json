@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "bookingId": 100,
+    "bookingReference": "BK-20260715-0012",
+    "userId": 1,
+    "guestName": "Guest User",
+    "roomNumber": "101",
+    "rating": 5,
+    "cleanlinessRating": 5,
+    "serviceRating": 5,
+    "comfortRating": 5,
+    "comments": "Exceptional stay! The room door digital key feature worked seamlessly and front desk staff was super helpful.",
+    "createdAt": "2026-07-18T11:00:00+05:30"
+  }
+]

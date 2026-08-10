@@ -1,0 +1,10 @@
+[
+  {
+    "id": 1,
+    "name": "Weekend Surge 10%",
+    "roomTypeCode": "DELUXE",
+    "multiplier": 1.10,
+    "daysOfWeek": ["FRIDAY", "SATURDAY"],
+    "active": true
+  }
+]

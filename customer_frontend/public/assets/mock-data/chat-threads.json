@@ -1,0 +1,33 @@
+[
+  {
+    "id": 1,
+    "threadReference": "CHAT-20260810-0001",
+    "userId": 1,
+    "guestName": "Guest User",
+    "bookingId": 1,
+    "roomNumber": "101",
+    "mode": "BOT",
+    "status": "OPEN",
+    "lastMessageText": "Hello! I am SmartStay AI Assistant. How can I help you today?",
+    "lastMessageAt": "2026-08-10T16:00:00+05:30",
+    "unreadCountCustomer": 0,
+    "unreadCountAdmin": 0,
+    "messages": [
+      {
+        "id": 1,
+        "threadId": 1,
+        "senderType": "BOT",
+        "senderName": "SmartStay Assistant",
+        "messageText": "Welcome to SmartStay Grand Resort! How can I assist with your stay?",
+        "createdAt": "2026-08-10T16:00:00+05:30",
+        "suggestedActions": [
+          { "label": "Breakfast Hours", "actionValue": "What are breakfast timings?" },
+          { "label": "Wi-Fi Password", "actionValue": "What is the Wi-Fi password?" },
+          { "label": "Talk to Front Desk", "actionValue": "Connect me with an administrator" }
+        ]
+      }
+    ],
+    "createdAt": "2026-08-10T16:00:00+05:30",
+    "updatedAt": "2026-08-10T16:00:00+05:30"
+  }
+]

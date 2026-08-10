@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "userId": 1,
+    "type": "BOOKING_CONFIRMED",
+    "title": "Booking Confirmed #BK-20260803-0001",
+    "message": "Your reservation for Deluxe Room 101 from Aug 10 to Aug 12 is confirmed.",
+    "read": false,
+    "linkUrl": "/account/bookings/1",
+    "createdAt": "2026-08-03T10:32:00+05:30"
+  },
+  {
+    "id": 2,
+    "userId": 1,
+    "type": "PASSCODE_ACTIVATED",
+    "title": "Room 101 Access Key Active",
+    "message": "Your 6-digit digital room door passcode is now active. Tap to view your key.",
+    "read": false,
+    "linkUrl": "/account/bookings/1/passcode",
+    "createdAt": "2026-08-10T14:00:00+05:30"
+  }
+]

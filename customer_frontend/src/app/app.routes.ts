@@ -67,6 +67,45 @@ export const routes: Routes = [
     ]
   },
   {
+    path: 'account',
+    component: CustomerLayoutComponent,
+    canActivate: [authGuard],
+    children: [
+      {
+        path: '',
+        loadComponent: () => import('./features/account/account-overview/account-overview.component').then(m => m.AccountOverviewComponent)
+      },
+      {
+        path: 'bookings',
+        loadComponent: () => import('./features/account/my-bookings/my-bookings.component').then(m => m.MyBookingsComponent)
+      },
+      {
+        path: 'bookings/:bookingId',
+        loadComponent: () => import('./features/account/booking-details-customer/booking-details-customer.component').then(m => m.BookingDetailsCustomerComponent)
+      },
+      {
+        path: 'bookings/:bookingId/passcode',
+        loadComponent: () => import('./features/account/digital-keycode/digital-keycode.component').then(m => m.DigitalKeycodeComponent)
+      },
+      {
+        path: 'service-requests',
+        loadComponent: () => import('./features/account/service-requests/service-requests.component').then(m => m.ServiceRequestsComponent)
+      },
+      {
+        path: 'chats',
+        loadComponent: () => import('./features/account/concierge-chat/concierge-chat.component').then(m => m.ConciergeChatComponent)
+      },
+      {
+        path: 'notifications',
+        loadComponent: () => import('./features/account/notifications/notifications.component').then(m => m.NotificationsComponent)
+      },
+      {
+        path: 'profile',
+        loadComponent: () => import('./features/account/profile/profile.component').then(m => m.ProfileComponent)
+      }
+    ]
+  },
+  {
     path: 'forbidden',
     loadComponent: () => import('./features/errors/forbidden/forbidden.component').then(m => m.ForbiddenComponent)
   },

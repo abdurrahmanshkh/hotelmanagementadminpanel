@@ -1,0 +1,21 @@
+[
+  {
+    "id": 1,
+    "referenceNumber": "SR-20260810-0001",
+    "bookingId": 1,
+    "bookingReference": "BK-20260803-0001",
+    "roomId": 1,
+    "roomNumber": "101",
+    "userId": 1,
+    "guestName": "Guest User",
+    "category": "Housekeeping",
+    "title": "Extra Bath Towels & Water",
+    "description": "Please deliver two extra bath towels and 2 bottles of mineral water to room 101.",
+    "priority": "MEDIUM",
+    "status": "ACCEPTED",
+    "assignedStaffId": 12,
+    "assignedStaffName": "Ramesh Kumar",
+    "createdAt": "2026-08-10T15:30:00+05:30",
+    "updatedAt": "2026-08-10T15:35:00+05:30"
+  }
+]

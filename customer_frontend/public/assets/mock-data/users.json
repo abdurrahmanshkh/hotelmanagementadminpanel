@@ -1,0 +1,34 @@
+[
+  {
+    "id": 1,
+    "publicId": "USR-0001",
+    "firstName": "Guest",
+    "lastName": "User",
+    "email": "guest@example.com",
+    "phone": "9876543210",
+    "mockPassword": "Guest@123",
+    "role": "CUSTOMER",
+    "dateOfBirth": "1995-04-18",
+    "governmentIdType": "AADHAAR",
+    "governmentIdMasked": "XXXXXXXX9012",
+    "active": true,
+    "createdAt": "2026-01-01T10:00:00+05:30",
+    "updatedAt": "2026-01-01T10:00:00+05:30"
+  },
+  {
+    "id": 2,
+    "publicId": "USR-0002",
+    "firstName": "Emily",
+    "lastName": "Watson",
+    "email": "emily@example.com",
+    "phone": "9812345678",
+    "mockPassword": "Guest@123",
+    "role": "CUSTOMER",
+    "dateOfBirth": "1992-08-22",
+    "governmentIdType": "PASSPORT",
+    "governmentIdMasked": "PXXXX1234",
+    "active": true,
+    "createdAt": "2026-02-15T11:20:00+05:30",
+    "updatedAt": "2026-02-15T11:20:00+05:30"
+  }
+]

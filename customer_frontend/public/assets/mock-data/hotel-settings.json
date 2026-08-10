@@ -1,0 +1,16 @@
+{
+  "hotelName": "SmartStay Grand Resort & Spa",
+  "tagline": "Luxury Living & Digital Hospitality",
+  "email": "concierge@smartstay.com",
+  "phone": "+91 98765 43210",
+  "address": "100 Ocean Drive, Luxury Promenade",
+  "city": "Mumbai",
+  "state": "Maharashtra",
+  "pincode": "400001",
+  "currency": "INR",
+  "checkInTime": "14:00",
+  "checkOutTime": "11:00",
+  "taxPercentage": 12.0,
+  "serviceFeePercentage": 5.0,
+  "policyText": "Free cancellation up to 48 hours prior to check-in. Valid government-issued ID required at check-in."
+}

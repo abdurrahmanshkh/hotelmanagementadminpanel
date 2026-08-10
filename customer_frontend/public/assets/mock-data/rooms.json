@@ -1,0 +1,105 @@
+[
+  {
+    "id": 1,
+    "publicId": "RM-101",
+    "roomNumber": "101",
+    "roomType": {
+      "id": 2,
+      "name": "Deluxe Room",
+      "code": "DELUXE",
+      "description": "Spacious room featuring a king bed, city skyline view, mini bar, and luxury bath.",
+      "basePrice": 4500.00,
+      "minimumPrice": 3600.00,
+      "maximumPrice": 6500.00,
+      "maximumAdults": 2,
+      "maximumChildren": 1,
+      "bedType": "King Bed",
+      "roomSizeSqft": 340,
+      "active": true
+    },
+    "floorNumber": 1,
+    "status": "AVAILABLE",
+    "description": "A modern deluxe room with a king-size bed and city view.",
+    "basePrice": 4500.00,
+    "currentPrice": 4950.00,
+    "currency": "INR",
+    "maximumAdults": 2,
+    "maximumChildren": 1,
+    "rating": 4.8,
+    "amenities": ["High-Speed Wi-Fi", "Air Conditioning", "Smart TV", "Mini Fridge", "24/7 Room Service", "City View"],
+    "images": [
+      { "url": "https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=1200&q=80", "altText": "Deluxe King Room Bedroom View", "displayOrder": 1 },
+      { "url": "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80", "altText": "Deluxe Bathroom Interior", "displayOrder": 2 }
+    ],
+    "featured": true,
+    "active": true
+  },
+  {
+    "id": 2,
+    "publicId": "RM-102",
+    "roomNumber": "102",
+    "roomType": {
+      "id": 1,
+      "name": "Standard Room",
+      "code": "STANDARD",
+      "description": "Cozy room with modern amenities, work desk, and high-speed Wi-Fi.",
+      "basePrice": 3200.00,
+      "minimumPrice": 2500.00,
+      "maximumPrice": 4500.00,
+      "maximumAdults": 2,
+      "maximumChildren": 1,
+      "bedType": "Queen Bed",
+      "roomSizeSqft": 280,
+      "active": true
+    },
+    "floorNumber": 1,
+    "status": "AVAILABLE",
+    "description": "Clean, bright, and budget-friendly standard room with work station.",
+    "basePrice": 3200.00,
+    "currentPrice": 3200.00,
+    "currency": "INR",
+    "maximumAdults": 2,
+    "maximumChildren": 1,
+    "rating": 4.5,
+    "amenities": ["High-Speed Wi-Fi", "Air Conditioning", "HD TV", "Coffee Maker"],
+    "images": [
+      { "url": "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1200&q=80", "altText": "Standard Queen Room", "displayOrder": 1 }
+    ],
+    "featured": false,
+    "active": true
+  },
+  {
+    "id": 3,
+    "publicId": "RM-201",
+    "roomNumber": "201",
+    "roomType": {
+      "id": 3,
+      "name": "Executive Suite",
+      "code": "SUITE",
+      "description": "Luxurious suite with private lounge, balcony view, espresso bar, and soaking tub.",
+      "basePrice": 8500.00,
+      "minimumPrice": 7000.00,
+      "maximumPrice": 12500.00,
+      "maximumAdults": 3,
+      "maximumChildren": 2,
+      "bedType": "King Bed + Sofa Bed",
+      "roomSizeSqft": 520,
+      "active": true
+    },
+    "floorNumber": 2,
+    "status": "AVAILABLE",
+    "description": "Panoramic balcony suite with living area and executive lounge privileges.",
+    "basePrice": 8500.00,
+    "currentPrice": 8900.00,
+    "currency": "INR",
+    "maximumAdults": 3,
+    "maximumChildren": 2,
+    "rating": 4.9,
+    "amenities": ["High-Speed Wi-Fi", "Balcony View", "Jacuzzi", "Espresso Machine", "VIP Lounge Access"],
+    "images": [
+      { "url": "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=1200&q=80", "altText": "Executive Suite Living Area", "displayOrder": 1 }
+    ],
+    "featured": true,
+    "active": true
+  }
+]
