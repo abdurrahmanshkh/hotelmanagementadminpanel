@@ -45,6 +45,10 @@ export interface Booking {
   currency: string;
   specialRequests?: string;
   cancellationReason?: string;
+  guestName?: string;
+  guestEmail?: string;
+  guestPhone?: string;
+  paymentTransactionRef?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -82,5 +86,9 @@ export interface CreateBookingRequest {
   adults: number;
   children: number;
   specialRequests?: string;
+  guestName?: string;
+  guestEmail?: string;
+  guestPhone?: string;
+  guestCount?: number;
   quoteId?: string;
 }

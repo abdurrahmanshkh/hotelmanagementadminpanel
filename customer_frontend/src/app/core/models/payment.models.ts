@@ -28,6 +28,7 @@ export interface Payment {
 export interface ProcessPaymentRequest {
   bookingId: number;
   paymentMethod: PaymentMethod;
+  paymentToken?: string;
   dummyPaymentToken?: string;
   cardHolderName?: string;
   upiId?: string;

@@ -43,6 +43,26 @@ export const routes: Routes = [
         path: 'forgot-password',
         canActivate: [guestGuard],
         loadComponent: () => import('./features/authentication/forgot-password/forgot-password.component').then(m => m.ForgotPasswordComponent)
+      },
+      {
+        path: 'booking/:roomId',
+        canActivate: [authGuard],
+        loadComponent: () => import('./features/booking/booking-form/booking-form.component').then(m => m.BookingFormComponent)
+      },
+      {
+        path: 'booking/:roomId/review',
+        canActivate: [authGuard],
+        loadComponent: () => import('./features/booking/booking-review/booking-review.component').then(m => m.BookingReviewComponent)
+      },
+      {
+        path: 'booking/:bookingId/payment',
+        canActivate: [authGuard],
+        loadComponent: () => import('./features/booking/payment/payment.component').then(m => m.PaymentComponent)
+      },
+      {
+        path: 'booking/:bookingId/confirmation',
+        canActivate: [authGuard],
+        loadComponent: () => import('./features/booking/booking-confirmation/booking-confirmation.component').then(m => m.BookingConfirmationComponent)
       }
     ]
   },
