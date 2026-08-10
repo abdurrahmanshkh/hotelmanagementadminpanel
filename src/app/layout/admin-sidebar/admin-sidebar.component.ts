@@ -209,7 +209,6 @@ export class AdminSidebarComponent {
       name: 'Front Desk',
       items: [
         { label: 'Bookings', route: '/admin/bookings', icon: 'calendar' },
-        { label: 'Guest Directory', route: '/admin/guests', icon: 'users' },
         { label: 'Service Requests', route: '/admin/service-requests', icon: 'sparkles' },
         { label: 'Front-Desk Chat', route: '/admin/chats', icon: 'chat' }
       ]
@@ -218,8 +217,7 @@ export class AdminSidebarComponent {
       name: 'Property',
       items: [
         { label: 'Rooms Inventory', route: '/admin/rooms', icon: 'door' },
-        { label: 'Room Types', route: '/admin/room-types', icon: 'bed' },
-        { label: 'Amenities', route: '/admin/amenities', icon: 'sparkles' }
+        { label: 'Room Types', route: '/admin/room-types', icon: 'bed' }
       ]
     },
     {
@@ -227,13 +225,6 @@ export class AdminSidebarComponent {
       items: [
         { label: 'Housekeeping', route: '/admin/cleaning', icon: 'sparkles' },
         { label: 'Maintenance', route: '/admin/maintenance', icon: 'wrench' }
-      ]
-    },
-    {
-      name: 'Finance',
-      items: [
-        { label: 'Payments & Refunds', route: '/admin/payments', icon: 'receipt' },
-        { label: 'Dynamic Pricing', route: '/admin/pricing', icon: 'trending-up', roles: ['ADMIN', 'MANAGER'] }
       ]
     },
     {

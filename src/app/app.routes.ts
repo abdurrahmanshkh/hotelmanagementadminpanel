@@ -36,15 +36,6 @@ export const routes: Routes = [
         path: 'bookings/:bookingId',
         loadComponent: () => import('./features/bookings/booking-detail/booking-detail.component').then(m => m.BookingDetailComponent)
       },
-      // Guests
-      {
-        path: 'guests',
-        loadComponent: () => import('./features/guests/guest-list/guest-list.component').then(m => m.GuestListComponent)
-      },
-      {
-        path: 'guests/:guestId',
-        loadComponent: () => import('./features/guests/guest-detail/guest-detail.component').then(m => m.GuestDetailComponent)
-      },
       // Service Requests
       {
         path: 'service-requests',
@@ -96,10 +87,6 @@ export const routes: Routes = [
         path: 'room-types/:roomTypeId/edit',
         loadComponent: () => import('./features/room-types/room-type-form/room-type-form.component').then(m => m.RoomTypeFormComponent)
       },
-      {
-        path: 'amenities',
-        loadComponent: () => import('./features/room-types/amenity-manager/amenity-manager.component').then(m => m.AmenityManagerComponent)
-      },
       // Operations (Cleaning & Maintenance)
       {
         path: 'cleaning',
@@ -124,51 +111,6 @@ export const routes: Routes = [
       {
         path: 'maintenance/:maintenanceId',
         loadComponent: () => import('./features/maintenance/maintenance-detail/maintenance-detail.component').then(m => m.MaintenanceDetailComponent)
-      },
-      // Finance
-      {
-        path: 'payments',
-        loadComponent: () => import('./features/payments/payment-list/payment-list.component').then(m => m.PaymentListComponent)
-      },
-      {
-        path: 'payments/:paymentId',
-        loadComponent: () => import('./features/payments/payment-detail/payment-detail.component').then(m => m.PaymentDetailComponent)
-      },
-      {
-        path: 'pricing',
-        canActivate: [roleGuard],
-        data: { roles: [Role.ADMIN, Role.MANAGER] },
-        loadComponent: () => import('./features/pricing/pricing-rules/pricing-rules.component').then(m => m.PricingRulesComponent)
-      },
-      {
-        path: 'pricing/new',
-        canActivate: [roleGuard],
-        data: { roles: [Role.ADMIN, Role.MANAGER] },
-        loadComponent: () => import('./features/pricing/pricing-rule-form/pricing-rule-form.component').then(m => m.PricingRuleFormComponent)
-      },
-      {
-        path: 'pricing/:ruleId/edit',
-        canActivate: [roleGuard],
-        data: { roles: [Role.ADMIN, Role.MANAGER] },
-        loadComponent: () => import('./features/pricing/pricing-rule-form/pricing-rule-form.component').then(m => m.PricingRuleFormComponent)
-      },
-      {
-        path: 'pricing/rules',
-        canActivate: [roleGuard],
-        data: { roles: [Role.ADMIN, Role.MANAGER] },
-        loadComponent: () => import('./features/pricing/pricing-rules/pricing-rules.component').then(m => m.PricingRulesComponent)
-      },
-      {
-        path: 'pricing/rules/new',
-        canActivate: [roleGuard],
-        data: { roles: [Role.ADMIN, Role.MANAGER] },
-        loadComponent: () => import('./features/pricing/pricing-rule-form/pricing-rule-form.component').then(m => m.PricingRuleFormComponent)
-      },
-      {
-        path: 'pricing/rules/:ruleId/edit',
-        canActivate: [roleGuard],
-        data: { roles: [Role.ADMIN, Role.MANAGER] },
-        loadComponent: () => import('./features/pricing/pricing-rule-form/pricing-rule-form.component').then(m => m.PricingRuleFormComponent)
       },
       // Reports
       {

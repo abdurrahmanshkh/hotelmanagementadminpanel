@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
+import { Observable, map, of } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { API_ENDPOINTS } from '../../constants';
 import {
@@ -34,6 +34,7 @@ import {
   GuestDetails,
   GuestFilter,
   ServiceRequest,
+  ServiceRequestStatus,
   ServiceRequestFilter,
   AssignStaffRequest,
   UpdateStatusRequest,
@@ -222,6 +223,70 @@ function normalizeDashboard(response: ApiResponse<unknown>): ApiResponse<{
   };
 }
 
+
+function toBackendRoom(value: RoomFormValue): JsonRecord {
+  return {
+    roomNumber: value.roomNumber,
+    roomTypeId: value.roomTypeId,
+    floorNumber: value.floor,
+    description: value.description ?? '',
+    imageUrl: value.imageUrls?.[0] ?? '',
+    active: value.isActive
+  };
+}
+
+function toBackendRoomType(value: RoomTypeFormValue): JsonRecord {
+  return {
+    name: value.name,
+    code: value.code,
+    description: value.description,
+    basePrice: value.basePrice,
+    minimumPrice: value.minimumPrice,
+    maximumPrice: value.maximumPrice,
+    maximumAdults: value.adultCapacity,
+    maximumChildren: value.childCapacity,
+    bedType: value.bedType,
+    roomSizeSqft: value.roomSizeSqFt,
+    active: value.isActive
+  };
+}
+
+function toCheckInPayload(request: CheckInRequest): JsonRecord {
+  return { notes: request.notes ?? 'Customer identity verified' };
+}
+
+function toCheckOutPayload(request: CheckOutRequest): JsonRecord {
+  return {
+    notes: request.cleaningNotes ?? 'Checkout completed',
+    maintenanceRequired: request.maintenanceRequired,
+    maintenanceDescription: request.maintenanceNotes ?? null
+  };
+}
+
+function toCancellationPayload(request: CancellationRequest): JsonRecord {
+  return { reason: request.reason, processRefund: true };
+}
+
+function toAssignPayload(userId: number, notes: string): JsonRecord {
+  return { assignedToUserId: userId, notes };
+}
+
+function toCleaningCompletePayload(request: CompleteCleaningRequest): JsonRecord {
+  return {
+    notes: request.notes ?? '',
+    maintenanceRequired: request.maintenanceIssueFound,
+    maintenanceDescription: request.maintenanceDescription ?? null
+  };
+}
+
+function toMaintenanceCompletePayload(request: CompleteMaintenanceRequest): JsonRecord {
+  return { notes: request.resolutionNotes, roomReady: request.roomReady };
+}
+
+function toSendMessagePayload(request: SendReplyRequest): JsonRecord {
+  return { message: request.content };
+}
+
 function appendPagination(params: HttpParams, page?: number, size?: number): HttpParams {
   let result = params;
   if (page !== undefined) result = result.set('page', page.toString());
@@ -281,15 +346,15 @@ export class ApiBookingRepository extends BookingRepository {
   }
 
   checkIn(id: number, request: CheckInRequest): Observable<ApiResponse<BookingDetails>> {
-    return this.http.patch<ApiResponse<BookingDetails>>(getUrl(API_ENDPOINTS.BOOKING_CHECK_IN(id)), request);
+    return this.http.patch<ApiResponse<BookingDetails>>(getUrl(API_ENDPOINTS.BOOKING_CHECK_IN(id)), toCheckInPayload(request)).pipe(map(response => ({ ...response, data: normalizeBooking(response.data) })));
   }
 
   checkOut(id: number, request: CheckOutRequest): Observable<ApiResponse<BookingDetails>> {
-    return this.http.patch<ApiResponse<BookingDetails>>(getUrl(API_ENDPOINTS.BOOKING_CHECK_OUT(id)), request);
+    return this.http.patch<ApiResponse<BookingDetails>>(getUrl(API_ENDPOINTS.BOOKING_CHECK_OUT(id)), toCheckOutPayload(request)).pipe(map(response => ({ ...response, data: normalizeBooking(response.data) })));
   }
 
   cancel(id: number, request: CancellationRequest): Observable<ApiResponse<BookingDetails>> {
-    return this.http.post<ApiResponse<BookingDetails>>(getUrl(API_ENDPOINTS.BOOKING_CANCEL(id)), request);
+    return this.http.post<ApiResponse<BookingDetails>>(getUrl(API_ENDPOINTS.BOOKING_CANCEL(id)), toCancellationPayload(request)).pipe(map(response => ({ ...response, data: normalizeBooking(response.data) })));
   }
 }
 
@@ -329,11 +394,18 @@ export class ApiServiceRequestRepository extends ServiceRequestRepository {
   }
 
   assignStaff(id: number, request: AssignStaffRequest): Observable<ApiResponse<ServiceRequest>> {
-    return this.http.patch<ApiResponse<ServiceRequest>>(getUrl(API_ENDPOINTS.SERVICE_REQUEST_ASSIGN(id)), request);
+    return this.http.patch<ApiResponse<ServiceRequest>>(getUrl(API_ENDPOINTS.SERVICE_REQUEST_ASSIGN(id)), toAssignPayload(request.staffId, `Assigned to ${request.staffName}`));
   }
 
   updateStatus(id: number, request: UpdateStatusRequest): Observable<ApiResponse<ServiceRequest>> {
-    return this.http.patch<ApiResponse<ServiceRequest>>(getUrl(API_ENDPOINTS.SERVICE_REQUEST_STATUS(id)), request);
+    const notes = request.notes ?? `Status changed to ${request.status}`;
+    if (request.status === ServiceRequestStatus.COMPLETED) {
+      return this.http.patch<ApiResponse<ServiceRequest>>(getUrl(API_ENDPOINTS.SERVICE_REQUEST_COMPLETE(id)), { notes });
+    }
+    if (request.status === ServiceRequestStatus.CANCELLED) {
+      return this.http.patch<ApiResponse<ServiceRequest>>(getUrl(API_ENDPOINTS.SERVICE_REQUEST_CANCEL(id)), { reason: notes });
+    }
+    return this.http.patch<ApiResponse<ServiceRequest>>(getUrl(API_ENDPOINTS.SERVICE_REQUEST_START(id)), { notes });
   }
 }
 
@@ -353,19 +425,21 @@ export class ApiChatRepository extends ChatRepository {
   }
 
   assignAdmin(id: number, adminId: number, adminName: string): Observable<ApiResponse<ChatThread>> {
-    return this.http.patch<ApiResponse<ChatThread>>(getUrl(API_ENDPOINTS.CHAT_ASSIGN(id)), { adminId, adminName });
+    return this.http.post<ApiResponse<ChatThread>>(getUrl(API_ENDPOINTS.CHAT_ASSIGN(id)), { assignedAdminId: adminId }).pipe(
+      map(response => ({ ...response, data: { ...response.data, assignedAdminName: response.data.assignedAdminName || adminName } }))
+    );
   }
 
   sendMessage(id: number, request: SendReplyRequest): Observable<ApiResponse<ChatMessage>> {
-    return this.http.post<ApiResponse<ChatMessage>>(getUrl(API_ENDPOINTS.CHAT_MESSAGES(id)), request);
+    return this.http.post<ApiResponse<ChatMessage>>(getUrl(API_ENDPOINTS.CHAT_MESSAGES(id)), toSendMessagePayload(request));
   }
 
   resolveThread(id: number): Observable<ApiResponse<ChatThread>> {
-    return this.http.patch<ApiResponse<ChatThread>>(getUrl(API_ENDPOINTS.CHAT_RESOLVE(id)), {});
+    return this.http.post<ApiResponse<ChatThread>>(getUrl(API_ENDPOINTS.CHAT_RESOLVE(id)), { resolution: 'Customer query resolved' });
   }
 
   markAsRead(id: number): Observable<ApiResponse<void>> {
-    return this.http.patch<ApiResponse<void>>(getUrl(API_ENDPOINTS.CHAT_READ(id)), {});
+    return of({ success: true, message: 'Chat read locally', data: undefined, timestamp: new Date().toISOString() });
   }
 }
 
@@ -385,15 +459,15 @@ export class ApiRoomRepository extends RoomRepository {
   }
 
   createRoom(value: RoomFormValue): Observable<ApiResponse<RoomDetails>> {
-    return this.http.post<ApiResponse<RoomDetails>>(getUrl(API_ENDPOINTS.ROOM_CREATE), value);
+    return this.http.post<ApiResponse<RoomDetails>>(getUrl(API_ENDPOINTS.ROOM_CREATE), toBackendRoom(value)).pipe(map(response => ({ ...response, data: normalizeRoom(response.data) })));
   }
 
   updateRoom(id: number, value: RoomFormValue): Observable<ApiResponse<RoomDetails>> {
-    return this.http.put<ApiResponse<RoomDetails>>(getUrl(API_ENDPOINTS.ROOM_UPDATE(id)), value);
+    return this.http.put<ApiResponse<RoomDetails>>(getUrl(API_ENDPOINTS.ROOM_UPDATE(id)), toBackendRoom(value)).pipe(map(response => ({ ...response, data: normalizeRoom(response.data) })));
   }
 
   updateRoomStatus(id: number, status: RoomStatus): Observable<ApiResponse<RoomDetails>> {
-    return this.http.patch<ApiResponse<RoomDetails>>(getUrl(API_ENDPOINTS.ROOM_STATUS(id)), { status });
+    return this.http.patch<ApiResponse<RoomDetails>>(getUrl(API_ENDPOINTS.ROOM_STATUS(id)), { status, reason: 'Updated from admin panel' });
   }
 
   getRoomTypes(): Observable<ApiResponse<RoomType[]>> {
@@ -405,11 +479,11 @@ export class ApiRoomRepository extends RoomRepository {
   }
 
   createRoomType(value: RoomTypeFormValue): Observable<ApiResponse<RoomType>> {
-    return this.http.post<ApiResponse<RoomType>>(getUrl(API_ENDPOINTS.ROOM_TYPE_CREATE), value);
+    return this.http.post<ApiResponse<RoomType>>(getUrl(API_ENDPOINTS.ROOM_TYPE_CREATE), toBackendRoomType(value));
   }
 
   updateRoomType(id: number, value: RoomTypeFormValue): Observable<ApiResponse<RoomType>> {
-    return this.http.put<ApiResponse<RoomType>>(getUrl(API_ENDPOINTS.ROOM_TYPE_UPDATE(id)), value);
+    return this.http.put<ApiResponse<RoomType>>(getUrl(API_ENDPOINTS.ROOM_TYPE_UPDATE(id)), toBackendRoomType(value));
   }
 
   getAmenities(): Observable<ApiResponse<Amenity[]>> {
@@ -441,15 +515,15 @@ export class ApiCleaningRepository extends CleaningRepository {
   }
 
   assignStaff(id: number, staffId: number, staffName: string): Observable<ApiResponse<CleaningTask>> {
-    return this.http.patch<ApiResponse<CleaningTask>>(getUrl(API_ENDPOINTS.CLEANING_TASK_ASSIGN(id)), { staffId, staffName });
+    return this.http.patch<ApiResponse<CleaningTask>>(getUrl(API_ENDPOINTS.CLEANING_TASK_ASSIGN(id)), toAssignPayload(staffId, `Assigned to ${staffName}`));
   }
 
   startTask(id: number): Observable<ApiResponse<CleaningTask>> {
-    return this.http.patch<ApiResponse<CleaningTask>>(getUrl(API_ENDPOINTS.CLEANING_TASK_START(id)), {});
+    return this.http.patch<ApiResponse<CleaningTask>>(getUrl(API_ENDPOINTS.CLEANING_TASK_START(id)), { notes: 'Cleaning started' });
   }
 
   completeTask(id: number, request: CompleteCleaningRequest): Observable<ApiResponse<CleaningTask>> {
-    return this.http.patch<ApiResponse<CleaningTask>>(getUrl(API_ENDPOINTS.CLEANING_TASK_COMPLETE(id)), request);
+    return this.http.patch<ApiResponse<CleaningTask>>(getUrl(API_ENDPOINTS.CLEANING_TASK_COMPLETE(id)), toCleaningCompletePayload(request));
   }
 }
 
@@ -473,11 +547,11 @@ export class ApiMaintenanceRepository extends MaintenanceRepository {
   }
 
   assignTechnician(id: number, techId: number, techName: string): Observable<ApiResponse<MaintenanceRecord>> {
-    return this.http.patch<ApiResponse<MaintenanceRecord>>(getUrl(API_ENDPOINTS.MAINTENANCE_ASSIGN(id)), { techId, techName });
+    return this.http.patch<ApiResponse<MaintenanceRecord>>(getUrl(API_ENDPOINTS.MAINTENANCE_ASSIGN(id)), toAssignPayload(techId, `Assigned to ${techName}`));
   }
 
   startRecord(id: number): Observable<ApiResponse<MaintenanceRecord>> {
-    return this.http.patch<ApiResponse<MaintenanceRecord>>(getUrl(API_ENDPOINTS.MAINTENANCE_START(id)), {});
+    return this.http.patch<ApiResponse<MaintenanceRecord>>(getUrl(API_ENDPOINTS.MAINTENANCE_START(id)), { notes: 'Inspection started' });
   }
 
   holdRecord(id: number, reason?: string): Observable<ApiResponse<MaintenanceRecord>> {
@@ -485,7 +559,7 @@ export class ApiMaintenanceRepository extends MaintenanceRepository {
   }
 
   completeRecord(id: number, request: CompleteMaintenanceRequest): Observable<ApiResponse<MaintenanceRecord>> {
-    return this.http.patch<ApiResponse<MaintenanceRecord>>(getUrl(API_ENDPOINTS.MAINTENANCE_COMPLETE(id)), request);
+    return this.http.patch<ApiResponse<MaintenanceRecord>>(getUrl(API_ENDPOINTS.MAINTENANCE_COMPLETE(id)), toMaintenanceCompletePayload(request));
   }
 }
 
