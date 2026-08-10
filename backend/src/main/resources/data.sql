@@ -41,10 +41,10 @@ MERGE INTO room_types (id, name, code, description, base_price, minimum_price, m
 (4, 'Presidential Suite', 'PRES', 'Ultra luxury suite with private terrace and dedicated butler service', 15000.00, 10000.00, 25000.00, 4, 2, 'King Bed', 1200, true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 -- Room Type Amenities mapping
-MERGE INTO room_type_amenities (room_type_id, amenity_id) VALUES (1, 1), (1, 2), (1, 3);
-MERGE INTO room_type_amenities (room_type_id, amenity_id) VALUES (2, 1), (2, 2), (2, 3), (2, 5), (2, 6), (2, 8);
-MERGE INTO room_type_amenities (room_type_id, amenity_id) VALUES (3, 1), (3, 2), (3, 3), (3, 4), (3, 5), (3, 6), (3, 7), (3, 9), (3, 10);
-MERGE INTO room_type_amenities (room_type_id, amenity_id) VALUES (4, 1), (4, 2), (4, 3), (4, 4), (4, 5), (4, 6), (4, 7), (4, 8), (4, 9), (4, 10), (4, 11), (4, 12);
+MERGE INTO room_type_amenities (room_type_id, amenity_id) KEY(room_type_id, amenity_id) VALUES (1, 1), (1, 2), (1, 3);
+MERGE INTO room_type_amenities (room_type_id, amenity_id) KEY(room_type_id, amenity_id) VALUES (2, 1), (2, 2), (2, 3), (2, 5), (2, 6), (2, 8);
+MERGE INTO room_type_amenities (room_type_id, amenity_id) KEY(room_type_id, amenity_id) VALUES (3, 1), (3, 2), (3, 3), (3, 4), (3, 5), (3, 6), (3, 7), (3, 9), (3, 10);
+MERGE INTO room_type_amenities (room_type_id, amenity_id) KEY(room_type_id, amenity_id) VALUES (4, 1), (4, 2), (4, 3), (4, 4), (4, 5), (4, 6), (4, 7), (4, 8), (4, 9), (4, 10), (4, 11), (4, 12);
 
 -- Rooms
 MERGE INTO rooms (id, public_id, room_number, room_type_id, floor_number, status, description, image_url, rating, featured, active, version, created_at, updated_at) KEY(id) VALUES
