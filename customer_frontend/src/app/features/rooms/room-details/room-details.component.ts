@@ -25,8 +25,7 @@ import { formatCurrency } from '../../../core/utilities/money.utils';
     RatingStarsComponent,
     PriceSummaryComponent,
     ButtonComponent,
-    IconComponent,
-    SkeletonLoaderComponent
+    IconComponent
   ],
   template: `
     <div class="room-details-page container" *ngIf="!isLoading && room">

@@ -11,7 +11,7 @@ import { formatDateDisplay } from '../../../core/utilities/date.utils';
 @Component({
   selector: 'app-booking-card',
   standalone: true,
-  imports: [CommonModule, RouterModule, StatusBadgeComponent, IconComponent, ButtonComponent],
+  imports: [CommonModule, RouterModule, StatusBadgeComponent, IconComponent],
   template: `
     <div class="booking-card" *ngIf="booking">
       <div class="card-header">

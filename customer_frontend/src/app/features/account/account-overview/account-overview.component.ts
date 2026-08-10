@@ -13,7 +13,7 @@ import { Booking, ServiceRequest } from '../../../core/models';
 @Component({
   selector: 'app-account-overview',
   standalone: true,
-  imports: [CommonModule, RouterModule, BookingCardComponent, StatusBadgeComponent, ButtonComponent, IconComponent],
+  imports: [CommonModule, RouterModule, BookingCardComponent, ButtonComponent, IconComponent],
   template: `
     <div class="overview-page" *ngIf="authState.currentUser() as user">
       <div class="welcome-card">

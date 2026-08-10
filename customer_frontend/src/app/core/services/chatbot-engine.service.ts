@@ -24,6 +24,37 @@ export class ChatbotEngineService {
   private knowledgeBase: KnowledgeItem[] = [];
   private isLoaded = false;
 
+  private defaultKnowledge: KnowledgeItem[] = [
+    {
+      keywords: ['wifi', 'wi-fi', 'internet', 'password'],
+      answer: 'Complimentary high-speed fiber Wi-Fi is available across the resort. Network: SmartStay_Guest (No password required; authenticate with room number).'
+    },
+    {
+      keywords: ['breakfast', 'timing', 'food', 'buffet', 'dining'],
+      answer: 'Breakfast buffet is served daily at The Grand Palm Restaurant on Level 1 from 7:00 AM to 10:30 AM.'
+    },
+    {
+      keywords: ['checkin', 'check-in', 'check in', 'time'],
+      answer: 'Standard check-in time is 2:00 PM (14:00). You can unlock your room door using your digital 6-digit passcode as soon as check-in opens.'
+    },
+    {
+      keywords: ['checkout', 'check-out', 'check out'],
+      answer: 'Standard check-out time is 11:00 AM. You can express check-out directly via your mobile customer portal.'
+    },
+    {
+      keywords: ['key', 'passcode', 'unlock', 'door', 'code'],
+      answer: 'Your 6-digit room passcode is visible under My Reservations -> View Digital Door Keycode. Enter the PIN on your room door keypad to unlock.'
+    },
+    {
+      keywords: ['pool', 'spa', 'gym', 'pool hours'],
+      answer: 'The Infinity Pool & Luxury Spa on the Roof Deck are open daily from 6:00 AM to 10:00 PM.'
+    },
+    {
+      keywords: ['staff', 'admin', 'human', 'reception', 'front desk', 'help'],
+      answer: 'I can connect you directly to our Front Desk Concierge staff. Click "Connect to Front Desk Staff" below.'
+    }
+  ];
+
   public loadKnowledge(): Observable<KnowledgeItem[]> {
     if (this.isLoaded && this.knowledgeBase.length > 0) {
       return of(this.knowledgeBase);
@@ -31,11 +62,15 @@ export class ChatbotEngineService {
 
     return this.http.get<KnowledgeItem[]>('assets/mock-data/chatbot-knowledge.json').pipe(
       map(items => {
-        this.knowledgeBase = items;
+        this.knowledgeBase = (items && Array.isArray(items) && items.length > 0) ? items : this.defaultKnowledge;
         this.isLoaded = true;
-        return items;
+        return this.knowledgeBase;
       }),
-      catchError(() => of([]))
+      catchError(() => {
+        this.knowledgeBase = this.defaultKnowledge;
+        this.isLoaded = true;
+        return of(this.defaultKnowledge);
+      })
     );
   }
 
@@ -69,7 +104,7 @@ export class ChatbotEngineService {
           }
         }
 
-        if (bestMatch && highestSim > 0.4) {
+        if (bestMatch && highestSim >= 0.4) {
           return {
             answer: bestMatch.answer,
             matched: true,
@@ -77,9 +112,8 @@ export class ChatbotEngineService {
           };
         }
 
-        // 3. Fallback answer offering escalation
         return {
-          answer: `I couldn't find a direct match for your request. Would you like me to connect you with our Front Desk Concierge staff?`,
+          answer: "I'm sorry, I didn't quite catch that. You can ask me about Wi-Fi, breakfast hours, pool timings, or click below to speak directly with front desk staff.",
           matched: false,
           confidence: 0,
           shouldSuggestEscalation: true

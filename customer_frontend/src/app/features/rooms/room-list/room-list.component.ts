@@ -23,9 +23,7 @@ import { Room, RoomType, RoomSearchFilters, PageData } from '../../../core/model
     PaginationComponent,
     SkeletonLoaderComponent,
     EmptyStateComponent,
-    ErrorStateComponent,
-    ButtonComponent,
-    IconComponent
+    ErrorStateComponent
   ],
   template: `
     <div class="rooms-page container">

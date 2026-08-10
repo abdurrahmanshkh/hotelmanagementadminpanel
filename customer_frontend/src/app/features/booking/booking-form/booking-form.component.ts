@@ -14,7 +14,7 @@ import { formatCurrency } from '../../../core/utilities/money.utils';
 @Component({
   selector: 'app-booking-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule, ButtonComponent, IconComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule, ButtonComponent],
   template: `
     <div class="booking-page container" *ngIf="room">
       <!-- Step Indicator Header -->

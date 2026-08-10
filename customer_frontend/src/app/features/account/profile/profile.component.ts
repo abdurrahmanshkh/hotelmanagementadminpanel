@@ -10,7 +10,7 @@ import { IconComponent } from '../../../shared/components/icon/icon.component';
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, ButtonComponent, IconComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, ButtonComponent],
   template: `
     <div class="profile-page" *ngIf="authState.currentUser() as user">
       <div class="header-box">

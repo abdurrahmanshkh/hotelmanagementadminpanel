@@ -15,7 +15,7 @@ import { formatDateDisplay } from '../../../core/utilities/date.utils';
 @Component({
   selector: 'app-booking-details-customer',
   standalone: true,
-  imports: [CommonModule, RouterModule, StatusBadgeComponent, PriceSummaryComponent, ButtonComponent, IconComponent],
+  imports: [CommonModule, RouterModule, StatusBadgeComponent, ButtonComponent, IconComponent],
   template: `
     <div class="details-page" *ngIf="booking">
       <div class="header-box flex-gap">
