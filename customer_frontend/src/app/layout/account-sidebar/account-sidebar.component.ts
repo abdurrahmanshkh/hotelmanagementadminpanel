@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
-import { AuthService } from '../../core/services/auth-state.service';
+import { AuthStateService } from '../../core/services/auth-state.service';
 import { IconComponent } from '../../shared/components/icon/icon.component';
 
 @Component({
@@ -153,7 +153,7 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
   `]
 })
 export class AccountSidebarComponent {
-  public authState = inject(AuthService);
+  public authState = inject(AuthStateService);
   private router = inject(Router);
 
   onLogout(): void {

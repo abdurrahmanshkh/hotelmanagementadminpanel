@@ -57,7 +57,7 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
             </div>
             <div class="contact-item flex-gap">
               <app-icon name="mail" [size]="16" color="#D97706"></app-icon>
-              <span>concierge@smartstay.com</span>
+              <span>concierge&#64;smartstay.com</span>
             </div>
           </div>
         </div>
