@@ -82,7 +82,7 @@
               ]
             }
           },
-          "defaultConfiguration": "mock"
+          "defaultConfiguration": "production"
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
@@ -97,7 +97,7 @@
               "buildTarget": "hotelmanagementadminpanel:build:mock"
             }
           },
-          "defaultConfiguration": "mock"
+          "defaultConfiguration": "production"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n"
