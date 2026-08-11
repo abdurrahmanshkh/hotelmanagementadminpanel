@@ -92,9 +92,12 @@ import { Room, RoomType, RoomSearchFilters, PageData } from '../../../core/model
           <div class="filter-group">
             <h4 class="group-title">Bed Type</h4>
             <select [(ngModel)]="filters.bedType" (change)="applyFilters()" class="select-input full">
-              <option [value]="undefined">All Bed Types</option>
+              <option value="">All Bed Types</option>
               <option value="King">King Bed</option>
               <option value="Queen">Queen Bed</option>
+              <option value="Twin">Twin Bed</option>
+              <option value="Double">Double Bed</option>
+              <option value="Suite">Suite</option>
             </select>
           </div>
         </aside>
@@ -278,22 +281,24 @@ export class RoomListComponent implements OnInit {
     this.isLoading = true;
     this.hasError = false;
 
-    this.roomRepo.getRooms(this.filters, this.currentPage, 9).subscribe({
+    // Sanitise filters: don't pass empty string bed type
+    const activeFilters: RoomSearchFilters = { ...this.filters };
+    if (!activeFilters.bedType) delete activeFilters.bedType;
+    if (!activeFilters.roomTypeId) delete activeFilters.roomTypeId;
+
+    this.roomRepo.getRooms(activeFilters, this.currentPage, 9).subscribe({
       next: res => {
         this.isLoading = false;
-        if (res?.data) {
-          if (Array.isArray(res.data)) {
-            const list = res.data as Room[];
-            this.paginatedData = {
-              items: list,
-              page: 1,
-              size: list.length,
-              totalItems: list.length,
-              totalPages: 1
-            };
-          } else {
-            this.paginatedData = res.data;
-          }
+        if (!res?.data) {
+          this.paginatedData = { items: [], page: 1, size: 9, totalItems: 0, totalPages: 1 };
+          return;
+        }
+        // Backend always returns PageData now; handle legacy array just in case
+        if (Array.isArray(res.data)) {
+          const list = res.data as Room[];
+          this.paginatedData = { items: list, page: 1, size: list.length, totalItems: list.length, totalPages: 1 };
+        } else if (res.data.items !== undefined) {
+          this.paginatedData = res.data as PageData<Room>;
         } else {
           this.paginatedData = { items: [], page: 1, size: 9, totalItems: 0, totalPages: 1 };
         }
@@ -311,7 +316,7 @@ export class RoomListComponent implements OnInit {
   }
 
   clearFilters(): void {
-    this.filters = { sortBy: 'RECOMMENDED' };
+    this.filters = { sortBy: 'RECOMMENDED', adults: undefined, bedType: '' };
     this.currentPage = 1;
     this.loadRooms();
   }

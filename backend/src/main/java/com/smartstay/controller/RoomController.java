@@ -1,13 +1,16 @@
 package com.smartstay.controller;
 
 import com.smartstay.dto.common.ApiResponse;
+import com.smartstay.dto.common.PageData;
 import com.smartstay.dto.room.RoomAvailabilityResultDto;
 import com.smartstay.dto.room.RoomDto;
 import com.smartstay.dto.room.RoomTypeDto;
+import com.smartstay.enums.RoomStatus;
 import com.smartstay.service.RoomService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -21,8 +24,22 @@ public class RoomController {
     }
 
     @GetMapping("/rooms")
-    public ResponseEntity<ApiResponse<List<RoomDto>>> getRooms() {
-        List<RoomDto> rooms = roomService.getAllActiveRooms();
+    public ResponseEntity<ApiResponse<PageData<RoomDto>>> getRooms(
+            @RequestParam(required = false) String query,
+            @RequestParam(required = false) Long roomTypeId,
+            @RequestParam(required = false) Integer floor,
+            @RequestParam(required = false) RoomStatus status,
+            @RequestParam(required = false) BigDecimal minPrice,
+            @RequestParam(required = false) BigDecimal maxPrice,
+            @RequestParam(required = false) Integer adults,
+            @RequestParam(required = false) String bedType,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "12") int size,
+            @RequestParam(required = false) String sortBy
+    ) {
+        PageData<RoomDto> rooms = roomService.searchRooms(
+                query, roomTypeId, floor, status, minPrice, maxPrice, adults, bedType, page, size, sortBy
+        );
         return ResponseEntity.ok(ApiResponse.ok("Rooms retrieved successfully", rooms));
     }
 

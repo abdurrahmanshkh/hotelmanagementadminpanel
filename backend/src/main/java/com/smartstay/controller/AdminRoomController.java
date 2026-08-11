@@ -36,7 +36,7 @@ public class AdminRoomController {
             @RequestParam(required = false) String sortBy
     ) {
         PageData<RoomDto> roomPage = roomService.searchRooms(
-                query, roomTypeId, floor, status, minPrice, maxPrice, page, size, sortBy
+                query, roomTypeId, floor, status, minPrice, maxPrice, null, null, page, size, sortBy
         );
         return ResponseEntity.ok(ApiResponse.ok("Rooms retrieved successfully", roomPage));
     }

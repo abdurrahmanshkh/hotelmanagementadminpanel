@@ -82,24 +82,30 @@ public class RoomService {
     @Transactional(readOnly = true)
     public PageData<RoomDto> searchRooms(
             String query, Long roomTypeId, Integer floor, RoomStatus status,
-            BigDecimal minPrice, BigDecimal maxPrice, int page, int size, String sortBy
+            BigDecimal minPrice, BigDecimal maxPrice, Integer adults, String bedType,
+            int page, int size, String sortBy
     ) {
         Sort sort = Sort.by(Sort.Direction.ASC, "roomNumber");
-        if ("price_asc".equalsIgnoreCase(sortBy)) {
+        if ("PRICE_LOW".equalsIgnoreCase(sortBy) || "price_asc".equalsIgnoreCase(sortBy)) {
             sort = Sort.by(Sort.Direction.ASC, "roomType.basePrice");
-        } else if ("price_desc".equalsIgnoreCase(sortBy)) {
+        } else if ("PRICE_HIGH".equalsIgnoreCase(sortBy) || "price_desc".equalsIgnoreCase(sortBy)) {
             sort = Sort.by(Sort.Direction.DESC, "roomType.basePrice");
-        } else if ("rating".equalsIgnoreCase(sortBy)) {
+        } else if ("RATING".equalsIgnoreCase(sortBy)) {
             sort = Sort.by(Sort.Direction.DESC, "rating");
+        } else if ("CAPACITY".equalsIgnoreCase(sortBy)) {
+            sort = Sort.by(Sort.Direction.DESC, "roomType.maximumAdults");
+        } else if ("RECOMMENDED".equalsIgnoreCase(sortBy)) {
+            sort = Sort.by(Sort.Direction.DESC, "featured").and(Sort.by(Sort.Direction.ASC, "roomNumber"));
         }
 
-        Pageable pageable = PageRequest.of(page, size, sort);
-        Page<Room> roomPage = roomRepository.searchRooms(query, roomTypeId, floor, status, minPrice, maxPrice, pageable);
+        int pageNum = Math.max(0, page - 1);
+        Pageable pageable = PageRequest.of(pageNum, size, sort);
+        Page<Room> roomPage = roomRepository.searchRooms(query, roomTypeId, floor, status, minPrice, maxPrice, adults, bedType, pageable);
         List<RoomDto> dtos = roomPage.getContent().stream()
                 .map(r -> RoomDto.fromEntity(r, r.getRoomType().getBasePrice()))
                 .collect(Collectors.toList());
 
-        return PageData.of(dtos, roomPage.getNumber(), roomPage.getSize(), roomPage.getTotalElements());
+        return PageData.of(dtos, roomPage.getNumber() + 1, roomPage.getSize(), roomPage.getTotalElements());
     }
 
     @Transactional(readOnly = true)

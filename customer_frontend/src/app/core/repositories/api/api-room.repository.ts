@@ -23,9 +23,12 @@ export class ApiRoomRepository implements RoomRepository {
     let params = new HttpParams().set('page', page).set('size', size);
     if (filters) {
       if (filters.roomTypeId) params = params.set('roomTypeId', filters.roomTypeId);
-      if (filters.minPrice) params = params.set('minPrice', filters.minPrice);
-      if (filters.maxPrice) params = params.set('maxPrice', filters.maxPrice);
+      if (filters.minPrice != null && filters.minPrice > 0) params = params.set('minPrice', filters.minPrice);
+      if (filters.maxPrice != null && filters.maxPrice > 0) params = params.set('maxPrice', filters.maxPrice);
       if (filters.adults) params = params.set('adults', filters.adults);
+      if (filters.bedType && filters.bedType !== '' && filters.bedType !== 'ALL') params = params.set('bedType', filters.bedType);
+      if (filters.checkInDate) params = params.set('checkInDate', filters.checkInDate);
+      if (filters.checkOutDate) params = params.set('checkOutDate', filters.checkOutDate);
       if (filters.minRating) params = params.set('minRating', filters.minRating);
       if (filters.sortBy) params = params.set('sortBy', filters.sortBy);
     }

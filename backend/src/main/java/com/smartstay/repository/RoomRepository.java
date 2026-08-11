@@ -36,6 +36,8 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
            "(:status IS NULL OR r.status = :status) AND " +
            "(:minPrice IS NULL OR r.roomType.basePrice >= :minPrice) AND " +
            "(:maxPrice IS NULL OR r.roomType.basePrice <= :maxPrice) AND " +
+           "(:adults IS NULL OR r.roomType.maximumAdults >= :adults) AND " +
+           "(:bedType IS NULL OR LOWER(r.roomType.bedType) LIKE LOWER(CONCAT('%', :bedType, '%'))) AND " +
            "(:query IS NULL OR LOWER(r.roomNumber) LIKE LOWER(CONCAT('%', :query, '%')) OR LOWER(r.description) LIKE LOWER(CONCAT('%', :query, '%')))")
     Page<Room> searchRooms(
             @Param("query") String query,
@@ -44,6 +46,8 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
             @Param("status") RoomStatus status,
             @Param("minPrice") BigDecimal minPrice,
             @Param("maxPrice") BigDecimal maxPrice,
+            @Param("adults") Integer adults,
+            @Param("bedType") String bedType,
             Pageable pageable
     );
 }
