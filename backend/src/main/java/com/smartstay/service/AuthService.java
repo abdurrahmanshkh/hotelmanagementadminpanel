@@ -87,8 +87,20 @@ public class AuthService {
             }
         }
 
+        boolean isStaffLoginAttempt = request.getStaffCode() != null && !request.getStaffCode().isBlank();
+
+        // 1. Prevent customer accounts from logging into Admin panel
+        if (user.getRole() == Role.CUSTOMER && isStaffLoginAttempt) {
+            throw new BusinessRuleException("Customer accounts cannot log into the Admin Portal. Please use the Customer Panel.");
+        }
+
+        // 2. Prevent admin/staff accounts from logging into Customer panel
+        if (user.getRole() != Role.CUSTOMER && !isStaffLoginAttempt) {
+            throw new BusinessRuleException("Admin and staff accounts cannot log into the Customer Panel. Please use the Admin Portal.");
+        }
+
         // If staffCode is provided for Admin/Staff/Manager roles, validate it
-        if (request.getStaffCode() != null && !request.getStaffCode().isBlank() && user.getRole() != Role.CUSTOMER) {
+        if (user.getRole() != Role.CUSTOMER) {
             if (user.getStaffCodeHash() != null) {
                 if (!passwordEncoder.matches(request.getStaffCode(), user.getStaffCodeHash()) &&
                     !request.getStaffCode().equals("STAFF2026") && !request.getStaffCode().equals("STAFF2027") && !request.getStaffCode().equals("STAFF2028")) {

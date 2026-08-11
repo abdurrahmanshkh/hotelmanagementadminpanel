@@ -281,11 +281,18 @@ export class LoginComponent {
     this.authRepo.login({ email: email!, password: password! }).subscribe({
       next: res => {
         this.isLoading = false;
-        this.toast.success(`Welcome back, ${res.data.user.firstName}!`);
+        const user: any = res.data.user;
+
+        if (user.role && user.role !== 'CUSTOMER') {
+          this.toast.error('Access denied. Admin and staff accounts cannot log into the Customer Panel. Please use the Admin Portal.');
+          return;
+        }
+
+        this.toast.success(`Welcome back, ${user.firstName || 'Guest'}!`);
         const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/account';
         this.router.navigateByUrl(returnUrl);
       },
-      error: err => {
+      error: () => {
         this.isLoading = false;
       }
     });

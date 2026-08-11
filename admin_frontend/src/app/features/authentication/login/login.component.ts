@@ -331,8 +331,13 @@ export class LoginComponent {
       password: val.password || '',
       staffCode: (val.staffCode || '').trim()
     }).subscribe({
-      next: () => {
+      next: (res) => {
         this.loading = false;
+        if (res.data?.user?.role === 'CUSTOMER') {
+          this.errorMessage = 'Access denied. Guest customer accounts cannot log into the Admin Portal. Please use the Customer Panel.';
+          this.toastService.error('Customer accounts cannot log into the Admin Portal.');
+          return;
+        }
         this.toastService.success('Welcome back to SmartStay Admin Panel.', 'Authentication Successful');
         const returnUrl = this.route.snapshot.queryParams['returnUrl'] || APP_ROUTES.DASHBOARD;
         this.router.navigateByUrl(returnUrl);
