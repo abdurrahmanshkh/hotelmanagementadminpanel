@@ -1,6 +1,6 @@
 export const environment = {
-  production: false,
-  useMockApi: true,
+  production: true,
+  useMockApi: false,
   apiBaseUrl: 'http://localhost:8080/api/v1',
   mockDataPath: 'assets/mock-data',
   mockDelayMs: 400,
