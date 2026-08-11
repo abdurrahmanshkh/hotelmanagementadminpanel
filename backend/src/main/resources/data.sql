@@ -128,10 +128,14 @@ VALUES (
 
 -- ============================================================
 -- 3. TEST STAFF & ADMIN ACCOUNTS
--- Passwords:
+-- ============================================================
+-- Login passwords:
+--
 -- Admin   -> Admin@123
 -- Manager -> Manager@123
 -- Staff   -> Staff@123
+--
+-- BCrypt cost factor: 10
 -- ============================================================
 
 MERGE INTO users (
@@ -157,9 +161,9 @@ VALUES (
     'Admin',
     'admin@example.com',
     '9998887770',
-    '$2a$10$e0MYzXyjpJS7Pd0RVvHwHe11.7.g3.r1A0K5sZ0aO9.g5K.7e1e.C',
+    '$2a$10$D45szuFPo26mspNxij4Kf.VkSvWKAG/QycAipn27JMn70LR9R1vai',
     'ADMIN',
-    '$2a$10$e0MYzXyjpJS7Pd0RVvHwHe11.7.g3.r1A0K5sZ0aO9.g5K.7e1e.C',
+    '$2a$10$D45szuFPo26mspNxij4Kf.VkSvWKAG/QycAipn27JMn70LR9R1vai',
     true,
     0,
     CURRENT_TIMESTAMP,
@@ -189,9 +193,9 @@ VALUES (
     'Manager',
     'manager@example.com',
     '9998887771',
-    '$2a$10$e0MYzXyjpJS7Pd0RVvHwHe11.7.g3.r1A0K5sZ0aO9.g5K.7e1e.C',
+    '$2a$10$V6d.GEay11xHyI4/bASFtOKgndalWcdeF3WpYKuqWGKT2bg9JqvRu',
     'MANAGER',
-    '$2a$10$e0MYzXyjpJS7Pd0RVvHwHe11.7.g3.r1A0K5sZ0aO9.g5K.7e1e.C',
+    '$2a$10$V6d.GEay11xHyI4/bASFtOKgndalWcdeF3WpYKuqWGKT2bg9JqvRu',
     true,
     0,
     CURRENT_TIMESTAMP,
@@ -221,9 +225,9 @@ VALUES (
     'Staff',
     'staff@example.com',
     '9998887772',
-    '$2a$10$e0MYzXyjpJS7Pd0RVvHwHe11.7.g3.r1A0K5sZ0aO9.g5K.7e1e.C',
+    '$2a$10$LE1FV3HDxqbGvGLXxBJQ1uBk4fdv8rTii2ZP7u2AIL1okQ94qCxFa',
     'STAFF',
-    '$2a$10$e0MYzXyjpJS7Pd0RVvHwHe11.7.g3.r1A0K5sZ0aO9.g5K.7e1e.C',
+    '$2a$10$LE1FV3HDxqbGvGLXxBJQ1uBk4fdv8rTii2ZP7u2AIL1okQ94qCxFa',
     true,
     0,
     CURRENT_TIMESTAMP,
