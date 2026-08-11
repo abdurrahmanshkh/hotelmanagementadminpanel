@@ -5,7 +5,7 @@ spring:
   application:
     name: smartstay-backend
   datasource:
-    url: jdbc:h2:file:./data/smartstay_db;DB_CLOSE_ON_EXIT=FALSE;AUTO_RECONNECT=TRUE;MODE=MySQL
+    url: jdbc:h2:file:./data/smartstay_db;AUTO_SERVER=TRUE;MODE=MySQL
     driver-class-name: org.h2.Driver
     username: sa
     password: password

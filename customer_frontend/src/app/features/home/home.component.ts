@@ -231,19 +231,25 @@ import { formatDateISO } from '../../core/utilities/date.utils';
       }
     }
 
-    .section { padding: 5rem 1.5rem 2rem; }
+    .section { padding: 4rem 1.5rem 2rem; }
 
     .section-header {
       display: flex;
+      flex-direction: row;
       align-items: flex-end;
       justify-content: space-between;
       margin-bottom: 2.5rem;
 
-      &.text-center { text-align: center; justify-content: center; }
+      .sub-title { display: block; font-size: 0.75rem; font-weight: 700; color: #D97706; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.375rem; }
+      .section-title { font-size: 2rem; font-weight: 800; color: #0F172A; margin: 0; }
+      .view-all-link { font-size: 0.875rem; font-weight: 700; color: #D97706; display: flex; align-items: center; gap: 0.375rem; &:hover { text-decoration: underline; } }
 
-      .sub-title { font-size: 0.75rem; font-weight: 700; color: #D97706; letter-spacing: 0.08em; }
-      .section-title { font-size: 2rem; font-weight: 800; color: #0F172A; }
-      .view-all-link { font-size: 0.875rem; font-weight: 700; color: #D97706; &:hover { text-decoration: underline; } }
+      &.text-center {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        justify-content: center;
+      }
     }
 
     .rooms-grid {

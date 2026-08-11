@@ -8,7 +8,6 @@ import com.smartstay.service.RoomService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -33,16 +32,16 @@ public class RoomController {
         return ResponseEntity.ok(ApiResponse.ok("Featured rooms retrieved successfully", rooms));
     }
 
-    @GetMapping("/rooms/{id}")
-    public ResponseEntity<ApiResponse<RoomDto>> getRoomById(@PathVariable String id) {
-        RoomDto room;
-        try {
-            Long numericId = Long.parseLong(id);
-            room = roomService.getRoomById(numericId);
-        } catch (NumberFormatException e) {
-            room = roomService.getRoomByPublicIdOrNumber(id);
-        }
-        return ResponseEntity.ok(ApiResponse.ok("Room details retrieved", room));
+    @GetMapping({"/rooms/types", "/room-types"})
+    public ResponseEntity<ApiResponse<List<RoomTypeDto>>> getRoomTypes() {
+        List<RoomTypeDto> roomTypes = roomService.getAllRoomTypes();
+        return ResponseEntity.ok(ApiResponse.ok("Room types retrieved successfully", roomTypes));
+    }
+
+    @GetMapping({"/rooms/types/{id}", "/room-types/{id}"})
+    public ResponseEntity<ApiResponse<RoomTypeDto>> getRoomTypeById(@PathVariable Long id) {
+        RoomTypeDto roomType = roomService.getRoomTypeById(id);
+        return ResponseEntity.ok(ApiResponse.ok("Room type details retrieved", roomType));
     }
 
     @GetMapping("/rooms/availability")
@@ -59,15 +58,15 @@ public class RoomController {
         return ResponseEntity.ok(ApiResponse.ok("Room availability calculated", results));
     }
 
-    @GetMapping("/room-types")
-    public ResponseEntity<ApiResponse<List<RoomTypeDto>>> getRoomTypes() {
-        List<RoomTypeDto> roomTypes = roomService.getAllRoomTypes();
-        return ResponseEntity.ok(ApiResponse.ok("Room types retrieved successfully", roomTypes));
-    }
-
-    @GetMapping("/room-types/{id}")
-    public ResponseEntity<ApiResponse<RoomTypeDto>> getRoomTypeById(@PathVariable Long id) {
-        RoomTypeDto roomType = roomService.getRoomTypeById(id);
-        return ResponseEntity.ok(ApiResponse.ok("Room type details retrieved", roomType));
+    @GetMapping("/rooms/{id}")
+    public ResponseEntity<ApiResponse<RoomDto>> getRoomById(@PathVariable String id) {
+        RoomDto room;
+        try {
+            Long numericId = Long.parseLong(id);
+            room = roomService.getRoomById(numericId);
+        } catch (NumberFormatException e) {
+            room = roomService.getRoomByPublicIdOrNumber(id);
+        }
+        return ResponseEntity.ok(ApiResponse.ok("Room details retrieved", room));
     }
 }

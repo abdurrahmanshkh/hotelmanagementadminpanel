@@ -76,7 +76,7 @@ VALUES (
     'User',
     'guest@example.com',
     '9876543210',
-    '$2a$10$e0MYzXyjpJS7Pd0RVvHwHe11.7.g3.r1A0K5sZ0aO9.g5K.7e1e.C',
+    '$2a$10$8.UnVuG9HHgffUDAlk8qfOUVGkqRzgVymGe07xd00DMxs.AQubh4a',
     'CUSTOMER',
     '1990-01-01',
     'AADHAAR',

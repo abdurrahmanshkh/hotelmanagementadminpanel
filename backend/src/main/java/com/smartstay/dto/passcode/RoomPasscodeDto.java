@@ -115,13 +115,13 @@ public class RoomPasscodeDto {
                 .passcode(rawPasscode)
                 .maskedPasscode(masked)
                 .status(p.getStatus())
-                .validFrom(p.getValidFrom() != null ? p.getValidFrom().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME) : null)
-                .validUntil(p.getValidUntil() != null ? p.getValidUntil().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME) : null)
+                .validFrom(p.getValidFrom() != null ? p.getValidFrom().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) : null)
+                .validUntil(p.getValidUntil() != null ? p.getValidUntil().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) : null)
                 .failedAttempts(p.getFailedAttempts() != null ? p.getFailedAttempts() : 0)
                 .maxAllowedAttempts(5)
-                .lockoutUntil(p.getLockedUntil() != null ? p.getLockedUntil().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME) : null)
-                .createdAt(p.getCreatedAt() != null ? p.getCreatedAt().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME) : null)
-                .updatedAt(p.getUpdatedAt() != null ? p.getUpdatedAt().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME) : null)
+                .lockoutUntil(p.getLockedUntil() != null ? p.getLockedUntil().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) : null)
+                .createdAt(p.getCreatedAt() != null ? p.getCreatedAt().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) : null)
+                .updatedAt(p.getUpdatedAt() != null ? p.getUpdatedAt().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) : null)
                 .build();
     }
 

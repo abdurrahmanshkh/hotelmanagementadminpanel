@@ -33,7 +33,7 @@ import { IconComponent } from '../../../shared/components/icon/icon.component';
           <div class="form-group">
             <label class="form-label">Email Address</label>
             <div class="input-wrapper">
-              <app-icon name="mail" [size]="18" color="#94A3B8" className="input-icon"></app-icon>
+              <app-icon name="mail" [size]="18" color="#94A3B8" class="input-icon-el"></app-icon>
               <input
                 type="email"
                 formControlName="email"
@@ -52,15 +52,15 @@ import { IconComponent } from '../../../shared/components/icon/icon.component';
               <a routerLink="/forgot-password" class="forgot-link">Forgot Password?</a>
             </div>
             <div class="input-wrapper">
-              <app-icon name="lock" [size]="18" color="#94A3B8" className="input-icon"></app-icon>
+              <app-icon name="lock" [size]="18" color="#94A3B8" class="input-icon-el"></app-icon>
               <input
                 [type]="showPassword ? 'text' : 'password'"
                 formControlName="password"
                 class="form-control"
-                placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;"
+                placeholder="••••••••"
               />
-              <button type="button" class="btn-toggle-eye" (click)="showPassword = !showPassword">
-                <app-icon [name]="showPassword ? 'x' : 'eye'" [size]="16" color="#94A3B8"></app-icon>
+              <button type="button" class="btn-toggle-eye" (click)="showPassword = !showPassword" aria-label="Toggle password visibility">
+                <app-icon [name]="showPassword ? 'eye-off' : 'eye'" [size]="18" color="#94A3B8"></app-icon>
               </button>
             </div>
             <span *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid" class="field-error">
@@ -89,11 +89,11 @@ import { IconComponent } from '../../../shared/components/icon/icon.component';
   `,
   styles: [`
     .auth-page {
-      min-height: calc(100vh - 72px);
+      min-height: calc(100vh - 72px - 200px);
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 2.5rem 1.5rem;
+      padding: 3.5rem 1.5rem;
       background: linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 100%);
     }
 
@@ -112,7 +112,10 @@ import { IconComponent } from '../../../shared/components/icon/icon.component';
       margin-bottom: 1.5rem;
 
       .brand-logo {
+        display: flex;
+        align-items: center;
         justify-content: center;
+        gap: 0.5rem;
         margin-bottom: 0.75rem;
         .title { font-size: 1.25rem; font-weight: 800; color: #0F172A; }
       }
@@ -124,17 +127,18 @@ import { IconComponent } from '../../../shared/components/icon/icon.component';
     .demo-box {
       background: #FFFBEB;
       border: 1px solid #FDE68A;
-      border-radius: 8px;
-      padding: 0.625rem 0.875rem;
-      font-size: 0.78125rem;
+      border-radius: 10px;
+      padding: 0.75rem 1rem;
+      font-size: 0.8125rem;
       color: #B45309;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.625rem;
       cursor: pointer;
       margin-bottom: 1.5rem;
+      transition: background-color 0.15s, border-color 0.15s;
 
-      &:hover { background: #FEF3C7; }
+      &:hover { background: #FEF3C7; border-color: #F59E0B; }
     }
 
     .auth-form {
@@ -171,31 +175,52 @@ import { IconComponent } from '../../../shared/components/icon/icon.component';
         position: relative;
         display: flex;
         align-items: center;
+        width: 100%;
 
-        .input-icon {
+        .input-icon-el {
           position: absolute;
           left: 0.875rem;
+          top: 50%;
+          transform: translateY(-50%);
           pointer-events: none;
+          z-index: 2;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
         }
 
         .form-control {
           width: 100%;
-          padding: 0.75rem 2.5rem 0.75rem 2.5rem;
+          box-sizing: border-box;
+          padding: 0.75rem 2.5rem 0.75rem 2.75rem;
           border: 1px solid #CBD5E1;
           border-radius: 8px;
           font-size: 0.875rem;
           outline: none;
-          transition: border-color 0.15s;
+          transition: border-color 0.15s, box-shadow 0.15s;
 
-          &:focus { border-color: #D97706; }
+          &:focus {
+            border-color: #D97706;
+            box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.12);
+          }
         }
 
         .btn-toggle-eye {
           position: absolute;
           right: 0.75rem;
+          top: 50%;
+          transform: translateY(-50%);
           background: none;
           border: none;
           cursor: pointer;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          padding: 0.25rem;
+          border-radius: 4px;
+          z-index: 2;
+
+          &:hover { background: #F1F5F9; }
         }
       }
 
@@ -258,7 +283,6 @@ export class LoginComponent {
       },
       error: err => {
         this.isLoading = false;
-        // Interceptor toasts error
       }
     });
   }
