@@ -83,7 +83,7 @@ export class AmenityManagerComponent implements OnInit {
 
   public amenities: Amenity[] = [];
   public newAmenityName = '';
-  public newAmenityIcon = '✨';
+  public newAmenityIcon = '';
 
   ngOnInit(): void {
     this.loadAmenities();
@@ -102,7 +102,7 @@ export class AmenityManagerComponent implements OnInit {
   createAmenity(): void {
     if (!this.newAmenityName.trim()) return;
     const name = this.newAmenityName.trim();
-    const icon = this.newAmenityIcon.trim() || '✨';
+    const icon = this.newAmenityIcon.trim() || 'default';
     this.roomRepo.createAmenity(name, icon).subscribe({
       next: (res) => {
         if (res.success && res.data) {
@@ -130,7 +130,7 @@ export class AmenityManagerComponent implements OnInit {
     if (str.includes('view') || str.includes('city')) return '🏙️';
     if (str.includes('balcony')) return '🏞️';
     if (str.includes('safe') || str.includes('lock')) return '🔒';
-    return (iconName && iconName.length <= 2) ? iconName : '✨';
+    return (iconName && iconName.length <= 2) ? iconName : 'default';
   }
 
   goBack(): void {
