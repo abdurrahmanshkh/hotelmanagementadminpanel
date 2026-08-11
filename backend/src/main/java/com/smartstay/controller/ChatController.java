@@ -130,4 +130,16 @@ public class ChatController {
         ChatThreadDto updated = chatService.resolveThread(id);
         return ResponseEntity.ok(ApiResponse.ok("Chat thread resolved", updated));
     }
+
+    @PatchMapping("/admin/chats/{id}/read")
+    public ResponseEntity<ApiResponse<Void>> markAdminRead(@PathVariable Long id) {
+        chatService.markAsRead(id, false);
+        return ResponseEntity.ok(ApiResponse.ok("Chat marked as read", null));
+    }
+
+    @PatchMapping("/customer/chat/threads/{id}/read")
+    public ResponseEntity<ApiResponse<Void>> markCustomerRead(@PathVariable Long id) {
+        chatService.markAsRead(id, true);
+        return ResponseEntity.ok(ApiResponse.ok("Chat marked as read", null));
+    }
 }
