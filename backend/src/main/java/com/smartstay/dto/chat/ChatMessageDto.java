@@ -55,6 +55,7 @@ public class ChatMessageDto {
     public void setMessageText(String messageText) { this.messageText = messageText; }
 
     public boolean isRead() { return isRead; }
+    public boolean getIsRead() { return isRead; }
     public void setRead(boolean read) { isRead = read; }
 
     public String getSentAt() { return sentAt; }

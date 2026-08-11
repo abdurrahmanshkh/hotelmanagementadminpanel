@@ -109,9 +109,9 @@ import { ServiceRequest, ServiceRequestStatus } from '../../../core/models';
             <label class="label">Assign Staff Technician / Housekeeper:</label>
             <select [(ngModel)]="selectedStaffId" class="form-control">
               <option [value]="0">-- Select Staff Member --</option>
-              <option [value]="101">Marcus Vance (Housekeeping Lead)</option>
-              <option [value]="102">Elena Rostova (Front-Desk Staff)</option>
-              <option [value]="103">David Miller (Maintenance Specialist)</option>
+              <option [value]="3">System Admin (Admin)</option>
+              <option [value]="4">General Manager (Manager)</option>
+              <option [value]="5">Hotel Staff (Housekeeping / Staff)</option>
             </select>
             <app-button variant="primary" size="md" (btnClick)="assignStaff()">
               Assign Staff Member
@@ -189,9 +189,9 @@ export class ServiceRequestDetailComponent implements OnInit {
   assignStaff(): void {
     if (!this.request || !this.selectedStaffId) return;
     const staffNames: Record<number, string> = {
-      101: 'Marcus Vance',
-      102: 'Elena Rostova',
-      103: 'David Miller'
+      3: 'System Admin',
+      4: 'General Manager',
+      5: 'Hotel Staff'
     };
     const staffName = staffNames[this.selectedStaffId] || 'Assigned Staff';
     this.serviceRepo.assignStaff(this.request.id, { staffId: this.selectedStaffId, staffName }).subscribe({
