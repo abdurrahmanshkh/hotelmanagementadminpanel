@@ -196,7 +196,12 @@ export class BookingReviewComponent implements OnInit {
   }
 
   onProceedToPayment(): void {
-    if (!this.room || !this.quote || !this.agreedToTerms) return;
+    if (!this.agreedToTerms) {
+      this.toast.warning('Please accept the resort rules and booking terms to proceed to payment.');
+      return;
+    }
+
+    if (!this.room || !this.quote) return;
 
     this.isCreating = true;
     const currentUser = this.authState.currentUser();

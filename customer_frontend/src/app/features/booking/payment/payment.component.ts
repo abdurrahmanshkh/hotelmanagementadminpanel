@@ -66,21 +66,33 @@ import { formatCurrency } from '../../../core/utilities/money.utils';
               <div class="form-group">
                 <label class="form-label">Cardholder Name</label>
                 <input type="text" formControlName="cardholderName" class="form-control" placeholder="John Doe" />
+                <span *ngIf="cardForm.get('cardholderName')?.touched && cardForm.get('cardholderName')?.invalid" class="field-error">
+                  Cardholder name is required.
+                </span>
               </div>
 
               <div class="form-group">
                 <label class="form-label">Card Number</label>
-                <input type="text" formControlName="cardNumber" class="form-control font-mono" placeholder="4532 &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; 8892" />
+                <input type="text" formControlName="cardNumber" class="form-control font-mono" placeholder="4532 8812 9901 8892" />
+                <span *ngIf="cardForm.get('cardNumber')?.touched && cardForm.get('cardNumber')?.invalid" class="field-error">
+                  Please enter a valid card number.
+                </span>
               </div>
 
               <div class="form-row">
                 <div class="form-group">
                   <label class="form-label">Expiration (MM/YY)</label>
                   <input type="text" formControlName="expiryDate" class="form-control font-mono" placeholder="12/28" />
+                  <span *ngIf="cardForm.get('expiryDate')?.touched && cardForm.get('expiryDate')?.invalid" class="field-error">
+                    Enter expiry as MM/YY (e.g. 12/28).
+                  </span>
                 </div>
                 <div class="form-group">
                   <label class="form-label">CVV Code</label>
                   <input type="password" formControlName="cvv" class="form-control font-mono" placeholder="123" />
+                  <span *ngIf="cardForm.get('cvv')?.touched && cardForm.get('cvv')?.invalid" class="field-error">
+                    Enter 3 or 4-digit CVV.
+                  </span>
                 </div>
               </div>
 
@@ -102,6 +114,9 @@ import { formatCurrency } from '../../../core/utilities/money.utils';
             <div *ngIf="activeTab === 'UPI'" class="upi-box text-center">
               <p>Scan UPI QR Code or Enter Virtual Payment Address (VPA):</p>
               <input type="text" class="form-control font-mono" placeholder="guest@upi" [(ngModel)]="upiId" />
+              <span *ngIf="!upiId || !upiId.includes('@')" class="field-error">
+                Please enter a valid UPI VPA (e.g. guest&#64;upi).
+              </span>
               <div class="actions-row mt-4">
                 <app-button
                   variant="primary"
@@ -187,6 +202,7 @@ import { formatCurrency } from '../../../core/utilities/money.utils';
       display: flex; flex-direction: column; gap: 0.375rem;
       .form-label { font-size: 0.8125rem; font-weight: 700; color: #0F172A; }
       .form-control { padding: 0.625rem 0.875rem; border: 1px solid #CBD5E1; border-radius: 8px; font-size: 0.875rem; outline: none; &:focus { border-color: #D97706; } }
+      .field-error { font-size: 0.75rem; color: #BE123C; font-weight: 600; text-align: left; }
     }
 
     .upi-box { padding: 1.5rem 0; display: flex; flex-direction: column; gap: 1rem; }
@@ -214,10 +230,10 @@ export class PaymentComponent implements OnInit {
   public upiId = 'guest@upi';
 
   public cardForm = this.fb.group({
-    cardholderName: ['John Doe', [Validators.required]],
-    cardNumber: ['4532 8812 9901 8892', [Validators.required]],
-    expiryDate: ['12/28', [Validators.required]],
-    cvv: ['123', [Validators.required, Validators.minLength(3)]],
+    cardholderName: ['John Doe', [Validators.required, Validators.minLength(3)]],
+    cardNumber: ['4532 8812 9901 8892', [Validators.required, Validators.pattern('^[0-9\\s]{13,19}$')]],
+    expiryDate: ['12/28', [Validators.required, Validators.pattern('^(0[1-9]|1[0-2])\\/[0-9]{2}$')]],
+    cvv: ['123', [Validators.required, Validators.pattern('^[0-9]{3,4}$')]],
     paymentToken: ['tok_success']
   });
 
@@ -252,6 +268,17 @@ export class PaymentComponent implements OnInit {
 
   onProcessPayment(method: string): void {
     if (!this.booking) return;
+
+    if (method === 'CARD' && this.cardForm.invalid) {
+      this.cardForm.markAllAsTouched();
+      this.toast.error('Please enter valid credit card details (cardholder name, card number, MM/YY expiry, CVV).');
+      return;
+    }
+
+    if (method === 'UPI' && (!this.upiId || !this.upiId.includes('@'))) {
+      this.toast.error('Please enter a valid UPI Virtual Payment Address (e.g. guest@upi).');
+      return;
+    }
 
     this.isProcessing = true;
     const token = this.cardForm.value.paymentToken || 'tok_success';

@@ -37,10 +37,16 @@ import { formatCurrency } from '../../../core/utilities/money.utils';
                 <div class="form-group">
                   <label class="form-label">Check-In Date</label>
                   <input type="date" formControlName="checkInDate" [min]="todayStr" class="form-control" />
+                  <span *ngIf="bookingForm.get('checkInDate')?.touched && bookingForm.get('checkInDate')?.invalid" class="field-error">
+                    Check-in date is required.
+                  </span>
                 </div>
                 <div class="form-group">
                   <label class="form-label">Check-Out Date</label>
                   <input type="date" formControlName="checkOutDate" [min]="bookingForm.get('checkInDate')?.value || todayStr" class="form-control" />
+                  <span *ngIf="isInvalidDateRange()" class="field-error">
+                    Check-out date must be after check-in date.
+                  </span>
                 </div>
               </div>
 
@@ -140,6 +146,11 @@ import { formatCurrency } from '../../../core/utilities/money.utils';
         padding: 0.625rem 0.875rem; border: 1px solid #CBD5E1; border-radius: 8px; font-size: 0.875rem; outline: none;
         &:focus { border-color: #D97706; }
       }
+      .field-error {
+        font-size: 0.75rem;
+        color: #BE123C;
+        font-weight: 600;
+      }
     }
 
     .actions-row { display: flex; justify-content: flex-end; margin-top: 1rem; }
@@ -196,10 +207,33 @@ export class BookingFormComponent implements OnInit {
     return formatCurrency(amount, this.room?.currency || 'INR');
   }
 
-  onSubmit(): void {
-    if (this.bookingForm.invalid || !this.room) return;
+  isInvalidDateRange(): boolean {
+    const inDate = this.bookingForm.get('checkInDate')?.value;
+    const outDate = this.bookingForm.get('checkOutDate')?.value;
+    if (!inDate || !outDate) return false;
+    return outDate <= inDate;
+  }
 
+  onSubmit(): void {
     const val = this.bookingForm.value;
+    const inDate = val.checkInDate;
+    const outDate = val.checkOutDate;
+
+    if (inDate && inDate < this.todayStr) {
+      this.toast.error('Check-in date cannot be in the past.');
+      return;
+    }
+
+    if (inDate && outDate && outDate <= inDate) {
+      this.toast.error('Check-out date must be after check-in date.');
+      return;
+    }
+
+    if (this.bookingForm.invalid || !this.room) {
+      this.bookingForm.markAllAsTouched();
+      this.toast.error('Please select valid stay dates and guest details.');
+      return;
+    }
 
     this.router.navigate(['/booking', this.room.id, 'review'], {
       queryParams: {

@@ -24,10 +24,16 @@ import { IconComponent } from '../../../shared/components/icon/icon.component';
             <div class="form-group">
               <label class="form-label">First Name</label>
               <input type="text" formControlName="firstName" class="form-control" />
+              <span *ngIf="profileForm.get('firstName')?.touched && profileForm.get('firstName')?.invalid" class="field-error">
+                First name is required.
+              </span>
             </div>
             <div class="form-group">
               <label class="form-label">Last Name</label>
               <input type="text" formControlName="lastName" class="form-control" />
+              <span *ngIf="profileForm.get('lastName')?.touched && profileForm.get('lastName')?.invalid" class="field-error">
+                Last name is required.
+              </span>
             </div>
           </div>
 
@@ -40,6 +46,9 @@ import { IconComponent } from '../../../shared/components/icon/icon.component';
             <div class="form-group">
               <label class="form-label">Phone Number</label>
               <input type="tel" formControlName="phone" class="form-control" />
+              <span *ngIf="profileForm.get('phone')?.touched && profileForm.get('phone')?.invalid" class="field-error">
+                Please enter a valid 10-digit phone number.
+              </span>
             </div>
             <div class="form-group">
               <label class="form-label">Government ID Masked</label>
@@ -67,6 +76,7 @@ import { IconComponent } from '../../../shared/components/icon/icon.component';
       display: flex; flex-direction: column; gap: 0.375rem;
       .form-label { font-size: 0.8125rem; font-weight: 700; color: #0F172A; }
       .form-control { padding: 0.625rem 0.875rem; border: 1px solid #CBD5E1; border-radius: 8px; font-size: 0.875rem; outline: none; &:focus { border-color: #D97706; } &.disabled { background: #F8FAFC; color: #64748B; } }
+      .field-error { font-size: 0.75rem; color: #BE123C; font-weight: 600; }
     }
     .actions-row { display: flex; justify-content: flex-end; margin-top: 1rem; }
   `]
@@ -80,8 +90,8 @@ export class ProfileComponent implements OnInit {
   public isSaving = false;
 
   public profileForm = this.fb.group({
-    firstName: ['', [Validators.required]],
-    lastName: ['', [Validators.required]],
+    firstName: ['', [Validators.required, Validators.minLength(2)]],
+    lastName: ['', [Validators.required, Validators.minLength(2)]],
     phone: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]]
   });
 
@@ -97,7 +107,11 @@ export class ProfileComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.profileForm.invalid) return;
+    if (this.profileForm.invalid) {
+      this.profileForm.markAllAsTouched();
+      this.toast.error('Please enter a valid first name, last name, and 10-digit phone number.');
+      return;
+    }
 
     this.isSaving = true;
     const val = this.profileForm.value;

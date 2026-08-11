@@ -37,26 +37,41 @@ import { IconComponent } from '../../../shared/components/icon/icon.component';
             <div class="form-group">
               <label class="form-label">First Name</label>
               <input type="text" formControlName="firstName" class="form-control" placeholder="John" />
+              <span *ngIf="registerForm.get('firstName')?.touched && registerForm.get('firstName')?.invalid" class="field-error">
+                First name is required.
+              </span>
             </div>
             <div class="form-group">
               <label class="form-label">Last Name</label>
               <input type="text" formControlName="lastName" class="form-control" placeholder="Doe" />
+              <span *ngIf="registerForm.get('lastName')?.touched && registerForm.get('lastName')?.invalid" class="field-error">
+                Last name is required.
+              </span>
             </div>
           </div>
 
           <div class="form-group">
             <label class="form-label">Email Address</label>
             <input type="email" formControlName="email" class="form-control" placeholder="john.doe@example.com" />
+            <span *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.invalid" class="field-error">
+              Please enter a valid email address.
+            </span>
           </div>
 
           <div class="form-row">
             <div class="form-group">
               <label class="form-label">Phone Number</label>
               <input type="tel" formControlName="phone" class="form-control" placeholder="9876543210" />
+              <span *ngIf="registerForm.get('phone')?.touched && registerForm.get('phone')?.invalid" class="field-error">
+                Please enter a valid 10-digit mobile number.
+              </span>
             </div>
             <div class="form-group">
               <label class="form-label">Date of Birth</label>
               <input type="date" formControlName="dateOfBirth" class="form-control" />
+              <span *ngIf="registerForm.get('dateOfBirth')?.touched && registerForm.get('dateOfBirth')?.invalid" class="field-error">
+                Please enter a valid date of birth.
+              </span>
             </div>
           </div>
 
@@ -72,6 +87,9 @@ import { IconComponent } from '../../../shared/components/icon/icon.component';
             <div class="form-group">
               <label class="form-label">ID Number</label>
               <input type="text" formControlName="governmentIdNumber" class="form-control" placeholder="12-digit / Passport #" />
+              <span *ngIf="registerForm.get('governmentIdNumber')?.touched && registerForm.get('governmentIdNumber')?.invalid" class="field-error">
+                Government ID number is required.
+              </span>
             </div>
           </div>
 
@@ -79,6 +97,9 @@ import { IconComponent } from '../../../shared/components/icon/icon.component';
             <label class="form-label">Password</label>
             <input type="password" formControlName="password" class="form-control" placeholder="At least 8 characters" />
             <app-password-strength [password]="registerForm.get('password')?.value || ''"></app-password-strength>
+            <span *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.invalid" class="field-error">
+              Password must be at least 8 characters.
+            </span>
           </div>
 
           <div class="terms-row">
@@ -86,6 +107,9 @@ import { IconComponent } from '../../../shared/components/icon/icon.component';
               <input type="checkbox" formControlName="terms" />
               <span>I agree to SmartStay <a routerLink="/about" class="link">Terms of Service</a> & Privacy Policy</span>
             </label>
+            <span *ngIf="registerForm.get('terms')?.touched && registerForm.get('terms')?.invalid" class="field-error">
+              You must accept terms to create an account.
+            </span>
           </div>
 
           <app-button
@@ -166,9 +190,18 @@ import { IconComponent } from '../../../shared/components/icon/icon.component';
         outline: none;
         &:focus { border-color: #D97706; }
       }
+
+      .field-error {
+        font-size: 0.75rem;
+        color: #BE123C;
+        font-weight: 600;
+      }
     }
 
     .terms-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
       font-size: 0.8125rem;
       color: #475569;
       .checkbox-label { display: flex; align-items: center; gap: 0.5rem; cursor: pointer; }
@@ -193,19 +226,23 @@ export class RegisterComponent {
   public isLoading = false;
 
   public registerForm = this.fb.group({
-    firstName: ['', [Validators.required]],
-    lastName: ['', [Validators.required]],
+    firstName: ['', [Validators.required, Validators.minLength(2)]],
+    lastName: ['', [Validators.required, Validators.minLength(2)]],
     email: ['', [Validators.required, Validators.email]],
     phone: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
     dateOfBirth: ['1998-05-12', [Validators.required]],
     governmentIdType: ['AADHAAR'],
-    governmentIdNumber: ['987654321012', [Validators.required]],
+    governmentIdNumber: ['987654321012', [Validators.required, Validators.minLength(5)]],
     password: ['', [Validators.required, Validators.minLength(8)]],
     terms: [true, [Validators.requiredTrue]]
   });
 
   onSubmit(): void {
-    if (this.registerForm.invalid) return;
+    if (this.registerForm.invalid) {
+      this.registerForm.markAllAsTouched();
+      this.toast.error('Please complete all required fields correctly before registering.');
+      return;
+    }
 
     this.isLoading = true;
     const formVal = this.registerForm.value;

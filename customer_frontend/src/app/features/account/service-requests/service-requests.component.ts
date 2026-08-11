@@ -170,7 +170,10 @@ export class ServiceRequestsComponent implements OnInit {
   }
 
   onSubmitRequest(): void {
-    if (!this.newNotes || !this.newTitle) return;
+    if (!this.newRoomNumber?.trim() || !this.newTitle?.trim() || !this.newNotes?.trim()) {
+      this.toast.error('Please fill in room number, request title, and detailed instructions.');
+      return;
+    }
 
     this.isSubmitting = true;
     this.serviceRepo.createServiceRequest({

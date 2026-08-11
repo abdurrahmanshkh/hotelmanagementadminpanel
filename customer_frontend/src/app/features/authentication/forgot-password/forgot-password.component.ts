@@ -30,6 +30,9 @@ import { IconComponent } from '../../../shared/components/icon/icon.component';
               <app-icon name="mail" [size]="18" color="#94A3B8" className="input-icon"></app-icon>
               <input type="email" formControlName="email" class="form-control" placeholder="guest@example.com" />
             </div>
+            <span *ngIf="resetForm.get('email')?.touched && resetForm.get('email')?.invalid" class="field-error">
+              Please enter a valid email address.
+            </span>
           </div>
 
           <app-button type="submit" variant="primary" size="lg" [fullWidth]="true" [loading]="isLoading" [disabled]="resetForm.invalid">
@@ -91,6 +94,11 @@ import { IconComponent } from '../../../shared/components/icon/icon.component';
           &:focus { border-color: #D97706; }
         }
       }
+      .field-error {
+        font-size: 0.75rem;
+        color: #BE123C;
+        font-weight: 600;
+      }
     }
 
     .success-box {
@@ -116,7 +124,11 @@ export class ForgotPasswordComponent {
   });
 
   onSubmit(): void {
-    if (this.resetForm.invalid) return;
+    if (this.resetForm.invalid) {
+      this.resetForm.markAllAsTouched();
+      this.toast.error('Please enter a valid email address.');
+      return;
+    }
 
     this.isLoading = true;
     this.authRepo.forgotPassword({ email: this.resetForm.value.email! }).subscribe({

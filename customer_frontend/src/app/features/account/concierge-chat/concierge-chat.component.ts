@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ChatRepository } from '../../../core/repositories/contracts/chat.repository';
 import { ChatbotEngineService } from '../../../core/services/chatbot-engine.service';
 import { AuthStateService } from '../../../core/services/auth-state.service';
+import { ToastService } from '../../../core/services/toast.service';
 import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
 import { ChatMessage, ChatThread } from '../../../core/models';
@@ -92,6 +93,7 @@ export class ConciergeChatComponent implements OnInit {
   private chatRepo = inject(ChatRepository);
   private engine = inject(ChatbotEngineService);
   public authState = inject(AuthStateService);
+  private toast = inject(ToastService);
 
   public inputText = '';
   public isThinking = false;
@@ -141,15 +143,21 @@ export class ConciergeChatComponent implements OnInit {
   }
 
   onEscalate(): void {
-    this.chatRepo.escalateToAdmin(1).subscribe(() => {
-      this.messages.push({
-        id: Math.random(),
-        threadId: 1,
-        senderType: 'ADMIN',
-        senderName: 'Front Desk Concierge',
-        messageText: 'Front Desk Admin staff has received your escalation and joined this conversation.',
-        createdAt: new Date().toISOString()
-      });
+    this.chatRepo.escalateToAdmin(1).subscribe({
+      next: () => {
+        this.messages.push({
+          id: Math.random(),
+          threadId: 1,
+          senderType: 'ADMIN',
+          senderName: 'Front Desk Concierge',
+          messageText: 'Front Desk Admin staff has received your escalation and joined this conversation.',
+          createdAt: new Date().toISOString()
+        });
+        this.toast.info('Chat escalated to Front Desk support staff.');
+      },
+      error: () => {
+        this.toast.error('Unable to escalate chat. Please try again.');
+      }
     });
   }
 

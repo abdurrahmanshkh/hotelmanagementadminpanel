@@ -269,7 +269,11 @@ export class LoginComponent {
   }
 
   onSubmit(): void {
-    if (this.loginForm.invalid) return;
+    if (this.loginForm.invalid) {
+      this.loginForm.markAllAsTouched();
+      this.toast.error('Please enter a valid email address and password.');
+      return;
+    }
 
     this.isLoading = true;
     const { email, password } = this.loginForm.value;
