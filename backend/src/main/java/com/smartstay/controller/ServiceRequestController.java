@@ -75,6 +75,12 @@ public class ServiceRequestController {
         return ResponseEntity.ok(ApiResponse.ok("Service requests retrieved successfully", pageData));
     }
 
+    @GetMapping("/admin/service-requests/{id}")
+    public ResponseEntity<ApiResponse<ServiceRequestDto>> getRequestById(@PathVariable Long id) {
+        ServiceRequestDto dto = serviceRequestManager.getRequestById(id);
+        return ResponseEntity.ok(ApiResponse.ok("Service request details retrieved", dto));
+    }
+
     @PatchMapping("/admin/service-requests/{id}/assign")
     public ResponseEntity<ApiResponse<ServiceRequestDto>> assignStaff(
             @PathVariable Long id,

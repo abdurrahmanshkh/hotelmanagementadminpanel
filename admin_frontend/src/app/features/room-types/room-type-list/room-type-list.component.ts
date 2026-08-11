@@ -53,11 +53,11 @@ import { RoomType } from '../../../core/models';
           <tr *ngFor="let item of roomTypes">
             <td><strong>{{ item.name }}</strong></td>
             <td><code>{{ item.code }}</code></td>
-            <td>{{ item.adultCapacity }} Adults / {{ item.childCapacity }} Children</td>
+            <td>{{ item.adultCapacity || item.maximumAdults || 2 }} Adults / {{ item.childCapacity || item.maximumChildren || 0 }} Children</td>
             <td><strong>{{ formatCurrency(item.basePrice) }}</strong></td>
             <td>{{ formatCurrency(item.minimumPrice) }} - {{ formatCurrency(item.maximumPrice) }}</td>
             <td>
-              <span class="badge" [class.badge--success]="item.isActive">{{ item.isActive ? 'ACTIVE' : 'INACTIVE' }}</span>
+              <span class="badge" [class.badge--success]="item.isActive || item.active">{{ (item.isActive || item.active) ? 'ACTIVE' : 'INACTIVE' }}</span>
             </td>
             <td>
               <button class="btn-action" (click)="editType(item.id)">Edit Category</button>

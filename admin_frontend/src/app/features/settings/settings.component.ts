@@ -28,12 +28,8 @@ import { HotelSettings } from '../../core/models';
         <form [formGroup]="settingsForm" (ngSubmit)="onSubmit()" class="settings-form">
           <!-- Property Profile Section -->
           <div class="form-section">
-            <h3 class="section-title">Hotel Property Profile</h3>
+            <h3 class="section-title">Hotel Contact & Location Profile</h3>
             <div class="form-grid">
-              <app-form-field label="Hotel Name" [required]="true">
-                <input type="text" formControlName="hotelName" placeholder="e.g. SmartStay Grand Hotel & Resort" class="form-control" />
-              </app-form-field>
-
               <app-form-field label="Contact Email" [required]="true">
                 <input type="email" formControlName="email" placeholder="contact@smartstay.com" class="form-control" />
               </app-form-field>
@@ -48,6 +44,10 @@ import { HotelSettings } from '../../core/models';
                   <option value="USD">USD ($)</option>
                   <option value="EUR">EUR (€)</option>
                 </select>
+              </app-form-field>
+
+              <app-form-field label="GST / Tax Percentage (%)" [required]="true">
+                <input type="number" formControlName="taxPercentage" class="form-control" />
               </app-form-field>
             </div>
 
@@ -66,10 +66,6 @@ import { HotelSettings } from '../../core/models';
 
               <app-form-field label="Standard Check-Out Time" [required]="true">
                 <input type="time" formControlName="checkOutTime" class="form-control" />
-              </app-form-field>
-
-              <app-form-field label="GST / Tax Percentage (%)" [required]="true">
-                <input type="number" formControlName="taxPercentage" class="form-control" />
               </app-form-field>
 
               <app-form-field label="Service Fee Percentage (%)">
@@ -106,7 +102,6 @@ export class SettingsComponent implements OnInit {
   public submitting = false;
 
   public settingsForm = this.fb.group({
-    hotelName: ['SmartStay Hotel & Resort', [Validators.required]],
     email: ['contact@smartstay.com', [Validators.required, Validators.email]],
     phone: ['+91 98765 43210', [Validators.required]],
     address: ['123 Luxury Boulevard, Beachfront Drive, Goa'],
@@ -127,7 +122,6 @@ export class SettingsComponent implements OnInit {
         if (res.success && res.data) {
           const s = res.data;
           this.settingsForm.patchValue({
-            hotelName: s.hotelName,
             email: s.email || 'contact@smartstay.com',
             phone: s.phone || '+91 98765 43210',
             address: s.address || '',

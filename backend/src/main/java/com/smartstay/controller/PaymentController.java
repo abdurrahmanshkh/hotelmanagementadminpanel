@@ -58,6 +58,12 @@ public class PaymentController {
         return ResponseEntity.ok(ApiResponse.ok("Payments list retrieved", pageData));
     }
 
+    @GetMapping("/admin/payments/{paymentId}")
+    public ResponseEntity<ApiResponse<PaymentDto>> getPaymentById(@PathVariable Long paymentId) {
+        PaymentDto payment = paymentService.getPaymentById(paymentId);
+        return ResponseEntity.ok(ApiResponse.ok("Payment details retrieved", payment));
+    }
+
     @PostMapping("/admin/payments/{paymentId}/refund")
     public ResponseEntity<ApiResponse<RefundRecordDto>> processRefund(
             @PathVariable Long paymentId,

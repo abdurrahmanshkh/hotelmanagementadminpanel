@@ -108,6 +108,13 @@ public class PaymentService {
     }
 
     @Transactional(readOnly = true)
+    public PaymentDto getPaymentById(Long paymentId) {
+        Payment payment = paymentRepository.findById(paymentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Payment not found with ID: " + paymentId));
+        return PaymentDto.fromEntity(payment);
+    }
+
+    @Transactional(readOnly = true)
     public PaymentDto getPaymentByBookingId(Long bookingId) {
         Payment payment = paymentRepository.findByBookingId(bookingId)
                 .orElseThrow(() -> new ResourceNotFoundException("Payment record not found for booking ID: " + bookingId));

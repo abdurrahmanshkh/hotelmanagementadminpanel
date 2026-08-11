@@ -255,6 +255,10 @@ public class BookingService {
             throw new BusinessRuleException("Only confirmed bookings can be checked in");
         }
 
+        if (LocalDate.now().isBefore(booking.getCheckInDate())) {
+            throw new BusinessRuleException("Check-in blocked: Cannot check in guest before scheduled check-in date (" + booking.getCheckInDate() + "). Scheduled date must be today or past.");
+        }
+
         booking.setStatus(BookingStatus.CHECKED_IN);
         booking.setActualCheckInAt(LocalDateTime.now());
         booking.getRoom().setStatus(RoomStatus.OCCUPIED);

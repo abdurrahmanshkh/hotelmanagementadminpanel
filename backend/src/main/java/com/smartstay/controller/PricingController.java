@@ -33,6 +33,12 @@ public class PricingController {
                 .body(ApiResponse.ok("Pricing rule created successfully", created));
     }
 
+    @GetMapping("/rules/{id}")
+    public ResponseEntity<ApiResponse<PricingRuleDto>> getRuleById(@PathVariable Long id) {
+        PricingRuleDto rule = pricingService.getRuleById(id);
+        return ResponseEntity.ok(ApiResponse.ok("Pricing rule retrieved", rule));
+    }
+
     @PutMapping("/rules/{id}")
     public ResponseEntity<ApiResponse<PricingRuleDto>> updateRule(
             @PathVariable Long id,
@@ -40,6 +46,22 @@ public class PricingController {
     ) {
         PricingRuleDto updated = pricingService.updateRule(id, dto);
         return ResponseEntity.ok(ApiResponse.ok("Pricing rule updated successfully", updated));
+    }
+
+    @DeleteMapping("/rules/{id}")
+    public ResponseEntity<ApiResponse<Void>> deleteRule(@PathVariable Long id) {
+        pricingService.deleteRule(id);
+        return ResponseEntity.ok(ApiResponse.ok("Pricing rule deleted successfully", null));
+    }
+
+    @PatchMapping("/rules/{id}/status")
+    public ResponseEntity<ApiResponse<PricingRuleDto>> toggleRuleStatus(
+            @PathVariable Long id,
+            @RequestBody Map<String, Boolean> body
+    ) {
+        boolean active = body.getOrDefault("isActive", body.getOrDefault("active", true));
+        PricingRuleDto updated = pricingService.toggleRuleStatus(id, active);
+        return ResponseEntity.ok(ApiResponse.ok("Pricing rule status updated", updated));
     }
 
     @PatchMapping("/enabled")

@@ -75,9 +75,9 @@ import { ErrorFormatter } from '../../core/utilities/error-formatter.utility';
         <div class="metrics-grid">
           <app-metric-card
             title="Occupancy Rate"
-            [value]="summaryData.occupancyPercentage + '%'"
+            [value]="(summaryData.occupancyPercentage ? summaryData.occupancyPercentage.toFixed(2) : '0') + '%'"
             icon="building"
-            [subtext]="summaryData.roomCounters['OCCUPIED'] + ' / ' + summaryData.roomCounters['TOTAL'] + ' Rooms Occupied'"
+            [subtext]="(summaryData.roomCounters['OCCUPIED'] || summaryData.occupiedRooms || 0) + ' / ' + (summaryData.totalRooms || summaryData.roomCounters['TOTAL'] || 0) + ' Rooms Occupied'"
             variant="accent"
           ></app-metric-card>
 

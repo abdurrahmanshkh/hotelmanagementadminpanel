@@ -72,6 +72,13 @@ public class ServiceRequestManager {
     }
 
     @Transactional(readOnly = true)
+    public ServiceRequestDto getRequestById(Long requestId) {
+        ServiceRequestEntity request = serviceRequestRepository.findById(requestId)
+                .orElseThrow(() -> new ResourceNotFoundException("Service request not found with ID: " + requestId));
+        return ServiceRequestDto.fromEntity(request);
+    }
+
+    @Transactional(readOnly = true)
     public List<ServiceRequestDto> getCustomerRequests(Long userId) {
         return serviceRequestRepository.findByUserIdOrderByCreatedAtDesc(userId).stream()
                 .map(ServiceRequestDto::fromEntity)

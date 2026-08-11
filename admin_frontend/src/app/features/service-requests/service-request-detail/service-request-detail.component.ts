@@ -43,7 +43,7 @@ import { ServiceRequest, ServiceRequestStatus } from '../../../core/models';
         <div class="card detail-card">
           <div class="card-header flex-between">
             <div class="header-title-box">
-              <span class="category-badge">{{ request.category }}</span>
+              <span class="category-badge">{{ formatCategory(request.category) }}</span>
               <h2 class="request-title">{{ request.title }}</h2>
             </div>
             <div class="badges-row">
@@ -211,5 +211,10 @@ export class ServiceRequestDetailComponent implements OnInit {
 
   formatDate(dateStr: string): string {
     return DateFormatter.formatDate(dateStr);
+  }
+
+  formatCategory(cat: string): string {
+    if (!cat) return '';
+    return cat.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, l => l.toUpperCase());
   }
 }

@@ -117,6 +117,30 @@ public class PricingService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
+    public PricingRuleDto getRuleById(Long id) {
+        PricingRule rule = pricingRuleRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Pricing rule not found with ID: " + id));
+        return PricingRuleDto.fromEntity(rule);
+    }
+
+    @Transactional
+    public void deleteRule(Long id) {
+        if (!pricingRuleRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Pricing rule not found with ID: " + id);
+        }
+        pricingRuleRepository.deleteById(id);
+    }
+
+    @Transactional
+    public PricingRuleDto toggleRuleStatus(Long id, boolean active) {
+        PricingRule rule = pricingRuleRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Pricing rule not found with ID: " + id));
+        rule.setActive(active);
+        rule = pricingRuleRepository.save(rule);
+        return PricingRuleDto.fromEntity(rule);
+    }
+
     @Transactional
     public PricingRuleDto createRule(PricingRuleDto dto) {
         RoomType rt = null;

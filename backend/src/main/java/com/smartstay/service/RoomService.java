@@ -22,6 +22,14 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.smartstay.enums.CleaningTaskStatus;
+import com.smartstay.enums.MaintenanceStatus;
+import com.smartstay.enums.Priority;
+import com.smartstay.model.CleaningTask;
+import com.smartstay.model.MaintenanceRecord;
+import com.smartstay.repository.CleaningTaskRepository;
+import com.smartstay.repository.MaintenanceRecordRepository;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -35,19 +43,25 @@ public class RoomService {
     private final AmenityRepository amenityRepository;
     private final RoomImageRepository roomImageRepository;
     private final BookingRepository bookingRepository;
+    private final CleaningTaskRepository cleaningTaskRepository;
+    private final MaintenanceRecordRepository maintenanceRecordRepository;
 
     public RoomService(
             RoomRepository roomRepository,
             RoomTypeRepository roomTypeRepository,
             AmenityRepository amenityRepository,
             RoomImageRepository roomImageRepository,
-            BookingRepository bookingRepository
+            BookingRepository bookingRepository,
+            CleaningTaskRepository cleaningTaskRepository,
+            MaintenanceRecordRepository maintenanceRecordRepository
     ) {
         this.roomRepository = roomRepository;
         this.roomTypeRepository = roomTypeRepository;
         this.amenityRepository = amenityRepository;
         this.roomImageRepository = roomImageRepository;
         this.bookingRepository = bookingRepository;
+        this.cleaningTaskRepository = cleaningTaskRepository;
+        this.maintenanceRecordRepository = maintenanceRecordRepository;
     }
 
     @Transactional(readOnly = true)
@@ -262,6 +276,7 @@ public class RoomService {
             }
         }
 
+        syncRoomStatusTasks(room);
         return RoomDto.fromEntity(room, roomType.getBasePrice());
     }
 
@@ -283,6 +298,7 @@ public class RoomService {
         if (form.getIsActive() != null) room.setActive(form.getIsActive());
 
         room = roomRepository.save(room);
+        syncRoomStatusTasks(room);
         return RoomDto.fromEntity(room, room.getRoomType().getBasePrice());
     }
 
@@ -292,7 +308,32 @@ public class RoomService {
                 .orElseThrow(() -> new ResourceNotFoundException("Room not found with ID: " + id));
         room.setStatus(status);
         room = roomRepository.save(room);
+        syncRoomStatusTasks(room);
         return RoomDto.fromEntity(room, room.getRoomType().getBasePrice());
+    }
+
+    private void syncRoomStatusTasks(Room room) {
+        if (room.getStatus() == RoomStatus.UNDER_CLEANING) {
+            String taskRef = "CLN-" + UUID.randomUUID().toString().substring(0, 6).toUpperCase();
+            CleaningTask task = CleaningTask.builder()
+                    .taskNumber(taskRef)
+                    .room(room)
+                    .status(CleaningTaskStatus.PENDING)
+                    .notes("Generated automatically for room " + room.getRoomNumber())
+                    .build();
+            cleaningTaskRepository.save(task);
+        } else if (room.getStatus() == RoomStatus.MAINTENANCE) {
+            String recordRef = "MNT-" + UUID.randomUUID().toString().substring(0, 6).toUpperCase();
+            MaintenanceRecord record = MaintenanceRecord.builder()
+                    .recordNumber(recordRef)
+                    .room(room)
+                    .title("Routine Maintenance for Room " + room.getRoomNumber())
+                    .description("Generated automatically for room " + room.getRoomNumber())
+                    .priority(Priority.MEDIUM)
+                    .status(MaintenanceStatus.OPEN)
+                    .build();
+            maintenanceRecordRepository.save(record);
+        }
     }
 
     @Transactional(readOnly = true)

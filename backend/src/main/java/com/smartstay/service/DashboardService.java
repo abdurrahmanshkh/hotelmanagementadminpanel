@@ -52,14 +52,15 @@ public class DashboardService {
         int mnt = (int) roomRepository.countByStatus(RoomStatus.MAINTENANCE);
 
         int total = avail + resv + occ + cln + mnt;
-        double occupancyPct = total > 0 ? ((double) (occ + resv) / total) * 100.0 : 0.0;
+        double occupancyPct = total > 0 ? Math.round((((double) (occ + resv) / total) * 100.0) * 100.0) / 100.0 : 0.0;
 
         Map<String, Integer> counters = Map.of(
                 "AVAILABLE", avail,
                 "RESERVED", resv,
                 "OCCUPIED", occ,
                 "UNDER_CLEANING", cln,
-                "MAINTENANCE", mnt
+                "MAINTENANCE", mnt,
+                "TOTAL", total
         );
 
         LocalDate today = LocalDate.now();

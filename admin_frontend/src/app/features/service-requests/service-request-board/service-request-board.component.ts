@@ -55,7 +55,7 @@ import { ServiceRequest, ServiceRequestStatus } from '../../../core/models';
               <strong class="card-title" (click)="viewDetails(item.id)">{{ item.title }}</strong>
               <div class="card-meta">
                 <span>Room {{ item.roomNumber }}</span>
-                <span>{{ item.category }}</span>
+                <span>{{ formatCategory(item.category) }}</span>
               </div>
             </div>
           </div>
@@ -220,6 +220,11 @@ export class ServiceRequestBoardComponent implements OnInit {
 
   viewDetails(id: number): void {
     this.router.navigate(['/admin/service-requests', id]);
+  }
+
+  formatCategory(cat: string): string {
+    if (!cat) return '';
+    return cat.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, l => l.toUpperCase());
   }
 
   navigate(path: string): void {

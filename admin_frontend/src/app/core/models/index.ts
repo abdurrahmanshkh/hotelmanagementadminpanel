@@ -288,11 +288,14 @@ export interface RoomType {
   maximumPrice: number;
   adultCapacity: number;
   childCapacity: number;
+  maximumAdults?: number;
+  maximumChildren?: number;
   bedType: string;
   roomSizeSqFt: number;
   amenities: Amenity[];
   images: RoomImage[];
   isActive: boolean;
+  active?: boolean;
   totalRoomsCount: number;
 }
 

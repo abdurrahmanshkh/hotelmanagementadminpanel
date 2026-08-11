@@ -75,7 +75,12 @@ public class RoomTypeDto {
     public void setRoomSizeSqft(int roomSizeSqft) { this.roomSizeSqft = roomSizeSqft; }
 
     public boolean isActive() { return active; }
+    public boolean getIsActive() { return active; }
     public void setActive(boolean active) { this.active = active; }
+
+    public int getAdultCapacity() { return maximumAdults; }
+    public int getChildCapacity() { return maximumChildren; }
+    public int getRoomSizeSqFt() { return roomSizeSqft; }
 
     public List<AmenityDto> getAmenities() { return amenities; }
     public void setAmenities(List<AmenityDto> amenities) { this.amenities = amenities; }
