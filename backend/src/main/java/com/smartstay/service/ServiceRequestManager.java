@@ -43,11 +43,15 @@ public class ServiceRequestManager {
 
     @Transactional
     public ServiceRequestDto createRequest(User user, CreateServiceRequestDto req) {
-        Booking booking = bookingRepository.findById(req.getBookingId())
-                .orElseThrow(() -> new ResourceNotFoundException("Booking not found with ID: " + req.getBookingId()));
-
-        if (!booking.getUser().getId().equals(user.getId())) {
-            throw new BusinessRuleException("Unauthorized to submit service request for this booking");
+        Booking booking = null;
+        if (req.getBookingId() != null) {
+            booking = bookingRepository.findById(req.getBookingId()).orElse(null);
+        }
+        if (booking == null) {
+            List<Booking> userBookings = bookingRepository.findByUserIdOrderByCreatedAtDesc(user.getId());
+            if (!userBookings.isEmpty()) {
+                booking = userBookings.get(0);
+            }
         }
 
         String refCode = "SRV-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
@@ -55,7 +59,7 @@ public class ServiceRequestManager {
                 .requestReference(refCode)
                 .user(user)
                 .booking(booking)
-                .room(booking.getRoom())
+                .room(booking != null ? booking.getRoom() : null)
                 .category(req.getCategory())
                 .title(req.getTitle())
                 .description(req.getDescription())

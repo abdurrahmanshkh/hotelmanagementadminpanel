@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { RoomRepository } from '../contracts/room.repository';
 import { API_ENDPOINTS } from '../../constants/api-endpoints.constants';
 import {
@@ -29,7 +29,23 @@ export class ApiRoomRepository implements RoomRepository {
       if (filters.minRating) params = params.set('minRating', filters.minRating);
       if (filters.sortBy) params = params.set('sortBy', filters.sortBy);
     }
-    return this.http.get<ApiResponse<PageData<Room>>>(`${this.baseUrl}${API_ENDPOINTS.ROOMS.LIST}`, { params });
+    return this.http.get<ApiResponse<any>>(`${this.baseUrl}${API_ENDPOINTS.ROOMS.LIST}`, { params }).pipe(
+      map(res => {
+        if (!res.data) return res;
+        if (Array.isArray(res.data)) {
+          const items: Room[] = res.data;
+          const pageData: PageData<Room> = {
+            items: items,
+            page: page,
+            size: size,
+            totalItems: items.length,
+            totalPages: Math.ceil(items.length / size) || 1
+          };
+          return { ...res, data: pageData };
+        }
+        return res;
+      })
+    );
   }
 
   getRoomById(roomId: number): Observable<ApiResponse<Room>> {

@@ -29,7 +29,7 @@ export interface ServiceRequest {
 }
 
 export interface CreateServiceRequestInput {
-  bookingId: number;
+  bookingId?: number;
   category: string;
   title: string;
   description: string;

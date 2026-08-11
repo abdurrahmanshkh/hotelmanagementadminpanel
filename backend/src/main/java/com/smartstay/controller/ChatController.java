@@ -71,7 +71,7 @@ public class ChatController {
         return ResponseEntity.ok(ApiResponse.ok("Message sent", msg));
     }
 
-    @PostMapping("/customer/chat/threads/{id}/escalate")
+    @RequestMapping(value = "/customer/chat/threads/{id}/escalate", method = {RequestMethod.POST, RequestMethod.PUT})
     public ResponseEntity<ApiResponse<ChatThreadDto>> escalateThread(
             @PathVariable Long id,
             @RequestBody(required = false) Map<String, String> body

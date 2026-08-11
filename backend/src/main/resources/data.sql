@@ -4,6 +4,8 @@
 -- Database: H2
 -- ============================================================
 
+ALTER TABLE service_requests ALTER COLUMN booking_id SET NULL;
+ALTER TABLE service_requests ALTER COLUMN room_id SET NULL;
 
 -- ============================================================
 -- 1. DEFAULT HOTEL SETTINGS

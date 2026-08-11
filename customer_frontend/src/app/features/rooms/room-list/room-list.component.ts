@@ -281,7 +281,22 @@ export class RoomListComponent implements OnInit {
     this.roomRepo.getRooms(this.filters, this.currentPage, 9).subscribe({
       next: res => {
         this.isLoading = false;
-        this.paginatedData = res.data;
+        if (res?.data) {
+          if (Array.isArray(res.data)) {
+            const list = res.data as Room[];
+            this.paginatedData = {
+              items: list,
+              page: 1,
+              size: list.length,
+              totalItems: list.length,
+              totalPages: 1
+            };
+          } else {
+            this.paginatedData = res.data;
+          }
+        } else {
+          this.paginatedData = { items: [], page: 1, size: 9, totalItems: 0, totalPages: 1 };
+        }
       },
       error: () => {
         this.isLoading = false;

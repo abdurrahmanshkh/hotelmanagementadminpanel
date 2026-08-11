@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { BookingRepository } from '../contracts/booking.repository';
 import { API_ENDPOINTS } from '../../constants/api-endpoints.constants';
 import {
@@ -31,7 +31,23 @@ export class ApiBookingRepository implements BookingRepository {
     if (status && status !== 'ALL') {
       params = params.set('status', status);
     }
-    return this.http.get<ApiResponse<PageData<Booking>>>(`${this.baseUrl}${API_ENDPOINTS.BOOKINGS.LIST}`, { params });
+    return this.http.get<ApiResponse<any>>(`${this.baseUrl}${API_ENDPOINTS.BOOKINGS.LIST}`, { params }).pipe(
+      map(res => {
+        if (!res.data) return res;
+        if (Array.isArray(res.data)) {
+          const items: Booking[] = res.data;
+          const pageData: PageData<Booking> = {
+            items: items,
+            page: page,
+            size: size,
+            totalItems: items.length,
+            totalPages: Math.ceil(items.length / size) || 1
+          };
+          return { ...res, data: pageData };
+        }
+        return res;
+      })
+    );
   }
 
   getBookingById(bookingId: number): Observable<ApiResponse<Booking>> {
@@ -39,6 +55,6 @@ export class ApiBookingRepository implements BookingRepository {
   }
 
   cancelBooking(bookingId: number, reason?: string): Observable<ApiResponse<Booking>> {
-    return this.http.put<ApiResponse<Booking>>(`${this.baseUrl}${API_ENDPOINTS.BOOKINGS.CANCEL(bookingId)}`, { reason });
+    return this.http.post<ApiResponse<Booking>>(`${this.baseUrl}${API_ENDPOINTS.BOOKINGS.CANCEL(bookingId)}`, { reason });
   }
 }

@@ -88,10 +88,21 @@ export class MyBookingsComponent implements OnInit {
   ];
 
   ngOnInit(): void {
-    this.bookingRepo.getMyBookings().subscribe(res => {
-      this.isLoading = false;
-      this.allBookings = res.data.items;
-      this.filterTab(this.activeTab);
+    this.bookingRepo.getMyBookings().subscribe({
+      next: res => {
+        this.isLoading = false;
+        if (res?.data) {
+          this.allBookings = Array.isArray(res.data) ? res.data : (res.data.items || []);
+        } else {
+          this.allBookings = [];
+        }
+        this.filterTab(this.activeTab);
+      },
+      error: () => {
+        this.isLoading = false;
+        this.allBookings = [];
+        this.filteredBookings = [];
+      }
     });
   }
 

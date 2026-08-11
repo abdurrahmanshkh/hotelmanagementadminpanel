@@ -31,7 +31,7 @@ public class NotificationController {
         return ResponseEntity.ok(ApiResponse.ok("Notifications retrieved", notifications));
     }
 
-    @PatchMapping("/{id}/read")
+    @RequestMapping(value = "/{id}/read", method = {RequestMethod.PUT, RequestMethod.PATCH, RequestMethod.POST})
     public ResponseEntity<ApiResponse<NotificationDto>> markRead(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable Long id
@@ -41,7 +41,7 @@ public class NotificationController {
         return ResponseEntity.ok(ApiResponse.ok("Notification marked as read", updated));
     }
 
-    @PatchMapping("/read-all")
+    @RequestMapping(value = "/read-all", method = {RequestMethod.PUT, RequestMethod.PATCH, RequestMethod.POST})
     public ResponseEntity<ApiResponse<Void>> markAllRead(@AuthenticationPrincipal UserDetails userDetails) {
         User user = authService.getAuthenticatedUser(userDetails.getUsername());
         notificationService.markAllAsRead(user.getId());

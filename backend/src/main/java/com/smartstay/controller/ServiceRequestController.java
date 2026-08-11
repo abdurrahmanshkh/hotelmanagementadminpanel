@@ -48,7 +48,7 @@ public class ServiceRequestController {
         return ResponseEntity.ok(ApiResponse.ok("Service requests retrieved", list));
     }
 
-    @PostMapping("/customer/service-requests/{id}/cancel")
+    @RequestMapping(value = "/customer/service-requests/{id}/cancel", method = {RequestMethod.POST, RequestMethod.PUT})
     public ResponseEntity<ApiResponse<ServiceRequestDto>> cancelMyRequest(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable Long id

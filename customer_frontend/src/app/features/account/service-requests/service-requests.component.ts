@@ -22,7 +22,7 @@ import { formatDateDisplay } from '../../../core/utilities/date.utils';
           <h2 class="title font-serif">Guest Service Requests</h2>
           <p class="sub">Order towels, housekeeping, luggage assistance, or report room maintenance.</p>
         </div>
-        <app-button variant="primary" icon="sparkles" class="ml-auto" (btnClick)="isModalOpen = true">
+        <app-button variant="primary" icon="sparkles" class="ml-auto" (click)="openModal()" (btnClick)="openModal()">
           New Service Request
         </app-button>
       </div>
@@ -34,7 +34,7 @@ import { formatDateDisplay } from '../../../core/utilities/date.utils';
             <app-icon [name]="getIcon(req.category)" [size]="20" color="#D97706"></app-icon>
           </div>
           <div class="req-details">
-            <h4 class="req-type">{{ req.title }} &bull; Room {{ req.roomNumber }}</h4>
+            <h4 class="req-type">{{ req.title }} &bull; Room {{ req.roomNumber || 'Guest' }}</h4>
             <p class="req-notes">{{ req.description }}</p>
             <span class="req-time">Requested {{ formatDate(req.createdAt) }}</span>
           </div>
@@ -50,16 +50,16 @@ import { formatDateDisplay } from '../../../core/utilities/date.utils';
           title="No Service Requests Yet"
           description="Need extra towels or room cleaning? Tap New Service Request to inform our staff."
           actionText="Create Service Request"
-          (action)="isModalOpen = true"
+          (action)="openModal()"
         ></app-empty-state>
       </ng-template>
 
       <!-- New Request Modal -->
-      <div class="modal-backdrop" *ngIf="isModalOpen">
-        <div class="modal-box">
+      <div class="modal-backdrop" *ngIf="isModalOpen" (click)="closeModal()">
+        <div class="modal-box" (click)="$event.stopPropagation()">
           <div class="modal-header">
             <h3>Submit Guest Service Request</h3>
-            <button type="button" class="btn-close" (click)="isModalOpen = false">
+            <button type="button" class="btn-close" (click)="closeModal()">
               <app-icon name="x" [size]="16"></app-icon>
             </button>
           </div>
@@ -92,7 +92,7 @@ import { formatDateDisplay } from '../../../core/utilities/date.utils';
             </div>
 
             <div class="modal-actions flex-gap">
-              <app-button variant="outline" (btnClick)="isModalOpen = false">Cancel</app-button>
+              <app-button variant="outline" (click)="closeModal()" (btnClick)="closeModal()">Cancel</app-button>
               <app-button type="submit" variant="primary" [loading]="isSubmitting">Submit Request</app-button>
             </div>
           </form>
@@ -116,7 +116,7 @@ import { formatDateDisplay } from '../../../core/utilities/date.utils';
     .modal-box { background: #FFFFFF; border-radius: 16px; padding: 1.5rem; max-width: 460px; width: 100%; box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.2); }
     .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; h3 { font-size: 1.125rem; font-weight: 700; color: #0F172A; } .btn-close { background: none; border: none; cursor: pointer; } }
     .modal-form { display: flex; flex-direction: column; gap: 1rem; .form-group { display: flex; flex-direction: column; gap: 0.375rem; label { font-size: 0.8125rem; font-weight: 700; color: #0F172A; } .input { padding: 0.625rem; border: 1px solid #CBD5E1; border-radius: 8px; font-size: 0.875rem; outline: none; } } }
-    .modal-actions { display: flex; justify-content: flex-end; margin-top: 0.5rem; }
+    .modal-actions { display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 0.5rem; }
   `]
 })
 export class ServiceRequestsComponent implements OnInit {
@@ -134,9 +134,26 @@ export class ServiceRequestsComponent implements OnInit {
   public newNotes = '';
 
   ngOnInit(): void {
-    this.serviceRepo.getMyServiceRequests().subscribe(res => {
-      this.requests = res.data.items;
+    this.serviceRepo.getMyServiceRequests().subscribe({
+      next: res => {
+        if (res?.data) {
+          this.requests = Array.isArray(res.data) ? res.data : (res.data.items || []);
+        } else {
+          this.requests = [];
+        }
+      },
+      error: () => {
+        this.requests = [];
+      }
     });
+  }
+
+  openModal(): void {
+    this.isModalOpen = true;
+  }
+
+  closeModal(): void {
+    this.isModalOpen = false;
   }
 
   getIcon(category: string): string {
@@ -157,7 +174,6 @@ export class ServiceRequestsComponent implements OnInit {
 
     this.isSubmitting = true;
     this.serviceRepo.createServiceRequest({
-      bookingId: 1,
       category: this.newCategory,
       title: this.newTitle,
       description: this.newNotes,
@@ -166,7 +182,9 @@ export class ServiceRequestsComponent implements OnInit {
       next: res => {
         this.isSubmitting = false;
         this.isModalOpen = false;
-        this.requests.unshift(res.data);
+        if (res?.data) {
+          this.requests.unshift(res.data);
+        }
         this.newNotes = '';
         this.toast.success('Service request submitted to staff!');
       },

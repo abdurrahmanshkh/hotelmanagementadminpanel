@@ -6,7 +6,6 @@ import jakarta.validation.constraints.NotNull;
 
 public class CreateServiceRequestDto {
 
-    @NotNull(message = "Booking ID is required")
     private Long bookingId;
 
     @NotBlank(message = "Category is required")
