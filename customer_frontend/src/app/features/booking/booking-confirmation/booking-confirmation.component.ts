@@ -70,8 +70,8 @@ import { formatDateDisplay } from '../../../core/utilities/date.utils';
     </div>
   `,
   styles: [`
-    .confirmation-page { padding-top: 3rem; padding-bottom: 5rem; }
-    .container { max-width: 900px; margin: 0 auto; padding: 0 1.5rem; }
+    .confirmation-page { padding-top: 3.5rem; padding-bottom: 5rem; }
+    .container { max-width: 900px; margin: 0 auto; padding-left: 1.5rem; padding-right: 1.5rem; }
     .text-center { text-align: center; }
 
     .success-banner {

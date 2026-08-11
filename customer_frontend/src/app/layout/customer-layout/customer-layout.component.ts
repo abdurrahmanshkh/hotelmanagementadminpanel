@@ -56,7 +56,7 @@ import { LoadingService } from '../../core/services/loading.service';
 
     .customer-body {
       flex: 1;
-      padding: 2rem 0;
+      padding: 3rem 0 5rem;
     }
 
     .customer-container {

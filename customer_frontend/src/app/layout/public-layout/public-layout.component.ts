@@ -46,7 +46,10 @@ import { LoadingService } from '../../core/services/loading.service';
     }
 
     .public-main {
-      flex: 1;
+      flex: 1 0 auto;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
     }
   `]
 })

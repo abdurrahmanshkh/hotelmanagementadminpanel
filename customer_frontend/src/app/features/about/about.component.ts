@@ -7,7 +7,7 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
   standalone: true,
   imports: [CommonModule, IconComponent],
   template: `
-    <div class="about-page container">
+    <div class="about-page">
       <div class="header-banner text-center">
         <span class="badge badge--info font-mono">OUR HERITAGE</span>
         <h1 class="title font-serif">Pioneering Digital Hospitality & Unmatched Luxury</h1>
@@ -34,8 +34,8 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
     </div>
   `,
   styles: [`
-    .about-page { padding-top: 3rem; padding-bottom: 5rem; }
-    .container { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; }
+    :host { display: block; width: 100%; flex: 1 0 auto; }
+    .about-page { max-width: 1100px; margin: 0 auto; padding: 4rem 1.5rem 6rem; width: 100%; }
     .text-center { text-align: center; }
     .header-banner {
       margin-bottom: 4rem;

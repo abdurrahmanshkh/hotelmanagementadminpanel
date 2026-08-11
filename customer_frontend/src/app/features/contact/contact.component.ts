@@ -10,7 +10,7 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
   standalone: true,
   imports: [CommonModule, FormsModule, ButtonComponent, IconComponent],
   template: `
-    <div class="contact-page container">
+    <div class="contact-page">
       <div class="header-banner text-center">
         <span class="badge badge--info font-mono">24/7 FRONT DESK</span>
         <h1 class="title font-serif">Get in Touch with Our Concierge</h1>
@@ -54,8 +54,8 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
     </div>
   `,
   styles: [`
-    .contact-page { padding-top: 3rem; padding-bottom: 5rem; }
-    .container { max-width: 1000px; margin: 0 auto; padding: 0 1.5rem; }
+    :host { display: block; width: 100%; flex: 1 0 auto; }
+    .contact-page { max-width: 1000px; margin: 0 auto; padding: 4rem 1.5rem 6rem; width: 100%; }
     .text-center { text-align: center; }
     .header-banner {
       margin-bottom: 3.5rem;

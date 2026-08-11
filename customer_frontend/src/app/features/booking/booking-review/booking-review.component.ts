@@ -98,8 +98,8 @@ import { formatDateDisplay } from '../../../core/utilities/date.utils';
     </div>
   `,
   styles: [`
-    .booking-page { padding-top: 2rem; padding-bottom: 5rem; }
-    .container { max-width: 1140px; margin: 0 auto; padding: 0 1.5rem; }
+    .booking-page { padding-top: 3rem; padding-bottom: 5rem; }
+    .container { max-width: 1140px; margin: 0 auto; padding-left: 1.5rem; padding-right: 1.5rem; }
 
     .step-indicator {
       display: flex; align-items: center; justify-content: center; gap: 1rem; margin-bottom: 2.5rem;

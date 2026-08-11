@@ -26,7 +26,7 @@ import { Room, RoomType, RoomSearchFilters, PageData } from '../../../core/model
     ErrorStateComponent
   ],
   template: `
-    <div class="rooms-page container">
+    <div class="rooms-page">
       <!-- Search Summary Bar -->
       <div class="search-bar-card">
         <div class="search-inputs flex-gap">
@@ -148,8 +148,8 @@ import { Room, RoomType, RoomSearchFilters, PageData } from '../../../core/model
     </div>
   `,
   styles: [`
-    .rooms-page { padding-top: 2rem; padding-bottom: 4rem; }
-    .container { max-width: 1280px; margin: 0 auto; padding: 0 1.5rem; }
+    :host { display: block; width: 100%; flex: 1 0 auto; }
+    .rooms-page { max-width: 1280px; margin: 0 auto; padding: 4rem 1.5rem 6rem; width: 100%; }
 
     .search-bar-card {
       background: #FFFFFF;

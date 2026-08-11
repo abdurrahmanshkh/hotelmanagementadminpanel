@@ -28,7 +28,7 @@ import { formatCurrency } from '../../../core/utilities/money.utils';
     IconComponent
   ],
   template: `
-    <div class="room-details-page container" *ngIf="!isLoading && room">
+    <div class="room-details-page" *ngIf="!isLoading && room">
       <!-- Gallery Grid -->
       <div class="gallery-grid">
         <div class="main-image">
@@ -148,8 +148,8 @@ import { formatCurrency } from '../../../core/utilities/money.utils';
     </div>
   `,
   styles: [`
-    .room-details-page { padding-top: 2rem; padding-bottom: 5rem; }
-    .container { max-width: 1280px; margin: 0 auto; padding: 0 1.5rem; }
+    :host { display: block; width: 100%; flex: 1 0 auto; }
+    .room-details-page { max-width: 1280px; margin: 0 auto; padding: 4rem 1.5rem 6rem; width: 100%; }
 
     .gallery-grid {
       display: grid;
