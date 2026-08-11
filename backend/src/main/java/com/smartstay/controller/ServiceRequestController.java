@@ -10,7 +10,6 @@ import com.smartstay.model.User;
 import com.smartstay.service.AuthService;
 import com.smartstay.service.ServiceRequestManager;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,14 +18,17 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-
 @RestController
 @RequestMapping("/api/v1")
-@RequiredArgsConstructor
 public class ServiceRequestController {
 
     private final ServiceRequestManager serviceRequestManager;
     private final AuthService authService;
+
+    public ServiceRequestController(ServiceRequestManager serviceRequestManager, AuthService authService) {
+        this.serviceRequestManager = serviceRequestManager;
+        this.authService = authService;
+    }
 
     @PostMapping("/customer/service-requests")
     public ResponseEntity<ApiResponse<ServiceRequestDto>> createCustomerRequest(

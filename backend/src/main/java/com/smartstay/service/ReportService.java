@@ -5,7 +5,6 @@ import com.smartstay.repository.BookingRepository;
 import com.smartstay.repository.PaymentRepository;
 import com.smartstay.repository.RoomRepository;
 import com.smartstay.repository.ServiceRequestRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,15 +12,25 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
-
 @Service
-@RequiredArgsConstructor
 public class ReportService {
 
     private final BookingRepository bookingRepository;
     private final PaymentRepository paymentRepository;
     private final RoomRepository roomRepository;
     private final ServiceRequestRepository serviceRequestRepository;
+
+    public ReportService(
+            BookingRepository bookingRepository,
+            PaymentRepository paymentRepository,
+            RoomRepository roomRepository,
+            ServiceRequestRepository serviceRequestRepository
+    ) {
+        this.bookingRepository = bookingRepository;
+        this.paymentRepository = paymentRepository;
+        this.roomRepository = roomRepository;
+        this.serviceRequestRepository = serviceRequestRepository;
+    }
 
     @Transactional(readOnly = true)
     public RevenueReportDto getRevenueReport(String fromDate, String toDate) {

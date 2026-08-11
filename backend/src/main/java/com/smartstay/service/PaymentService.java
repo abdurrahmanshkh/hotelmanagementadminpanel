@@ -11,7 +11,6 @@ import com.smartstay.exception.BusinessRuleException;
 import com.smartstay.exception.ResourceNotFoundException;
 import com.smartstay.model.*;
 import com.smartstay.repository.*;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,9 +24,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
 @Service
-@RequiredArgsConstructor
 public class PaymentService {
 
     private final PaymentRepository paymentRepository;
@@ -36,6 +33,22 @@ public class PaymentService {
     private final RoomRepository roomRepository;
     private final PasscodeService passcodeService;
     private final NotificationService notificationService;
+
+    public PaymentService(
+            PaymentRepository paymentRepository,
+            RefundRepository refundRepository,
+            BookingRepository bookingRepository,
+            RoomRepository roomRepository,
+            PasscodeService passcodeService,
+            NotificationService notificationService
+    ) {
+        this.paymentRepository = paymentRepository;
+        this.refundRepository = refundRepository;
+        this.bookingRepository = bookingRepository;
+        this.roomRepository = roomRepository;
+        this.passcodeService = passcodeService;
+        this.notificationService = notificationService;
+    }
 
     @Transactional
     public PaymentDto processPayment(User user, ProcessPaymentRequestDto req) {

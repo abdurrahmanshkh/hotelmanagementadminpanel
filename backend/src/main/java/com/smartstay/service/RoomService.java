@@ -15,7 +15,6 @@ import com.smartstay.repository.BookingRepository;
 import com.smartstay.repository.RoomImageRepository;
 import com.smartstay.repository.RoomRepository;
 import com.smartstay.repository.RoomTypeRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -28,9 +27,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
-
 @Service
-@RequiredArgsConstructor
 public class RoomService {
 
     private final RoomRepository roomRepository;
@@ -38,6 +35,20 @@ public class RoomService {
     private final AmenityRepository amenityRepository;
     private final RoomImageRepository roomImageRepository;
     private final BookingRepository bookingRepository;
+
+    public RoomService(
+            RoomRepository roomRepository,
+            RoomTypeRepository roomTypeRepository,
+            AmenityRepository amenityRepository,
+            RoomImageRepository roomImageRepository,
+            BookingRepository bookingRepository
+    ) {
+        this.roomRepository = roomRepository;
+        this.roomTypeRepository = roomTypeRepository;
+        this.amenityRepository = amenityRepository;
+        this.roomImageRepository = roomImageRepository;
+        this.bookingRepository = bookingRepository;
+    }
 
     @Transactional(readOnly = true)
     public List<RoomDto> getAllActiveRooms() {

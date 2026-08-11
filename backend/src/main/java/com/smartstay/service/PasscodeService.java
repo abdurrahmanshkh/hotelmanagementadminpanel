@@ -9,22 +9,29 @@ import com.smartstay.model.Booking;
 import com.smartstay.model.RoomPasscode;
 import com.smartstay.repository.BookingRepository;
 import com.smartstay.repository.RoomPasscodeRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
-
 @Service
-@RequiredArgsConstructor
 public class PasscodeService {
 
     private final RoomPasscodeRepository passcodeRepository;
     private final BookingRepository bookingRepository;
     private final PasswordEncoder passwordEncoder;
     private final SecureRandom secureRandom = new SecureRandom();
+
+    public PasscodeService(
+            RoomPasscodeRepository passcodeRepository,
+            BookingRepository bookingRepository,
+            PasswordEncoder passwordEncoder
+    ) {
+        this.passcodeRepository = passcodeRepository;
+        this.bookingRepository = bookingRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Transactional
     public RoomPasscodeDto generatePasscodeForBooking(Booking booking) {

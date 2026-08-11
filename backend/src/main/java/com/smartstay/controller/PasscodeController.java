@@ -5,7 +5,6 @@ import com.smartstay.dto.passcode.RoomPasscodeDto;
 import com.smartstay.model.User;
 import com.smartstay.service.AuthService;
 import com.smartstay.service.PasscodeService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,11 +12,15 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1")
-@RequiredArgsConstructor
 public class PasscodeController {
 
     private final PasscodeService passcodeService;
     private final AuthService authService;
+
+    public PasscodeController(PasscodeService passcodeService, AuthService authService) {
+        this.passcodeService = passcodeService;
+        this.authService = authService;
+    }
 
     @GetMapping("/passcodes/booking/{bookingId}")
     public ResponseEntity<ApiResponse<RoomPasscodeDto>> getPasscode(

@@ -11,7 +11,6 @@ import com.smartstay.exception.ConflictException;
 import com.smartstay.exception.ResourceNotFoundException;
 import com.smartstay.model.*;
 import com.smartstay.repository.*;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -31,7 +30,6 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class BookingService {
 
     private final BookingRepository bookingRepository;
@@ -42,6 +40,26 @@ public class BookingService {
     private final PricingService pricingService;
     private final HotelSettingsRepository hotelSettingsRepository;
     private final AppProperties appProperties;
+
+    public BookingService(
+            BookingRepository bookingRepository,
+            BookingGuestRepository bookingGuestRepository,
+            RoomRepository roomRepository,
+            UserRepository userRepository,
+            CleaningTaskRepository cleaningTaskRepository,
+            PricingService pricingService,
+            HotelSettingsRepository hotelSettingsRepository,
+            AppProperties appProperties
+    ) {
+        this.bookingRepository = bookingRepository;
+        this.bookingGuestRepository = bookingGuestRepository;
+        this.roomRepository = roomRepository;
+        this.userRepository = userRepository;
+        this.cleaningTaskRepository = cleaningTaskRepository;
+        this.pricingService = pricingService;
+        this.hotelSettingsRepository = hotelSettingsRepository;
+        this.appProperties = appProperties;
+    }
 
     @Transactional(readOnly = true)
     public BookingQuoteDto generateQuote(BookingQuoteRequestDto req) {

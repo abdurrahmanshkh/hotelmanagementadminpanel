@@ -10,7 +10,6 @@ import com.smartstay.model.PriceSnapshot;
 import com.smartstay.model.PricingRule;
 import com.smartstay.model.RoomType;
 import com.smartstay.repository.*;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,9 +20,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
-
 @Service
-@RequiredArgsConstructor
 public class PricingService {
 
     private final PricingRuleRepository pricingRuleRepository;
@@ -33,6 +30,24 @@ public class PricingService {
     private final BookingRepository bookingRepository;
     private final HotelSettingsRepository hotelSettingsRepository;
     private final AppProperties appProperties;
+
+    public PricingService(
+            PricingRuleRepository pricingRuleRepository,
+            PriceSnapshotRepository priceSnapshotRepository,
+            RoomTypeRepository roomTypeRepository,
+            RoomRepository roomRepository,
+            BookingRepository bookingRepository,
+            HotelSettingsRepository hotelSettingsRepository,
+            AppProperties appProperties
+    ) {
+        this.pricingRuleRepository = pricingRuleRepository;
+        this.priceSnapshotRepository = priceSnapshotRepository;
+        this.roomTypeRepository = roomTypeRepository;
+        this.roomRepository = roomRepository;
+        this.bookingRepository = bookingRepository;
+        this.hotelSettingsRepository = hotelSettingsRepository;
+        this.appProperties = appProperties;
+    }
 
     @Transactional(readOnly = true)
     public BigDecimal calculateNightlyPrice(RoomType roomType, LocalDate date) {

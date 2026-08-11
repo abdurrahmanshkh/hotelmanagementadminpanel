@@ -15,7 +15,6 @@ import com.smartstay.repository.BookingRepository;
 import com.smartstay.repository.ChatMessageRepository;
 import com.smartstay.repository.ChatThreadRepository;
 import com.smartstay.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -29,13 +28,24 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class ChatService {
 
     private final ChatThreadRepository threadRepository;
     private final ChatMessageRepository messageRepository;
     private final BookingRepository bookingRepository;
     private final UserRepository userRepository;
+
+    public ChatService(
+            ChatThreadRepository threadRepository,
+            ChatMessageRepository messageRepository,
+            BookingRepository bookingRepository,
+            UserRepository userRepository
+    ) {
+        this.threadRepository = threadRepository;
+        this.messageRepository = messageRepository;
+        this.bookingRepository = bookingRepository;
+        this.userRepository = userRepository;
+    }
 
     @Transactional
     public ChatThreadDto createThread(User user, Long bookingId, String initialMessage, ChatMode mode) {

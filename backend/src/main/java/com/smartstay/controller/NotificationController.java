@@ -5,7 +5,6 @@ import com.smartstay.dto.notification.NotificationDto;
 import com.smartstay.model.User;
 import com.smartstay.service.AuthService;
 import com.smartstay.service.NotificationService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,11 +14,15 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/customer/notifications")
-@RequiredArgsConstructor
 public class NotificationController {
 
     private final NotificationService notificationService;
     private final AuthService authService;
+
+    public NotificationController(NotificationService notificationService, AuthService authService) {
+        this.notificationService = notificationService;
+        this.authService = authService;
+    }
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<NotificationDto>>> getMyNotifications(@AuthenticationPrincipal UserDetails userDetails) {

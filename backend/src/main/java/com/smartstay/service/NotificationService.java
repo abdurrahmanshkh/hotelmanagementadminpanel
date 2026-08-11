@@ -5,7 +5,6 @@ import com.smartstay.exception.ResourceNotFoundException;
 import com.smartstay.model.NotificationEntity;
 import com.smartstay.model.User;
 import com.smartstay.repository.NotificationRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,10 +12,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class NotificationService {
 
     private final NotificationRepository notificationRepository;
+
+    public NotificationService(NotificationRepository notificationRepository) {
+        this.notificationRepository = notificationRepository;
+    }
 
     @Transactional
     public NotificationDto createNotification(User user, String type, String title, String message) {

@@ -1,10 +1,6 @@
 package com.smartstay.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -23,10 +19,6 @@ import java.util.UUID;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @Data
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
     public static class ApiError {
         private boolean success;
         private String code;
@@ -35,6 +27,128 @@ public class GlobalExceptionHandler {
         private String path;
         private String timestamp;
         private String traceId;
+
+        public ApiError() {
+        }
+
+        public ApiError(boolean success, String code, String message, Map<String, String> fieldErrors, String path, String timestamp, String traceId) {
+            this.success = success;
+            this.code = code;
+            this.message = message;
+            this.fieldErrors = fieldErrors;
+            this.path = path;
+            this.timestamp = timestamp;
+            this.traceId = traceId;
+        }
+
+        public boolean isSuccess() {
+            return success;
+        }
+
+        public void setSuccess(boolean success) {
+            this.success = success;
+        }
+
+        public String getCode() {
+            return code;
+        }
+
+        public void setCode(String code) {
+            this.code = code;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public void setMessage(String message) {
+            this.message = message;
+        }
+
+        public Map<String, String> getFieldErrors() {
+            return fieldErrors;
+        }
+
+        public void setFieldErrors(Map<String, String> fieldErrors) {
+            this.fieldErrors = fieldErrors;
+        }
+
+        public String getPath() {
+            return path;
+        }
+
+        public void setPath(String path) {
+            this.path = path;
+        }
+
+        public String getTimestamp() {
+            return timestamp;
+        }
+
+        public void setTimestamp(String timestamp) {
+            this.timestamp = timestamp;
+        }
+
+        public String getTraceId() {
+            return traceId;
+        }
+
+        public void setTraceId(String traceId) {
+            this.traceId = traceId;
+        }
+
+        public static ApiErrorBuilder builder() {
+            return new ApiErrorBuilder();
+        }
+
+        public static class ApiErrorBuilder {
+            private boolean success;
+            private String code;
+            private String message;
+            private Map<String, String> fieldErrors;
+            private String path;
+            private String timestamp;
+            private String traceId;
+
+            public ApiErrorBuilder success(boolean success) {
+                this.success = success;
+                return this;
+            }
+
+            public ApiErrorBuilder code(String code) {
+                this.code = code;
+                return this;
+            }
+
+            public ApiErrorBuilder message(String message) {
+                this.message = message;
+                return this;
+            }
+
+            public ApiErrorBuilder fieldErrors(Map<String, String> fieldErrors) {
+                this.fieldErrors = fieldErrors;
+                return this;
+            }
+
+            public ApiErrorBuilder path(String path) {
+                this.path = path;
+                return this;
+            }
+
+            public ApiErrorBuilder timestamp(String timestamp) {
+                this.timestamp = timestamp;
+                return this;
+            }
+
+            public ApiErrorBuilder traceId(String traceId) {
+                this.traceId = traceId;
+                return this;
+            }
+
+            public ApiError build() {
+                return new ApiError(success, code, message, fieldErrors, path, timestamp, traceId);
+            }
+        }
     }
 
     private ApiError buildError(String code, String message, Map<String, String> fieldErrors, HttpServletRequest request) {

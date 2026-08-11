@@ -15,7 +15,6 @@ import com.smartstay.repository.BookingRepository;
 import com.smartstay.repository.ChatThreadRepository;
 import com.smartstay.repository.RoomRepository;
 import com.smartstay.repository.ServiceRequestRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,15 +23,25 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
 @Service
-@RequiredArgsConstructor
 public class DashboardService {
 
     private final RoomRepository roomRepository;
     private final BookingRepository bookingRepository;
     private final ServiceRequestRepository serviceRequestRepository;
     private final ChatThreadRepository chatThreadRepository;
+
+    public DashboardService(
+            RoomRepository roomRepository,
+            BookingRepository bookingRepository,
+            ServiceRequestRepository serviceRequestRepository,
+            ChatThreadRepository chatThreadRepository
+    ) {
+        this.roomRepository = roomRepository;
+        this.bookingRepository = bookingRepository;
+        this.serviceRequestRepository = serviceRequestRepository;
+        this.chatThreadRepository = chatThreadRepository;
+    }
 
     @Transactional(readOnly = true)
     public DashboardSummaryDto getSummary() {

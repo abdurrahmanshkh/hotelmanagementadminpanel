@@ -7,7 +7,6 @@ import com.smartstay.model.User;
 import com.smartstay.service.AuthService;
 import com.smartstay.service.FeedbackService;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -18,11 +17,15 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1")
-@RequiredArgsConstructor
 public class FeedbackController {
 
     private final FeedbackService feedbackService;
     private final AuthService authService;
+
+    public FeedbackController(FeedbackService feedbackService, AuthService authService) {
+        this.feedbackService = feedbackService;
+        this.authService = authService;
+    }
 
     @PostMapping("/customer/feedback")
     public ResponseEntity<ApiResponse<FeedbackDto>> submitFeedback(

@@ -7,7 +7,6 @@ import com.smartstay.enums.MaintenanceStatus;
 import com.smartstay.enums.Priority;
 import com.smartstay.service.MaintenanceService;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,10 +15,13 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/admin/maintenance")
-@RequiredArgsConstructor
 public class MaintenanceController {
 
     private final MaintenanceService maintenanceService;
+
+    public MaintenanceController(MaintenanceService maintenanceService) {
+        this.maintenanceService = maintenanceService;
+    }
 
     @GetMapping
     public ResponseEntity<ApiResponse<PageData<MaintenanceRecordDto>>> getRecords(

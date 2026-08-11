@@ -6,7 +6,6 @@ import com.smartstay.dto.common.ApiResponse;
 import com.smartstay.dto.common.PageData;
 import com.smartstay.enums.CleaningTaskStatus;
 import com.smartstay.service.CleaningService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,10 +14,13 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/admin/cleaning-tasks")
-@RequiredArgsConstructor
 public class CleaningController {
 
     private final CleaningService cleaningService;
+
+    public CleaningController(CleaningService cleaningService) {
+        this.cleaningService = cleaningService;
+    }
 
     @GetMapping
     public ResponseEntity<ApiResponse<PageData<CleaningTaskDto>>> getCleaningTasks(

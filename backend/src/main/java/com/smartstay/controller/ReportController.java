@@ -3,7 +3,6 @@ package com.smartstay.controller;
 import com.smartstay.dto.common.ApiResponse;
 import com.smartstay.dto.report.*;
 import com.smartstay.service.ReportService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -11,10 +10,13 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/admin/reports")
-@RequiredArgsConstructor
 public class ReportController {
 
     private final ReportService reportService;
+
+    public ReportController(ReportService reportService) {
+        this.reportService = reportService;
+    }
 
     @GetMapping("/revenue")
     public ResponseEntity<ApiResponse<RevenueReportDto>> getRevenueReport(

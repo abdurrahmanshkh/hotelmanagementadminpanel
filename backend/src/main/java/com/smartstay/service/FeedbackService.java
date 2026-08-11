@@ -10,19 +10,21 @@ import com.smartstay.model.Feedback;
 import com.smartstay.model.User;
 import com.smartstay.repository.BookingRepository;
 import com.smartstay.repository.FeedbackRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
 @Service
-@RequiredArgsConstructor
 public class FeedbackService {
 
     private final FeedbackRepository feedbackRepository;
     private final BookingRepository bookingRepository;
+
+    public FeedbackService(FeedbackRepository feedbackRepository, BookingRepository bookingRepository) {
+        this.feedbackRepository = feedbackRepository;
+        this.bookingRepository = bookingRepository;
+    }
 
     @Transactional
     public FeedbackDto submitFeedback(User user, SubmitFeedbackRequestDto req) {

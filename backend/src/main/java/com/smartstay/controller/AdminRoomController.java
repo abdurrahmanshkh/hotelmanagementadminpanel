@@ -5,7 +5,6 @@ import com.smartstay.dto.common.PageData;
 import com.smartstay.dto.room.*;
 import com.smartstay.enums.RoomStatus;
 import com.smartstay.service.RoomService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,10 +15,13 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/admin")
-@RequiredArgsConstructor
 public class AdminRoomController {
 
     private final RoomService roomService;
+
+    public AdminRoomController(RoomService roomService) {
+        this.roomService = roomService;
+    }
 
     @GetMapping("/rooms")
     public ResponseEntity<ApiResponse<PageData<RoomDto>>> getRooms(

@@ -9,7 +9,6 @@ import com.smartstay.enums.ChatStatus;
 import com.smartstay.model.User;
 import com.smartstay.service.AuthService;
 import com.smartstay.service.ChatService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -18,14 +17,17 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-
 @RestController
 @RequestMapping("/api/v1")
-@RequiredArgsConstructor
 public class ChatController {
 
     private final ChatService chatService;
     private final AuthService authService;
+
+    public ChatController(ChatService chatService, AuthService authService) {
+        this.chatService = chatService;
+        this.authService = authService;
+    }
 
     @PostMapping("/customer/chat/threads")
     public ResponseEntity<ApiResponse<ChatThreadDto>> createThread(

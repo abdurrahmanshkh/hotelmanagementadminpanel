@@ -3,7 +3,6 @@ package com.smartstay.controller;
 import com.smartstay.dto.common.ApiResponse;
 import com.smartstay.dto.pricing.*;
 import com.smartstay.service.PricingService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,10 +12,13 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/admin/pricing")
-@RequiredArgsConstructor
 public class PricingController {
 
     private final PricingService pricingService;
+
+    public PricingController(PricingService pricingService) {
+        this.pricingService = pricingService;
+    }
 
     @GetMapping("/rules")
     public ResponseEntity<ApiResponse<List<PricingRuleDto>>> getRules() {

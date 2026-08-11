@@ -13,7 +13,6 @@ import com.smartstay.model.User;
 import com.smartstay.repository.BookingRepository;
 import com.smartstay.repository.ServiceRequestRepository;
 import com.smartstay.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,14 +24,22 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
 @Service
-@RequiredArgsConstructor
 public class ServiceRequestManager {
 
     private final ServiceRequestRepository serviceRequestRepository;
     private final BookingRepository bookingRepository;
     private final UserRepository userRepository;
+
+    public ServiceRequestManager(
+            ServiceRequestRepository serviceRequestRepository,
+            BookingRepository bookingRepository,
+            UserRepository userRepository
+    ) {
+        this.serviceRequestRepository = serviceRequestRepository;
+        this.bookingRepository = bookingRepository;
+        this.userRepository = userRepository;
+    }
 
     @Transactional
     public ServiceRequestDto createRequest(User user, CreateServiceRequestDto req) {

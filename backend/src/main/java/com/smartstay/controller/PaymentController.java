@@ -9,7 +9,6 @@ import com.smartstay.model.User;
 import com.smartstay.service.AuthService;
 import com.smartstay.service.PaymentService;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,11 +18,15 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1")
-@RequiredArgsConstructor
 public class PaymentController {
 
     private final PaymentService paymentService;
     private final AuthService authService;
+
+    public PaymentController(PaymentService paymentService, AuthService authService) {
+        this.paymentService = paymentService;
+        this.authService = authService;
+    }
 
     @PostMapping("/payments/process")
     public ResponseEntity<ApiResponse<PaymentDto>> processPayment(

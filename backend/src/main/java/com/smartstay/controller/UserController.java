@@ -6,7 +6,6 @@ import com.smartstay.dto.common.ApiResponse;
 import com.smartstay.model.User;
 import com.smartstay.service.AuthService;
 import com.smartstay.service.UserService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,11 +13,15 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/customer")
-@RequiredArgsConstructor
 public class UserController {
 
     private final AuthService authService;
     private final UserService userService;
+
+    public UserController(AuthService authService, UserService userService) {
+        this.authService = authService;
+        this.userService = userService;
+    }
 
     @GetMapping("/profile")
     public ResponseEntity<ApiResponse<UserResponseDto>> getProfile(@AuthenticationPrincipal UserDetails userDetails) {

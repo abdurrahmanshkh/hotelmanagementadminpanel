@@ -12,7 +12,6 @@ import com.smartstay.model.User;
 import com.smartstay.repository.CleaningTaskRepository;
 import com.smartstay.repository.RoomRepository;
 import com.smartstay.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,14 +23,22 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
 @Service
-@RequiredArgsConstructor
 public class CleaningService {
 
     private final CleaningTaskRepository cleaningTaskRepository;
     private final RoomRepository roomRepository;
     private final UserRepository userRepository;
+
+    public CleaningService(
+            CleaningTaskRepository cleaningTaskRepository,
+            RoomRepository roomRepository,
+            UserRepository userRepository
+    ) {
+        this.cleaningTaskRepository = cleaningTaskRepository;
+        this.roomRepository = roomRepository;
+        this.userRepository = userRepository;
+    }
 
     @Transactional(readOnly = true)
     public PageData<CleaningTaskDto> searchCleaningTasks(

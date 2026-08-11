@@ -16,7 +16,6 @@ import com.smartstay.repository.CleaningTaskRepository;
 import com.smartstay.repository.MaintenanceRecordRepository;
 import com.smartstay.repository.RoomRepository;
 import com.smartstay.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,13 +29,24 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class MaintenanceService {
 
     private final MaintenanceRecordRepository maintenanceRepository;
     private final RoomRepository roomRepository;
     private final UserRepository userRepository;
     private final CleaningTaskRepository cleaningTaskRepository;
+
+    public MaintenanceService(
+            MaintenanceRecordRepository maintenanceRepository,
+            RoomRepository roomRepository,
+            UserRepository userRepository,
+            CleaningTaskRepository cleaningTaskRepository
+    ) {
+        this.maintenanceRepository = maintenanceRepository;
+        this.roomRepository = roomRepository;
+        this.userRepository = userRepository;
+        this.cleaningTaskRepository = cleaningTaskRepository;
+    }
 
     @Transactional(readOnly = true)
     public PageData<MaintenanceRecordDto> searchRecords(

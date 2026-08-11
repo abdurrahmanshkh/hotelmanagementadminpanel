@@ -4,15 +4,17 @@ import com.smartstay.dto.settings.HotelSettingsDto;
 import com.smartstay.dto.settings.UpdateHotelSettingsRequestDto;
 import com.smartstay.model.HotelSettings;
 import com.smartstay.repository.HotelSettingsRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@RequiredArgsConstructor
 public class SettingsService {
 
     private final HotelSettingsRepository settingsRepository;
+
+    public SettingsService(HotelSettingsRepository settingsRepository) {
+        this.settingsRepository = settingsRepository;
+    }
 
     @Transactional(readOnly = true)
     public HotelSettingsDto getSettings() {

@@ -5,7 +5,6 @@ import com.smartstay.dto.common.ApiResponse;
 import com.smartstay.dto.common.PageData;
 import com.smartstay.enums.BookingStatus;
 import com.smartstay.service.BookingService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,10 +12,13 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/admin")
-@RequiredArgsConstructor
 public class AdminBookingController {
 
     private final BookingService bookingService;
+
+    public AdminBookingController(BookingService bookingService) {
+        this.bookingService = bookingService;
+    }
 
     @GetMapping("/bookings")
     public ResponseEntity<ApiResponse<PageData<BookingDto>>> getBookings(

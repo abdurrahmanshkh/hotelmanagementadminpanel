@@ -6,7 +6,6 @@ import com.smartstay.model.User;
 import com.smartstay.service.AuthService;
 import com.smartstay.service.BookingService;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -18,11 +17,15 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1")
-@RequiredArgsConstructor
 public class BookingController {
 
     private final BookingService bookingService;
     private final AuthService authService;
+
+    public BookingController(BookingService bookingService, AuthService authService) {
+        this.bookingService = bookingService;
+        this.authService = authService;
+    }
 
     @PostMapping("/bookings/quote")
     public ResponseEntity<ApiResponse<BookingQuoteDto>> getQuote(@Valid @RequestBody BookingQuoteRequestDto request) {

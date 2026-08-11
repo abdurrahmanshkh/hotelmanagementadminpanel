@@ -10,7 +10,6 @@ import com.smartstay.exception.ResourceNotFoundException;
 import com.smartstay.model.User;
 import com.smartstay.repository.UserRepository;
 import com.smartstay.service.BookingService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,14 +18,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
 @RestController
 @RequestMapping("/api/v1/admin/guests")
-@RequiredArgsConstructor
 public class AdminGuestController {
 
     private final UserRepository userRepository;
     private final BookingService bookingService;
+
+    public AdminGuestController(UserRepository userRepository, BookingService bookingService) {
+        this.userRepository = userRepository;
+        this.bookingService = bookingService;
+    }
 
     @GetMapping
     public ResponseEntity<ApiResponse<PageData<GuestSummaryDto>>> getGuests(
